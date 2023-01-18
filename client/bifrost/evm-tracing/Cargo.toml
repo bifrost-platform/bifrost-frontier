@@ -13,7 +13,7 @@ hex = { version = "0.4", features = [ "serde" ] }
 serde = { version = "1.0", features = [ "derive" ] }
 serde_json = { version = "1.0" }
 
-fp-evm-tracing-events = { path = "../../../primitives/bifrost/rpc/evm-tracing-events" }
+fp-rpc-evm-tracing-events = { path = "../../../primitives/bifrost/rpc/evm-tracing-events" }
 fp-rpc-debug = { path = "../../../primitives/bifrost/rpc/debug" }
 
 # Substrate

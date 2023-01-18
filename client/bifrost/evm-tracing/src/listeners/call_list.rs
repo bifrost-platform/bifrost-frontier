@@ -18,7 +18,7 @@ use crate::formatters::blockscout::BlockscoutCall as Call;
 use crate::formatters::blockscout::BlockscoutCallInner as CallInner;
 use crate::types::{CallResult, CallType, ContextType, CreateResult};
 use ethereum_types::{H160, U256};
-use fp_evm_tracing_events::{
+use fp_rpc_evm_tracing_events::{
 	runtime::{Capture, ExitError, ExitReason, ExitSucceed},
 	Event, EvmEvent, GasometerEvent, Listener as ListenerT, RuntimeEvent, StepEventFilter,
 };
@@ -122,7 +122,7 @@ impl Default for Listener {
 
 impl Listener {
 	pub fn using<R, F: FnOnce() -> R>(&mut self, f: F) -> R {
-		fp_evm_tracing_events::using(self, f)
+		fp_rpc_evm_tracing_events::using(self, f)
 	}
 
 	/// Called at the end of each transaction when tracing.
@@ -666,7 +666,7 @@ impl ListenerT for Listener {
 mod tests {
 	use super::*;
 	use ethereum_types::H256;
-	use fp_evm_tracing_events::{
+	use fp_rpc_evm_tracing_events::{
 		evm::CreateScheme,
 		gasometer::Snapshot,
 		runtime::{Memory, Stack},
