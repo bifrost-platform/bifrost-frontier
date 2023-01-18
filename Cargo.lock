@@ -1878,6 +1878,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "fc-rpc-trace"
+version = "0.6.0"
+dependencies = [
+ "ethereum",
+ "ethereum-types",
+ "fc-consensus",
+ "fc-evm-tracing",
+ "fc-rpc",
+ "fc-rpc-core",
+ "fc-rpc-core-trace",
+ "fc-rpc-core-types",
+ "fp-rpc",
+ "fp-rpc-debug",
+ "futures 0.3.24",
+ "jsonrpsee",
+ "sc-client-api",
+ "sc-network",
+ "sc-utils",
+ "serde",
+ "sha3",
+ "sp-api",
+ "sp-block-builder",
+ "sp-blockchain",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+ "sp-transaction-pool",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "fdlimit"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
