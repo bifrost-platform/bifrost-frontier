@@ -19,6 +19,7 @@ members = [
 	"client/rpc",
 	"client/db",
 	"client/mapping-sync",
+	"client/bifrost/evm-tracing",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
 	"primitives/evm",

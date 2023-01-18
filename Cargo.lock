@@ -1900,6 +1900,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "fc-evm-tracing"
+version = "0.1.0"
+dependencies = [
+ "ethereum-types",
+ "fp-evm-tracing-events",
+ "fp-rpc-debug",
+ "hex",
+ "parity-scale-codec",
+ "serde",
+ "serde_json",
+ "sp-std",
+]
+
+[[package]]
 name = "fc-mapping-sync"
 version = "2.0.0-dev"
 dependencies = [
