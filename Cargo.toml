@@ -26,6 +26,7 @@ members = [
 	"client/bifrost/rpc-core/txpool",
 	"client/bifrost/rpc/debug",
 	"client/bifrost/rpc/trace",
+	"client/bifrost/rpc/txpool",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
 	"primitives/evm",
