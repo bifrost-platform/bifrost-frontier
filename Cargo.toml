@@ -26,6 +26,7 @@ members = [
 	"primitives/self-contained",
 	"primitives/bifrost/evm-tracing-events",
 	"primitives/bifrost/ext",
+	"primitives/bifrost/rpc-debug",
 	"template/node",
 	"template/runtime",
 ]
