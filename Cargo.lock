@@ -1603,8 +1603,8 @@ dependencies = [
  "evm-gasometer",
  "evm-runtime",
  "fp-evm",
- "fp-evm-tracing-events",
  "fp-ext",
+ "fp-rpc-evm-tracing-events",
  "pallet-evm",
  "parity-scale-codec",
  "sp-core",
@@ -1716,8 +1716,8 @@ name = "fc-evm-tracing"
 version = "0.1.0"
 dependencies = [
  "ethereum-types",
- "fp-evm-tracing-events",
  "fp-rpc-debug",
+ "fp-rpc-evm-tracing-events",
  "hex",
  "parity-scale-codec",
  "serde",
@@ -2099,25 +2099,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "fp-evm-tracing-events"
-version = "0.1.0"
-dependencies = [
- "environmental",
- "ethereum",
- "ethereum-types",
- "evm",
- "evm-gasometer",
- "evm-runtime",
- "parity-scale-codec",
- "sp-runtime-interface",
-]
-
-[[package]]
 name = "fp-ext"
 version = "0.1.0"
 dependencies = [
  "ethereum-types",
- "fp-evm-tracing-events",
+ "fp-rpc-evm-tracing-events",
  "parity-scale-codec",
  "sp-externalities",
  "sp-runtime-interface",
@@ -2156,6 +2142,20 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
+]
+
+[[package]]
+name = "fp-rpc-evm-tracing-events"
+version = "0.1.0"
+dependencies = [
+ "environmental",
+ "ethereum",
+ "ethereum-types",
+ "evm",
+ "evm-gasometer",
+ "evm-runtime",
+ "parity-scale-codec",
+ "sp-runtime-interface",
 ]
 
 [[package]]
