@@ -8,7 +8,7 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-fp-evm-tracing-events = { path = "../../primitives/bifrost/rpc/evm-tracing-events", default-features = false, features = [ "evm-tracing" ] }
+fp-rpc-evm-tracing-events = { path = "../../primitives/bifrost/rpc/evm-tracing-events", default-features = false, features = [ "evm-tracing" ] }
 fp-ext = { path = "../../primitives/bifrost/ext", default-features = false }
 
 # Substrate
@@ -35,7 +35,7 @@ std = [
 	"evm-runtime/std",
 	"evm/std",
 	"evm/with-serde",
-	"fp-evm-tracing-events/std",
+	"fp-rpc-evm-tracing-events/std",
 	"fp-evm/std",
 	"fp-ext/std",
 	"pallet-evm/std",

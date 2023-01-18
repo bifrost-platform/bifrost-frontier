@@ -1,5 +1,5 @@
 [package]
-name = "fp-evm-tracing-events"
+name = "fp-rpc-evm-tracing-events"
 authors = [ "bifrost-platform" ]
 edition = "2021"
 homepage = "https://thebifrost.io"
