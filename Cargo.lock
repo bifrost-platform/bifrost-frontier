@@ -1595,6 +1595,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "evm-tracer"
+version = "0.1.0"
+dependencies = [
+ "ethereum-types",
+ "evm",
+ "evm-gasometer",
+ "evm-runtime",
+ "fp-evm",
+ "fp-evm-tracing-events",
+ "fp-ext",
+ "pallet-evm",
+ "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "exit-future"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
