@@ -21,6 +21,7 @@ members = [
 	"client/mapping-sync",
 	"client/bifrost/evm-tracing",
 	"client/bifrost/rpc-core/types",
+	"client/bifrost/rpc-core/trace",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
 	"primitives/evm",
