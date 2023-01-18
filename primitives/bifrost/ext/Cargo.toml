@@ -1,0 +1,31 @@
+[package]
+name = "fp-ext"
+authors = [ "bifrost-platform" ]
+edition = "2021"
+homepage = "https://thebifrost.io"
+license = "Apache-2.0"
+repository = "https://github.com/bifrost-platform/bifrost-frontier"
+version = "0.1.0"
+
+[dependencies]
+ethereum-types = { version = "0.14", default-features = false }
+
+# BIFROST
+fp-rpc-evm-tracing-events = { workspace = true }
+
+# Substrate
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+sp-externalities = { workspace = true }
+sp-runtime-interface = { workspace = true }
+sp-std = { workspace = true }
+
+[features]
+default = [ "std" ]
+std = [
+	"codec/std",
+	"ethereum-types/std",
+	"fp-rpc-evm-tracing-events/std",
+	"sp-externalities/std",
+	"sp-runtime-interface/std",
+	"sp-std/std",
+]
