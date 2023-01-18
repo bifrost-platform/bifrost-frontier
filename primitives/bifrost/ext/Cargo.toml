@@ -11,7 +11,7 @@ version = "0.1.0"
 ethereum-types = { version = "0.14", default-features = false }
 
 # BIFROST
-fp-evm-tracing-events = { path = "../evm-tracing-events", default-features = false }
+fp-evm-tracing-events = { path = "../rpc/evm-tracing-events", default-features = false }
 
 # Substrate
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }

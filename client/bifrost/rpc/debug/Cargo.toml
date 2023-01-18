@@ -17,7 +17,7 @@ tokio = { version = "1.10", features = [ "sync", "time" ] }
 fc-evm-tracing = { path = "../../evm-tracing" }
 fc-rpc-core-debug = { path = "../../rpc-core/debug" }
 fc-rpc-core-types = { path = "../../rpc-core/types" }
-fp-rpc-debug = { path = "../../../../primitives/bifrost/rpc-debug" }
+fp-rpc-debug = { path = "../../../../primitives/bifrost/rpc/debug" }
 
 # Substrate
 sc-client-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
