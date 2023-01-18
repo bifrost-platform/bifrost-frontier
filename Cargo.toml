@@ -22,12 +22,25 @@ members = [
 	"client/db",
 	"client/storage",
 	"client/mapping-sync",
+	"client/bifrost/evm-tracing",
+	"client/bifrost/rpc-core/types",
+	"client/bifrost/rpc-core/trace",
+	"client/bifrost/rpc-core/debug",
+	"client/bifrost/rpc-core/txpool",
+	"client/bifrost/rpc/debug",
+	"client/bifrost/rpc/trace",
+	"client/bifrost/rpc/txpool",
 	"primitives/account",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
 	"primitives/evm",
 	"primitives/rpc",
 	"primitives/self-contained",
+	"primitives/bifrost/ext",
+	"primitives/bifrost/rpc/evm-tracing-events",
+	"primitives/bifrost/rpc/debug",
+	"primitives/bifrost/rpc/txpool",
+	"runtime/evm-tracer",
 	"template/node",
 	"template/runtime",
 ]
@@ -141,6 +154,15 @@ fc-mapping-sync = { version = "2.0.0-dev", path = "client/mapping-sync", default
 fc-rpc = { version = "2.0.0-dev", path = "client/rpc", default-features = false }
 fc-rpc-core = { version = "1.1.0-dev", path = "client/rpc-core" }
 fc-storage = { version = "1.0.0-dev", path = "client/storage" }
+# Frontier BIFROST Client
+fc-evm-tracing = { version = "0.1.0", path = "client/bifrost/evm-tracing" }
+fc-rpc-debug = { version = "0.1.0", path = "client/bifrost/rpc/debug" }
+fc-rpc-trace = { version = "0.1.0", path = "client/bifrost/rpc/trace" }
+fc-rpc-txpool = { version = "0.1.0", path = "client/bifrost/rpc/txpool" }
+fc-rpc-core-debug = { version = "0.1.0", path = "client/bifrost/rpc-core/debug" }
+fc-rpc-core-trace = { version = "0.6.0", path = "client/bifrost/rpc-core/trace" }
+fc-rpc-core-txpool = { version = "0.6.0", path = "client/bifrost/rpc-core/txpool" }
+fc-rpc-core-types = { version = "0.1.0", path = "client/bifrost/rpc-core/types" }
 # Frontier Primitive
 fp-account = { version = "1.0.0-dev", path = "primitives/account", default-features = false }
 fp-consensus = { version = "2.0.0-dev", path = "primitives/consensus", default-features = false }
@@ -150,6 +172,13 @@ fp-evm = { version = "3.0.0-dev", path = "primitives/evm", default-features = fa
 fp-rpc = { version = "3.0.0-dev", path = "primitives/rpc", default-features = false }
 fp-self-contained = { version = "1.0.0-dev", path = "primitives/self-contained", default-features = false }
 fp-storage = { version = "2.0.0", path = "primitives/storage", default-features = false }
+# Frontier BIFROST Primitive
+fp-ext = { version = "0.1.0", path = "primitives/bifrost/ext", default-features = false }
+fp-rpc-debug = { version = "0.1.0", path = "primitives/bifrost/rpc/debug", default-features = false }
+fp-rpc-evm-tracing-events = { version = "0.1.0", path = "primitives/bifrost/rpc/evm-tracing-events", default-features = false }
+fp-rpc-txpool = { version = "0.6.0", path = "primitives/bifrost/rpc/txpool", default-features = false }
+# Frontier Runtime
+evm-tracer = { version = "0.1.0", path = "runtime/evm-tracer", default-features = false }
 # Frontier FRAME
 pallet-base-fee = { version = "1.0.0", path = "frame/base-fee", default-features = false }
 pallet-dynamic-fee = { version = "4.0.0-dev", path = "frame/dynamic-fee", default-features = false }
