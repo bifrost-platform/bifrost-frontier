@@ -1802,6 +1802,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "fc-rpc-core-debug"
+version = "0.1.0"
+dependencies = [
+ "ethereum-types",
+ "fc-evm-tracing",
+ "fc-rpc-core-types",
+ "futures 0.3.24",
+ "jsonrpsee",
+ "serde",
+ "serde_json",
+ "sp-core",
+]
+
+[[package]]
 name = "fc-rpc-core-trace"
 version = "0.6.0"
 dependencies = [
