@@ -1,0 +1,28 @@
+[package]
+name = "fp-rpc-txpool"
+authors = [ "bifrost-platform" ]
+edition = "2021"
+homepage = "https://thebifrost.io"
+license = "Apache-2.0"
+repository = "https://github.com/bifrost-platform/bifrost-frontier"
+version = "0.6.0"
+
+[dependencies]
+ethereum = { version = "0.14.0", default-features = false, features = [ "with-codec" ] }
+
+# Substrate
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+sp-api = { workspace = true }
+sp-io = { workspace = true }
+sp-runtime = { workspace = true }
+sp-std = { workspace = true }
+
+[features]
+default = [ "std" ]
+std = [
+	"ethereum/std",
+	"sp-api/std",
+	"sp-io/std",
+	"sp-runtime/std",
+	"sp-std/std",
+]

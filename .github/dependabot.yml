@@ -13,7 +13,7 @@ updates:
       interval: "daily"
   - package-ecosystem: cargo
     directory: "/"
-    # Handle updates for crates from github.com/paritytech/substrate manually.
+    # Handle updates for crates from github.com/bifrost-platform/bifrost-substrate manually.
     ignore:
       - dependency-name: "sc-*"
       - dependency-name: "sp-*"
