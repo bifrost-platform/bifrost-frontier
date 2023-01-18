@@ -2132,6 +2132,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fp-ext"
+version = "0.1.0"
+dependencies = [
+ "ethereum-types",
+ "fp-evm-tracing-events",
+ "parity-scale-codec",
+ "sp-externalities",
+ "sp-runtime-interface",
+ "sp-std",
+]
+
+[[package]]
 name = "fp-rpc"
 version = "3.0.0-dev"
 dependencies = [
