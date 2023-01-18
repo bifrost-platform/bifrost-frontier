@@ -28,6 +28,7 @@ members = [
 	"primitives/bifrost/ext",
 	"primitives/bifrost/rpc-debug",
 	"primitives/bifrost/rpc-txpool",
+	"runtime/evm-tracer",
 	"template/node",
 	"template/runtime",
 ]
