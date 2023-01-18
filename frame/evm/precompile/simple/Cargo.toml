@@ -9,7 +9,8 @@ repository = { workspace = true }
 [dependencies]
 ripemd = { version = "0.1", default-features = false }
 # Substrate
-sp-io = { workspace = true }
+sp-io = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32", default-features = false }
+
 # Frontier
 fp-evm = { workspace = true }
 

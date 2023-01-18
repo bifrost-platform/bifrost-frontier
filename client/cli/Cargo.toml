@@ -16,10 +16,12 @@ ethereum-types = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 # Substrate
-sc-cli = { workspace = true }
-sp-api = { workspace = true }
-sp-blockchain = { workspace = true }
-sp-runtime = { workspace = true }
+sc-cli = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sc-service = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sp-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sp-blockchain = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sp-runtime = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+
 # Frontier
 fc-db = { workspace = true }
 fp-rpc = { workspace = true, features = ["std"] }
@@ -30,10 +32,10 @@ futures = "0.3.21"
 scale-codec = { package = "parity-scale-codec", workspace = true }
 tempfile = "3.3.0"
 # Substrate
-sc-block-builder = { workspace = true }
-sc-client-db = { workspace = true }
-sp-consensus = { workspace = true }
-sp-io = { workspace = true }
-substrate-test-runtime-client = { workspace = true }
+sc-block-builder = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sc-client-db = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sp-consensus = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+sp-io = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+substrate-test-runtime-client = { version = "2.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
 # Frontier
 frontier-template-runtime = { workspace = true, features = ["std", "with-rocksdb-weights"] }
