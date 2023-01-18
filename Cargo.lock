@@ -2014,6 +2014,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fc-rpc-core-txpool"
+version = "0.6.0"
+dependencies = [
+ "ethereum",
+ "ethereum-types",
+ "fc-rpc-core",
+ "jsonrpsee",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "fc-rpc-core-types"
 version = "0.1.0"
 dependencies = [
