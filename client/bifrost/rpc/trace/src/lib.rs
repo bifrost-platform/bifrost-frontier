@@ -806,10 +806,20 @@ where
 			.map(|t| t.transaction_hash)
 			.collect();
 
+		let substrate_block_hash = match substrate_block_id {
+			BlockId::Hash(hash) => hash,
+			BlockId::Number(_) => {
+				return Err(format!(
+					"Block identifier is not a hash: {:?}",
+					substrate_block_id
+				))
+			}
+		};
+
 		// Get extrinsics (containing Ethereum ones)
 		let extrinsics = backend
 			.blockchain()
-			.body(substrate_block_id)
+			.body(substrate_block_hash)
 			.map_err(|e| {
 				format!(
 					"Blockchain error when fetching extrinsics of block {} : {:?}",
