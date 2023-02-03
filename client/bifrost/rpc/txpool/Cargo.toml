@@ -8,7 +8,7 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.6.0"
 
 [dependencies]
-jsonrpsee = { version = "0.15.0", default-features = false, features = [ "macros", "server" ] }
+jsonrpsee = { version = "0.16.2", default-features = false, features = [ "macros", "server" ] }
 rlp = "0.5"
 serde = { version = "1.0", features = [ "derive" ] }
 sha3 = "0.10"
@@ -17,14 +17,14 @@ fc-rpc-core-txpool = { path = "../../rpc-core/txpool" }
 fp-rpc-txpool = { path = "../../../../primitives/bifrost/rpc/txpool" }
 
 # Substrate
-frame-system = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sc-transaction-pool = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sc-transaction-pool-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sp-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sp-blockchain = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sp-io = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sp-runtime = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
-sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.32" }
+frame-system = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sc-transaction-pool = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sc-transaction-pool-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sp-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sp-blockchain = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sp-io = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sp-runtime = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
+sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.35" }
 
 # Frontier
 ethereum-types = "0.14"

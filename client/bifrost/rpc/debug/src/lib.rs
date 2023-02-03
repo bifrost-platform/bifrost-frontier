@@ -340,9 +340,19 @@ where
 			return Ok(Response::Block(vec![]));
 		}
 
+		let reference_hash = match reference_id {
+			BlockId::Hash(hash) => hash,
+			BlockId::Number(_) => {
+				return Err(internal_err(format!(
+					"Block identifier is not a hash: {:?}",
+					reference_id
+				)))
+			}
+		};
+
 		// Get block extrinsics.
 		let exts = blockchain
-			.body(reference_id)
+			.body(reference_hash)
 			.map_err(|e| internal_err(format!("Fail to read blockchain db: {:?}", e)))?
 			.unwrap_or_default();
 
@@ -444,9 +454,19 @@ where
 		// Get parent blockid.
 		let parent_block_id = BlockId::Hash(*header.parent_hash());
 
+		let reference_hash = match reference_id {
+			BlockId::Hash(hash) => hash,
+			BlockId::Number(_) => {
+				return Err(internal_err(format!(
+					"Block identifier is not a hash: {:?}",
+					reference_id
+				)))
+			}
+		};
+
 		// Get block extrinsics.
 		let exts = blockchain
-			.body(reference_id)
+			.body(reference_hash)
 			.map_err(|e| internal_err(format!("Fail to read blockchain db: {:?}", e)))?
 			.unwrap_or_default();
 
