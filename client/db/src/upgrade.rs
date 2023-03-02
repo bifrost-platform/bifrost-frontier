@@ -134,8 +134,8 @@ pub(crate) fn current_version(path: &Path) -> UpgradeResult<u32> {
 		Err(ref err) if err.kind() == ErrorKind::NotFound => {
 			fs::create_dir_all(path)?;
 			let mut file = fs::File::create(version_file_path(path))?;
-			file.write_all(format!("{}", CURRENT_VERSION).as_bytes())?;
-			Ok(CURRENT_VERSION)
+			file.write_all(format!("{}", 1u32).as_bytes())?;
+			Ok(1u32)
 		}
 		Err(_) => Err(UpgradeError::UnknownDatabaseVersion),
 		Ok(mut file) => {
