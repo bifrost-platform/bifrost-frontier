@@ -1,6 +1,6 @@
 pub use fc_rpc_core_debug::{DebugServer, TraceParams};
 use futures::{SinkExt, StreamExt};
-use jsonrpsee::core::RpcResult;
+use jsonrpsee::core::{async_trait, RpcResult};
 
 use tokio::{
 	self,
@@ -47,7 +47,7 @@ impl Debug {
 	}
 }
 
-#[jsonrpsee::core::async_trait]
+#[async_trait]
 impl DebugServer for Debug {
 	/// Handler for `debug_traceTransaction` request. Communicates with the service-defined task
 	/// using channels.
@@ -135,7 +135,7 @@ where
 		raw_max_memory_usage: usize,
 	) -> (impl Future<Output = ()>, DebugRequester) {
 		let (tx, mut rx): (DebugRequester, _) =
-			sc_utils::mpsc::tracing_unbounded("debug-requester");
+			sc_utils::mpsc::tracing_unbounded("debug-requester", 100_000);
 
 		let fut = async move {
 			loop {
@@ -305,7 +305,10 @@ where
 		// Get Blockchain backend
 		let blockchain = backend.blockchain();
 		// Get the header I want to work with.
-		let header = match client.header(reference_id) {
+		let Ok(hash) = client.expect_block_hash_from_id(&reference_id) else {
+			return Err(internal_err("Block header not found"))
+		};
+		let header = match client.header(hash) {
 			Ok(Some(h)) => h,
 			_ => return Err(internal_err("Block header not found")),
 		};
@@ -340,19 +343,9 @@ where
 			return Ok(Response::Block(vec![]));
 		}
 
-		let reference_hash = match reference_id {
-			BlockId::Hash(hash) => hash,
-			BlockId::Number(_) => {
-				return Err(internal_err(format!(
-					"Block identifier is not a hash: {:?}",
-					reference_id
-				)))
-			}
-		};
-
 		// Get block extrinsics.
 		let exts = blockchain
-			.body(reference_hash)
+			.body(hash)
 			.map_err(|e| internal_err(format!("Fail to read blockchain db: {:?}", e)))?
 			.unwrap_or_default();
 
@@ -447,22 +440,15 @@ where
 		// Get Blockchain backend
 		let blockchain = backend.blockchain();
 		// Get the header I want to work with.
-		let header = match client.header(reference_id) {
+		let Ok(reference_hash) = client.expect_block_hash_from_id(&reference_id) else {
+			return Err(internal_err("Block header not found"))
+		};
+		let header = match client.header(reference_hash) {
 			Ok(Some(h)) => h,
 			_ => return Err(internal_err("Block header not found")),
 		};
 		// Get parent blockid.
 		let parent_block_id = BlockId::Hash(*header.parent_hash());
-
-		let reference_hash = match reference_id {
-			BlockId::Hash(hash) => hash,
-			BlockId::Number(_) => {
-				return Err(internal_err(format!(
-					"Block identifier is not a hash: {:?}",
-					reference_id
-				)))
-			}
-		};
 
 		// Get block extrinsics.
 		let exts = blockchain

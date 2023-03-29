@@ -200,28 +200,10 @@ where
 		Ok((slot, timestamp, dynamic_fee))
 	};
 
-<<<<<<< HEAD
 	let import_queue = sc_consensus_aura::import_queue::<AuraPair, _, _, _, _, _>(
 		sc_consensus_aura::ImportQueueParams {
 			block_import: frontier_block_import.clone(),
 			justification_import: Some(Box::new(grandpa_block_import)),
-=======
-		let import_queue = sc_consensus_aura::import_queue::<AuraPair, _, _, _, _, _>(
-			sc_consensus_aura::ImportQueueParams {
-				block_import: frontier_block_import.clone(),
-				justification_import: Some(Box::new(grandpa_block_import)),
-				client: client.clone(),
-				create_inherent_data_providers,
-				spawner: &task_manager.spawn_essential_handle(),
-				registry: config.prometheus_registry(),
-				check_for_equivocation: Default::default(),
-				telemetry: telemetry.as_ref().map(|x| x.handle()),
-				compatibility_mode: sc_consensus_aura::CompatibilityMode::None,
-			},
-		)?;
-
-		Ok(sc_service::PartialComponents {
->>>>>>> e873a0d (set to bifrost-polkadot-v0.9.32)
 			client,
 			create_inherent_data_providers,
 			spawner: &task_manager.spawn_essential_handle(),
