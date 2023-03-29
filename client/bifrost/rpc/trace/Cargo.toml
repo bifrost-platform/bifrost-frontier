@@ -17,25 +17,25 @@ sha3 = "0.10"
 tokio = { version = "1.10", features = [ "sync", "time" ] }
 tracing = "0.1.34"
 
-fc-evm-tracing = { path = "../../evm-tracing" }
-fc-rpc-core-trace = { path = "../../rpc-core/trace" }
-fc-rpc-core-types = { path = "../../rpc-core/types" }
-fp-rpc-debug = { path = "../../../../primitives/bifrost/rpc/debug" }
+fc-evm-tracing = { workspace = true }
+fc-rpc-core-trace = { workspace = true }
+fc-rpc-core-types = { workspace = true }
+fp-rpc-debug = { workspace = true }
 
 # Substrate
-sc-client-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-network = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-utils = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-block-builder = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-blockchain = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-io = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-runtime = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-transaction-pool = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
+sc-client-api = { workspace = true }
+sc-network = { workspace = true }
+sc-utils = { workspace = true }
+sp-api = { workspace = true }
+sp-block-builder = { workspace = true }
+sp-blockchain = { workspace = true }
+sp-io = { workspace = true }
+sp-runtime = { workspace = true }
+sp-std = { workspace = true }
+sp-transaction-pool = { workspace = true }
 
 # Frontier
-fc-consensus = { path = "../../../consensus" }
-fc-rpc = { path = "../../../rpc" }
-fc-rpc-core = { path = "../../../rpc-core" }
-fp-rpc = { path = "../../../../primitives/rpc" }
+fc-consensus = { workspace = true }
+fc-rpc = { workspace = true, features = [ "rpc-binary-search-estimate" ] }
+fc-rpc-core = { workspace = true }
+fp-rpc = { workspace = true }

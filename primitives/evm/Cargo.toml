@@ -15,11 +15,10 @@ evm = { workspace = true, features = ["with-codec"] }
 scale-codec = { package = "parity-scale-codec", workspace = true }
 serde = { workspace = true, optional = true }
 # Substrate
-sp-core = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-sp-std = { version = "5.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-sp-runtime = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-# Substrate FRAME
-frame-support = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
+frame-support = { workspace = true }
+sp-core = { workspace = true }
+sp-runtime = { workspace = true }
+sp-std = { workspace = true }
 
 [features]
 default = ["std"]

@@ -18,12 +18,11 @@ parking_lot = "0.12.1"
 scale-codec = { package = "parity-scale-codec", workspace = true }
 smallvec = "1.10"
 # Substrate
-sc-client-db = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", features = ["rocksdb"] }
-sp-blockchain = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-core = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-database = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-runtime = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-
+sc-client-db = { workspace = true, features = ["rocksdb"] }
+sp-blockchain = { workspace = true }
+sp-core = { workspace = true }
+sp-database = { workspace = true }
+sp-runtime = { workspace = true }
 # Frontier
 fp-storage = { workspace = true, features = ["std"] }
 

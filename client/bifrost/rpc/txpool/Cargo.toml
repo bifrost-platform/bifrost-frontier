@@ -13,19 +13,19 @@ rlp = "0.5"
 serde = { version = "1.0", features = [ "derive" ] }
 sha3 = "0.10"
 
-fc-rpc-core-txpool = { path = "../../rpc-core/txpool" }
-fp-rpc-txpool = { path = "../../../../primitives/bifrost/rpc/txpool" }
+fc-rpc-core-txpool = { workspace = true }
+fp-rpc-txpool = { workspace = true }
 
 # Substrate
-frame-system = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-transaction-pool = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-transaction-pool-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-api = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-blockchain = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-io = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-runtime = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
+frame-system = { workspace = true }
+sc-transaction-pool = { workspace = true }
+sc-transaction-pool-api = { workspace = true }
+sp-api = { workspace = true }
+sp-blockchain = { workspace = true }
+sp-io = { workspace = true }
+sp-runtime = { workspace = true }
+sp-std = { workspace = true }
 
 # Frontier
 ethereum-types = "0.14"
-fc-rpc = { path = "../../../rpc" }
+fc-rpc = { workspace = true, features = [ "rpc-binary-search-estimate" ] }

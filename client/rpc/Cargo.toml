@@ -27,23 +27,22 @@ scale-codec = { package = "parity-scale-codec", workspace = true }
 tokio = { version = "1.24", features = ["sync"] }
 
 # Substrate
-prometheus-endpoint = { package = "substrate-prometheus-endpoint", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-client-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-network = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-network-common = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-rpc = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-service = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-transaction-pool = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-transaction-pool-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-block-builder = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-blockchain = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-consensus = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-core = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-io = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-runtime = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-storage = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-
+prometheus-endpoint = { workspace = true }
+sc-client-api = { workspace = true }
+sc-network = { workspace = true }
+sc-network-common = { workspace = true }
+sc-rpc = { workspace = true }
+sc-service = { workspace = true }
+sc-transaction-pool = { workspace = true }
+sc-transaction-pool-api = { workspace = true }
+sp-api = { workspace = true }
+sp-block-builder = { workspace = true }
+sp-blockchain = { workspace = true }
+sp-consensus = { workspace = true }
+sp-core = { workspace = true }
+sp-io = { workspace = true }
+sp-runtime = { workspace = true }
+sp-storage = { workspace = true }
 # Frontier
 fc-db = { workspace = true }
 fc-rpc-core = { workspace = true }
@@ -54,10 +53,10 @@ fp-storage = { workspace = true, features = ["std"] }
 [dev-dependencies]
 tempfile = "3.3.0"
 # Substrate
-sc-block-builder = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sc-client-db = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-sp-consensus = { version = "0.10.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
-substrate-test-runtime-client = { version = "2.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
+sc-block-builder = { workspace = true }
+sc-client-db = { workspace = true }
+sp-consensus = { workspace = true }
+substrate-test-runtime-client = { workspace = true }
 
 [features]
 rpc-binary-search-estimate = []

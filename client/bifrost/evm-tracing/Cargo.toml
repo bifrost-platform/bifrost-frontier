@@ -13,9 +13,9 @@ hex = { version = "0.4", features = [ "serde" ] }
 serde = { version = "1.0", features = [ "derive" ] }
 serde_json = { version = "1.0" }
 
-fp-rpc-evm-tracing-events = { path = "../../../primitives/bifrost/rpc/evm-tracing-events" }
-fp-rpc-debug = { path = "../../../primitives/bifrost/rpc/debug" }
+fp-rpc-evm-tracing-events = { workspace = true }
+fp-rpc-debug = { workspace = true }
 
 # Substrate
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
-sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
+sp-std = { workspace = true }

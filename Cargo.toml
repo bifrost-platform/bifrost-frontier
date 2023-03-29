@@ -82,6 +82,7 @@ sc-service = { version = "0.10.0-dev", git = "https://github.com/bifrost-platfor
 sc-telemetry = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
 sc-transaction-pool = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
 sc-transaction-pool-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
+sc-utils = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37" }
 # Substrate Primitive
 sp-api = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
 sp-block-builder = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
@@ -104,6 +105,8 @@ sp-timestamp = { version = "4.0.0-dev", git = "https://github.com/bifrost-platfo
 sp-transaction-pool = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
 sp-trie = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
 sp-version = { version = "5.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
+sp-externalities = { version = "0.13.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
+sp-runtime-interface = { version = "7.0.0", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
 # Substrate FRAME
 frame-benchmarking = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
 frame-executive = { version = "4.0.0-dev", git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
@@ -134,6 +137,15 @@ fc-db = { version = "2.0.0-dev", path = "client/db" }
 fc-mapping-sync = { version = "2.0.0-dev", path = "client/mapping-sync" }
 fc-rpc = { version = "2.0.0-dev", path = "client/rpc" }
 fc-rpc-core = { version = "1.1.0-dev", path = "client/rpc-core" }
+# Frontier BIFROST Client
+fc-evm-tracing = { version = "0.1.0", path = "client/bifrost/evm-tracing" }
+fc-rpc-debug = { version = "0.1.0", path = "client/bifrost/rpc/debug" }
+fc-rpc-trace = { version = "0.1.0", path = "client/bifrost/rpc/trace" }
+fc-rpc-txpool = { version = "0.1.0", path = "client/bifrost/rpc/txpool" }
+fc-rpc-core-debug = { version = "0.1.0", path = "client/bifrost/rpc-core/debug" }
+fc-rpc-core-trace = { version = "0.6.0", path = "client/bifrost/rpc-core/trace" }
+fc-rpc-core-txpool = { version = "0.6.0", path = "client/bifrost/rpc-core/txpool" }
+fc-rpc-core-types = { version = "0.1.0", path = "client/bifrost/rpc-core/types" }
 # Frontier Primitive
 fp-consensus = { version = "2.0.0-dev", path = "primitives/consensus", default-features = false }
 fp-dynamic-fee = { version = "1.0.0", path = "primitives/dynamic-fee", default-features = false }
@@ -142,6 +154,13 @@ fp-evm = { version = "3.0.0-dev", path = "primitives/evm", default-features = fa
 fp-rpc = { version = "3.0.0-dev", path = "primitives/rpc", default-features = false }
 fp-self-contained = { version = "1.0.0-dev", path = "primitives/self-contained", default-features = false }
 fp-storage = { version = "2.0.0", path = "primitives/storage", default-features = false }
+# Frontier BIFROST Primitive
+fp-ext = { version = "0.1.0", path = "primitives/bifrost/ext", default-features = false }
+fp-rpc-debug = { version = "0.1.0", path = "primitives/bifrost/rpc/debug", default-features = false }
+fp-rpc-evm-tracing-events = { version = "0.1.0", path = "primitives/bifrost/rpc/evm-tracing-events", default-features = false }
+fp-rpc-txpool = { version = "0.6.0", path = "primitives/bifrost/rpc/txpool", default-features = false }
+# Frontier Runtime
+evm-tracer = { version = "0.1.0", path = "runtime/evm-tracer", default-features = false }
 # Frontier FRAME
 pallet-base-fee = { version = "1.0.0", path = "frame/base-fee", default-features = false }
 pallet-dynamic-fee = { version = "4.0.0-dev", path = "frame/dynamic-fee", default-features = false }

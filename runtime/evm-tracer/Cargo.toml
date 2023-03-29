@@ -8,23 +8,23 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-fp-rpc-evm-tracing-events = { path = "../../primitives/bifrost/rpc/evm-tracing-events", default-features = false, features = [ "evm-tracing" ] }
-fp-ext = { path = "../../primitives/bifrost/ext", default-features = false }
+fp-rpc-evm-tracing-events = { workspace = true, features = [ "evm-tracing" ] }
+fp-ext = { workspace = true }
 
 # Substrate
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
-sp-core = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-sp-io = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-sp-runtime = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
-sp-std = { git = "https://github.com/bifrost-platform/bifrost-substrate", branch = "bifrost-polkadot-v0.9.37", default-features = false }
+sp-core = { workspace = true }
+sp-io = { workspace = true }
+sp-runtime = { workspace = true }
+sp-std = { workspace = true }
 
 # Frontier
 ethereum-types = { version = "0.14", default-features = false }
 evm = { version = "0.37.0", default-features = false, features = [ "with-codec" ] }
 evm-gasometer = { version = "0.37.0", default-features = false }
 evm-runtime = { version = "0.37.0", default-features = false }
-fp-evm = { path = "../../primitives/evm", default-features = false }
-pallet-evm = { path = "../../frame/evm", default-features = false, features = [ "forbid-evm-reentrancy" ] }
+fp-evm = { workspace = true }
+pallet-evm = { workspace = true, features = [ "forbid-evm-reentrancy" ] }
 
 [features]
 default = [ "std" ]

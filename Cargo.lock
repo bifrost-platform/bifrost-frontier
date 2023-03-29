@@ -1949,7 +1949,6 @@ dependencies = [
  "sc-block-builder",
  "sc-cli",
  "sc-client-db",
- "sc-service",
  "serde",
  "serde_json",
  "sp-api",
@@ -2367,7 +2366,6 @@ dependencies = [
  "frame-support",
  "num_enum",
  "parity-scale-codec",
- "sp-core",
  "sp-std",
 ]
 
@@ -2407,7 +2405,6 @@ dependencies = [
  "scale-info",
  "sp-api",
  "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]
@@ -2725,7 +2722,6 @@ dependencies = [
  "sc-consensus-manual-seal",
  "sc-executor",
  "sc-finality-grandpa",
- "sc-keystore",
  "sc-network",
  "sc-rpc",
  "sc-rpc-api",
@@ -2790,7 +2786,6 @@ dependencies = [
  "sp-consensus-aura",
  "sp-core",
  "sp-inherents",
- "sp-io",
  "sp-offchain",
  "sp-runtime",
  "sp-session",
@@ -5168,10 +5163,8 @@ dependencies = [
  "pallet-evm-precompile-simple",
  "pallet-timestamp",
  "parity-scale-codec",
- "primitive-types",
  "rlp",
  "scale-info",
- "serde",
  "sp-core",
  "sp-io",
  "sp-runtime",
@@ -5186,7 +5179,6 @@ dependencies = [
  "frame-system",
  "parity-scale-codec",
  "scale-info",
- "serde",
 ]
 
 [[package]]
@@ -5423,7 +5415,6 @@ name = "pallet-utility"
 version = "4.0.0-dev"
 source = "git+https://github.com/bifrost-platform/bifrost-substrate?branch=bifrost-polkadot-v0.9.37#0cd4c1413760d8cddbcb61cd622719d320432ae8"
 dependencies = [
- "frame-benchmarking",
  "frame-support",
  "frame-system",
  "parity-scale-codec",
