@@ -394,6 +394,7 @@ where
 		)),
 		filter_pool: filter_pool.clone(),
 		max_past_logs: eth_config.max_past_logs,
+		logs_request_timeout: eth_config.logs_request_timeout,
 		fee_history_cache: fee_history_cache.clone(),
 		fee_history_cache_limit,
 		execute_gas_limit_multiplier: eth_config.execute_gas_limit_multiplier,
