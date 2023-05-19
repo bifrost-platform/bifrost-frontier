@@ -47,6 +47,8 @@ pub struct EthDeps<C, P, A: ChainApi, CT, B: BlockT> {
 	pub filter_pool: Option<FilterPool>,
 	/// Maximum number of logs in a query.
 	pub max_past_logs: u32,
+	/// Timeout for eth logs query RPCs in seconds. (default 10).
+	pub logs_request_timeout: u64,
 	/// Fee history cache.
 	pub fee_history_cache: FeeHistoryCache,
 	/// Maximum fee history cache size.
@@ -71,6 +73,7 @@ impl<C, P, A: ChainApi, CT: Clone, B: BlockT> Clone for EthDeps<C, P, A, CT, B> 
 			block_data_cache: self.block_data_cache.clone(),
 			filter_pool: self.filter_pool.clone(),
 			max_past_logs: self.max_past_logs,
+			logs_request_timeout: self.logs_request_timeout,
 			fee_history_cache: self.fee_history_cache.clone(),
 			fee_history_cache_limit: self.fee_history_cache_limit,
 			execute_gas_limit_multiplier: self.execute_gas_limit_multiplier,
@@ -113,6 +116,7 @@ where
 		block_data_cache,
 		filter_pool,
 		max_past_logs,
+		logs_request_timeout,
 		fee_history_cache,
 		fee_history_cache_limit,
 		execute_gas_limit_multiplier,
@@ -150,6 +154,7 @@ where
 				filter_pool,
 				500_usize, // max stored filters
 				max_past_logs,
+				logs_request_timeout,
 				block_data_cache,
 			)
 			.into_rpc(),

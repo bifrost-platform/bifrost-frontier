@@ -42,6 +42,7 @@ pub struct EthFilter<B: BlockT, C, BE> {
 	filter_pool: FilterPool,
 	max_stored_filters: usize,
 	max_past_logs: u32,
+	logs_request_timeout: u64,
 	block_data_cache: Arc<EthBlockDataCacheTask<B>>,
 	_marker: PhantomData<BE>,
 }
@@ -53,6 +54,7 @@ impl<B: BlockT, C, BE> EthFilter<B, C, BE> {
 		filter_pool: FilterPool,
 		max_stored_filters: usize,
 		max_past_logs: u32,
+		logs_request_timeout: u64,
 		block_data_cache: Arc<EthBlockDataCacheTask<B>>,
 	) -> Self {
 		Self {
@@ -61,6 +63,7 @@ impl<B: BlockT, C, BE> EthFilter<B, C, BE> {
 			filter_pool,
 			max_stored_filters,
 			max_past_logs,
+			logs_request_timeout,
 			block_data_cache,
 			_marker: PhantomData,
 		}
@@ -235,6 +238,7 @@ where
 		let client = Arc::clone(&self.client);
 		let block_data_cache = Arc::clone(&self.block_data_cache);
 		let max_past_logs = self.max_past_logs;
+		let logs_request_timeout = self.logs_request_timeout;
 
 		match path {
 			FuturePath::Error(err) => Err(err),
@@ -267,6 +271,7 @@ where
 					&block_data_cache,
 					&mut ret,
 					max_past_logs,
+					logs_request_timeout,
 					&filter,
 					from_number,
 					current_number,
@@ -305,6 +310,7 @@ where
 		let client = Arc::clone(&self.client);
 		let block_data_cache = Arc::clone(&self.block_data_cache);
 		let max_past_logs = self.max_past_logs;
+		let logs_request_timeout = self.logs_request_timeout;
 
 		let filter = filter_result?;
 
@@ -331,6 +337,7 @@ where
 			&block_data_cache,
 			&mut ret,
 			max_past_logs,
+			logs_request_timeout,
 			&filter,
 			from_number,
 			current_number,
@@ -360,6 +367,7 @@ where
 		let block_data_cache = Arc::clone(&self.block_data_cache);
 		let backend = Arc::clone(&self.backend);
 		let max_past_logs = self.max_past_logs;
+		let logs_request_timeout = self.logs_request_timeout;
 
 		let mut ret: Vec<Log> = Vec::new();
 		if let Some(hash) = filter.block_hash {
@@ -405,6 +413,7 @@ where
 				&block_data_cache,
 				&mut ret,
 				max_past_logs,
+				logs_request_timeout,
 				&filter,
 				from_number,
 				current_number,
@@ -420,6 +429,7 @@ async fn filter_range_logs<B: BlockT, C, BE>(
 	block_data_cache: &EthBlockDataCacheTask<B>,
 	ret: &mut Vec<Log>,
 	max_past_logs: u32,
+	logs_request_timeout: u64,
 	filter: &Filter,
 	from: NumberFor<B>,
 	to: NumberFor<B>,
@@ -432,7 +442,7 @@ where
 	BE: Backend<B> + 'static,
 {
 	// Max request duration of 10 seconds.
-	let max_duration = time::Duration::from_secs(10);
+	let max_duration = time::Duration::from_secs(logs_request_timeout);
 	let begin_request = time::Instant::now();
 
 	let mut current_number = from;
