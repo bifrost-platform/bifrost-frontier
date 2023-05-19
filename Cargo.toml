@@ -190,6 +190,15 @@ fc-rpc-v2 = { path = "client/rpc-v2" }
 fc-rpc-v2-api = { path = "client/rpc-v2/api" }
 fc-rpc-v2-types = { path = "client/rpc-v2/types" }
 fc-storage = { path = "client/storage" }
+# Frontier BIFROST Client
+fc-evm-tracing = { path = "client/bifrost/evm-tracing" }
+fc-rpc-core-debug = { path = "client/bifrost/rpc-core/debug" }
+fc-rpc-core-trace = { path = "client/bifrost/rpc-core/trace" }
+fc-rpc-core-txpool = { path = "client/bifrost/rpc-core/txpool" }
+fc-rpc-core-types = { path = "client/bifrost/rpc-core/types" }
+fc-rpc-debug = { path = "client/bifrost/rpc/debug" }
+fc-rpc-trace = { path = "client/bifrost/rpc/trace" }
+fc-rpc-txpool = { path = "client/bifrost/rpc/txpool" }
 # Frontier Primitive
 fp-account = { path = "primitives/account", default-features = false }
 fp-consensus = { path = "primitives/consensus", default-features = false }
@@ -199,6 +208,13 @@ fp-evm = { path = "primitives/evm", default-features = false }
 fp-rpc = { path = "primitives/rpc", default-features = false }
 fp-self-contained = { path = "primitives/self-contained", default-features = false }
 fp-storage = { path = "primitives/storage", default-features = false }
+# Frontier BIFROST Primitive
+fp-ext = { path = "primitives/bifrost/ext", default-features = false }
+fp-rpc-debug = { path = "primitives/bifrost/rpc/debug", default-features = false }
+fp-rpc-evm-tracing-events = { path = "primitives/bifrost/rpc/evm-tracing-events", default-features = false }
+fp-rpc-txpool = { path = "primitives/bifrost/rpc/txpool", default-features = false }
+# Frontier Runtime
+evm-tracer = { path = "runtime/evm-tracer", default-features = false }
 # Frontier FRAME
 pallet-base-fee = { path = "frame/base-fee", default-features = false }
 pallet-dynamic-fee = { path = "frame/dynamic-fee", default-features = false }
