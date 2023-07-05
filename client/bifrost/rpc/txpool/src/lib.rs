@@ -11,8 +11,7 @@ use sha3::{Digest, Keccak256};
 use sp_api::{ApiExt, ProvideRuntimeApi};
 use sp_blockchain::{Error as BlockChainError, HeaderBackend, HeaderMetadata};
 use sp_runtime::traits::Block as BlockT;
-use std::collections::HashMap;
-use std::{marker::PhantomData, sync::Arc};
+use std::{collections::HashMap, marker::PhantomData, sync::Arc};
 
 use fp_rpc_txpool::{Transaction as TransactionV2, TxPoolResponse, TxPoolRuntimeApi};
 
@@ -161,5 +160,11 @@ where
 			pending: U256::from(status.ready),
 			queued: U256::from(status.future),
 		})
+	}
+}
+
+impl<B: BlockT, C, A: ChainApi> Clone for TxPool<B, C, A> {
+	fn clone(&self) -> Self {
+		Self::new(self.client.clone(), self.graph.clone())
 	}
 }
