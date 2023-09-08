@@ -1,6 +1,6 @@
 [package]
 name = "evm-tracer"
-authors = [ "bifrost-platform" ]
+authors = ["bifrost-platform"]
 edition = "2021"
 homepage = "https://thebifrost.io"
 license = "Apache-2.0"
@@ -8,26 +8,26 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-fp-rpc-evm-tracing-events = { workspace = true, features = [ "evm-tracing" ] }
 fp-ext = { workspace = true }
+fp-rpc-evm-tracing-events = { workspace = true, features = ["evm-tracing"] }
 
 # Substrate
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+codec = { package = "parity-scale-codec", version = "3.2.2", features = ["std"] }
 sp-core = { workspace = true }
 sp-io = { workspace = true }
 sp-runtime = { workspace = true }
 sp-std = { workspace = true }
 
 # Frontier
-ethereum-types = { version = "0.14", default-features = false }
-evm = { version = "0.37.0", default-features = false, features = [ "with-codec" ] }
-evm-gasometer = { version = "0.37.0", default-features = false }
-evm-runtime = { version = "0.37.0", default-features = false }
+ethereum-types = { workspace = true }
+evm = { workspace = true }
+evm-gasometer = { workspace = true }
+evm-runtime = { workspace = true }
 fp-evm = { workspace = true }
-pallet-evm = { workspace = true, features = [ "forbid-evm-reentrancy" ] }
+pallet-evm = { workspace = true, features = ["forbid-evm-reentrancy"] }
 
 [features]
-default = [ "std" ]
+default = ["std"]
 std = [
 	"codec/std",
 	"ethereum-types/std",

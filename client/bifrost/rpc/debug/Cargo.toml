@@ -1,6 +1,6 @@
 [package]
 name = "fc-rpc-debug"
-authors = [ "bifrost-platform" ]
+authors = ["bifrost-platform"]
 edition = "2021"
 homepage = "https://thebifrost.io"
 license = "Apache-2.0"
@@ -8,32 +8,32 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-futures = { version = "0.3", features = [ "compat" ] }
+futures = { version = "0.3.21", features = ["compat"] }
 hex-literal = "0.3.4"
-jsonrpsee = { version = "0.16.2", default-features = false, features = [ "macros", "server" ] }
-tokio = { version = "1.10", features = [ "sync", "time" ] }
+jsonrpsee = { version = "0.16.2", features = ["macros", "server"] }
+tokio = { version = "1.13", features = ["sync", "time"] }
 
 # BIFROST
 fc-evm-tracing = { workspace = true }
 fc-rpc-core-debug = { workspace = true }
 fc-rpc-core-types = { workspace = true }
-fp-rpc-debug = { workspace = true }
+fp-rpc-debug = { workspace = true, features = ["std"] }
 
 # Substrate
 sc-client-api = { workspace = true }
 sc-utils = { workspace = true }
-sp-api = { workspace = true }
-sp-block-builder = { workspace = true }
+sp-api = { workspace = true, features = ["std"] }
+sp-block-builder = { workspace = true, features = ["std"] }
 sp-blockchain = { workspace = true }
-sp-core = { workspace = true }
-sp-io = { workspace = true }
-sp-runtime = { workspace = true }
+sp-core = { workspace = true, features = ["std"] }
+sp-io = { workspace = true, features = ["std"] }
+sp-runtime = { workspace = true, features = ["std"] }
 
 # Frontier
-ethereum = { version = "0.14.0", default-features = false, features = [ "with-codec" ] }
-ethereum-types = "0.14"
+ethereum = { version = "0.14.0", default-features = false, features = ["std", "with-codec"] }
+ethereum-types = { version = "0.14", features = ["std"] }
 fc-consensus = { workspace = true }
 fc-db = { workspace = true }
-fc-rpc = { workspace = true, features = [ "rpc-binary-search-estimate" ] }
+fc-rpc = { workspace = true, features = ["rpc-binary-search-estimate"] }
 fc-storage = { workspace = true }
-fp-rpc = { workspace = true }
+fp-rpc = { workspace = true, features = ["std"] }
