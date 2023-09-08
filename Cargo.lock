@@ -2077,27 +2077,6 @@ dependencies = [
 
 [[package]]
 name = "evm"
-version = "0.37.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4448c65b71e8e2b9718232d84d09045eeaaccb2320494e6bd6dbf7e58fec8ff"
-dependencies = [
- "auto_impl",
- "environmental",
- "ethereum 0.14.0",
- "evm-core 0.37.0",
- "evm-gasometer 0.37.0",
- "evm-runtime 0.37.0",
- "log",
- "parity-scale-codec",
- "primitive-types",
- "rlp",
- "scale-info",
- "serde",
- "sha3",
-]
-
-[[package]]
-name = "evm"
 version = "0.41.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "767f43e9630cc36cf8ff2777cbb0121b055f0d1fd6eaaa13b46a1808f0d0e7e9"
@@ -2105,9 +2084,9 @@ dependencies = [
  "auto_impl",
  "environmental",
  "ethereum 0.15.0",
- "evm-core 0.41.0",
- "evm-gasometer 0.41.0",
- "evm-runtime 0.41.0",
+ "evm-core",
+ "evm-gasometer",
+ "evm-runtime",
  "log",
  "parity-scale-codec",
  "primitive-types",
@@ -2115,18 +2094,6 @@ dependencies = [
  "scale-info",
  "serde",
  "sha3",
-]
-
-[[package]]
-name = "evm-core"
-version = "0.37.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64c51bec0eb68a891c2575c758eaaa1d61373fc51f7caaf216b1fb5c3fea3b5d"
-dependencies = [
- "parity-scale-codec",
- "primitive-types",
- "scale-info",
- "serde",
 ]
 
 [[package]]
@@ -2143,39 +2110,14 @@ dependencies = [
 
 [[package]]
 name = "evm-gasometer"
-version = "0.37.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8b93c59c54fc26522d842f0e0d3f8e8be331c776df18ff3e540b53c2f64d509"
-dependencies = [
- "environmental",
- "evm-core 0.37.0",
- "evm-runtime 0.37.0",
- "primitive-types",
-]
-
-[[package]]
-name = "evm-gasometer"
 version = "0.41.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dc0eb591abc5cd7b05bef6a036c2bb6c66ab6c5e0c5ce94bfe377ab670b1fd7"
 dependencies = [
  "environmental",
- "evm-core 0.41.0",
- "evm-runtime 0.41.0",
+ "evm-core",
+ "evm-runtime",
  "primitive-types",
-]
-
-[[package]]
-name = "evm-runtime"
-version = "0.37.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c79b9459ce64f1a28688397c4013764ce53cd57bb84efc16b5187fa9b05b13ad"
-dependencies = [
- "auto_impl",
- "environmental",
- "evm-core 0.37.0",
- "primitive-types",
- "sha3",
 ]
 
 [[package]]
@@ -2186,7 +2128,7 @@ checksum = "84bbe09b64ae13a29514048c1bb6fda6374ac0b4f6a1f15a443348ab88ef42cd"
 dependencies = [
  "auto_impl",
  "environmental",
- "evm-core 0.41.0",
+ "evm-core",
  "primitive-types",
  "sha3",
 ]
@@ -2196,9 +2138,9 @@ name = "evm-tracer"
 version = "0.1.0"
 dependencies = [
  "ethereum-types",
- "evm 0.37.0",
- "evm-gasometer 0.37.0",
- "evm-runtime 0.37.0",
+ "evm",
+ "evm-gasometer",
+ "evm-runtime",
  "fp-evm",
  "fp-ext",
  "fp-rpc-evm-tracing-events",
@@ -2392,7 +2334,7 @@ version = "2.0.0-dev"
 dependencies = [
  "ethereum 0.15.0",
  "ethereum-types",
- "evm 0.41.1",
+ "evm",
  "fc-api",
  "fc-db",
  "fc-mapping-sync",
@@ -2552,6 +2494,7 @@ dependencies = [
  "fp-rpc-debug",
  "futures 0.3.30",
  "jsonrpsee 0.16.3",
+ "log",
  "sc-client-api",
  "sc-network",
  "sc-utils",
@@ -2564,6 +2507,7 @@ dependencies = [
  "sp-runtime",
  "sp-std",
  "sp-transaction-pool",
+ "substrate-prometheus-endpoint",
  "tokio",
  "tracing",
 ]
@@ -2841,7 +2785,7 @@ dependencies = [
 name = "fp-evm"
 version = "3.0.0-dev"
 dependencies = [
- "evm 0.41.1",
+ "evm",
  "frame-support",
  "num_enum",
  "parity-scale-codec",
@@ -2883,7 +2827,7 @@ name = "fp-rpc-debug"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.14.0",
+ "ethereum 0.15.0",
  "ethereum-types",
  "hex",
  "parity-scale-codec",
@@ -2901,11 +2845,11 @@ name = "fp-rpc-evm-tracing-events"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.14.0",
+ "ethereum 0.15.0",
  "ethereum-types",
- "evm 0.37.0",
- "evm-gasometer 0.37.0",
- "evm-runtime 0.37.0",
+ "evm",
+ "evm-gasometer",
+ "evm-runtime",
  "parity-scale-codec",
  "sp-runtime-interface",
 ]
@@ -6265,7 +6209,7 @@ version = "4.0.0-dev"
 dependencies = [
  "ethereum 0.15.0",
  "ethereum-types",
- "evm 0.41.1",
+ "evm",
  "fp-consensus",
  "fp-ethereum",
  "fp-evm",
@@ -6292,7 +6236,7 @@ name = "pallet-evm"
 version = "6.0.0-dev"
 dependencies = [
  "environmental",
- "evm 0.41.1",
+ "evm",
  "fp-account",
  "fp-evm",
  "frame-benchmarking",
@@ -6463,7 +6407,7 @@ dependencies = [
 name = "pallet-evm-test-vector-support"
 version = "1.0.0-dev"
 dependencies = [
- "evm 0.41.1",
+ "evm",
  "fp-evm",
  "hex",
  "serde",
@@ -7047,7 +6991,7 @@ version = "0.1.0"
 dependencies = [
  "derive_more",
  "environmental",
- "evm 0.41.1",
+ "evm",
  "fp-evm",
  "frame-support",
  "frame-system",
@@ -7091,7 +7035,7 @@ dependencies = [
 name = "precompile-utils-tests-external"
 version = "0.1.0"
 dependencies = [
- "evm 0.41.1",
+ "evm",
  "fp-evm",
  "frame-support",
  "frame-system",
