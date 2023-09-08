@@ -16,6 +16,9 @@ use tokio::{
 };
 use tracing::{instrument, Instrument};
 
+use prometheus_endpoint::{
+	register, Counter, PrometheusError, Registry as PrometheusRegistry, U64,
+};
 use sc_client_api::backend::{Backend, StateBackend, StorageProvider};
 use sc_utils::mpsc::TracingUnboundedSender;
 use sp_api::{ApiExt, Core, HeaderT, ProvideRuntimeApi};
@@ -50,7 +53,7 @@ pub struct Trace<B, C> {
 impl<B, C> Clone for Trace<B, C> {
 	fn clone(&self) -> Self {
 		Self {
-			_phantom: PhantomData::default(),
+			_phantom: PhantomData,
 			client: Arc::clone(&self.client),
 			requester: self.requester.clone(),
 			max_count: self.max_count,
@@ -71,7 +74,7 @@ where
 			client,
 			requester,
 			max_count,
-			_phantom: PhantomData::default(),
+			_phantom: PhantomData,
 		}
 	}
 
@@ -395,6 +398,7 @@ pub struct CacheTask<B, C, BE> {
 	cached_blocks: BTreeMap<H256, CacheBlock>,
 	batches: BTreeMap<u64, Vec<H256>>,
 	next_batch_id: u64,
+	metrics: Option<Metrics>,
 	_phantom: PhantomData<B>,
 }
 
@@ -423,6 +427,7 @@ where
 		cache_duration: Duration,
 		blocking_permits: Arc<Semaphore>,
 		overrides: Arc<OverrideHandle<B>>,
+		prometheus: Option<PrometheusRegistry>,
 	) -> (impl Future<Output = ()>, CacheRequester) {
 		// Communication with the outside world :
 		let (requester_tx, mut requester_rx) =
@@ -435,7 +440,17 @@ where
 			let mut batch_expirations = FuturesUnordered::new();
 			let (blocking_tx, mut blocking_rx) =
 				mpsc::channel(blocking_permits.available_permits() * 2);
-
+			let metrics = if let Some(registry) = prometheus {
+				match Metrics::register(&registry) {
+					Ok(metrics) => Some(metrics),
+					Err(err) => {
+						log::error!(target: "tracing", "Failed to register metrics {err:?}");
+						None
+					}
+				}
+			} else {
+				None
+			};
 			// Contains the inner state of the cache task, excluding the pooled futures/channels.
 			// Having this object allow to refactor each event into its own function, simplifying
 			// the main loop.
@@ -446,6 +461,7 @@ where
 				cached_blocks: BTreeMap::new(),
 				batches: BTreeMap::new(),
 				next_batch_id: 0,
+				metrics,
 				_phantom: Default::default(),
 			};
 
@@ -621,6 +637,9 @@ where
 						block
 					);
 					waiting_requests.push(sender);
+					if let Some(metrics) = &self.metrics {
+						metrics.tracing_cache_misses.inc();
+					}
 				}
 				CacheBlockState::Cached { traces, .. } => {
 					tracing::warn!(
@@ -628,6 +647,9 @@ where
 						block
 					);
 					let _ = sender.send(traces.clone());
+					if let Some(metrics) = &self.metrics {
+						metrics.tracing_cache_hits.inc();
+					}
 				}
 			}
 		} else {
@@ -861,5 +883,27 @@ where
 			}
 		}
 		Ok(traces)
+	}
+}
+
+/// Prometheus metrics for tracing.
+#[derive(Clone)]
+pub(crate) struct Metrics {
+	tracing_cache_hits: Counter<U64>,
+	tracing_cache_misses: Counter<U64>,
+}
+
+impl Metrics {
+	pub(crate) fn register(registry: &PrometheusRegistry) -> Result<Self, PrometheusError> {
+		Ok(Self {
+			tracing_cache_hits: register(
+				Counter::new("tracing_cache_hits", "Number of tracing cache hits.")?,
+				registry,
+			)?,
+			tracing_cache_misses: register(
+				Counter::new("tracing_cache_misses", "Number of tracing cache misses.")?,
+				registry,
+			)?,
+		})
 	}
 }

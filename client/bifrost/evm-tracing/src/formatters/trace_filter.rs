@@ -1,10 +1,13 @@
 use super::blockscout::BlockscoutCallInner as CallInner;
-use crate::listeners::call_list::Listener;
-use crate::types::{
-	block::{
-		TransactionTrace, TransactionTraceAction, TransactionTraceOutput, TransactionTraceResult,
+use crate::{
+	listeners::call_list::Listener,
+	types::{
+		block::{
+			TransactionTrace, TransactionTraceAction, TransactionTraceOutput,
+			TransactionTraceResult,
+		},
+		CallResult, CreateResult, CreateType,
 	},
-	CallResult, CreateResult, CreateType,
 };
 use ethereum_types::H256;
 
