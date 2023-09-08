@@ -1,6 +1,6 @@
 [package]
 name = "fc-evm-tracing"
-authors = [ "bifrost-platform" ]
+authors = ["bifrost-platform"]
 edition = "2021"
 homepage = "https://thebifrost.io"
 license = "Apache-2.0"
@@ -8,14 +8,14 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-ethereum-types = { version = "0.14" }
-hex = { version = "0.4", features = [ "serde" ] }
-serde = { version = "1.0", features = [ "derive" ] }
+ethereum-types = { version = "0.14", features = ["std"] }
+hex = { version = "0.4.3", features = ["serde"] }
+serde = { version = "1.0.101", features = ["derive", "std"] }
 serde_json = { version = "1.0" }
 
-fp-rpc-evm-tracing-events = { workspace = true }
-fp-rpc-debug = { workspace = true }
+fp-rpc-debug = { workspace = true, features = ["std"] }
+fp-rpc-evm-tracing-events = { workspace = true, features = ["std"] }
 
 # Substrate
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
-sp-std = { workspace = true }
+codec = { package = "parity-scale-codec", version = "3.2.2", features = ["std"] }
+sp-std = { workspace = true, features = ["std"] }
