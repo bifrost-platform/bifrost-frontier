@@ -1,5 +1,4 @@
-use crate::listeners::raw::Listener;
-use crate::types::single::TransactionTrace;
+use crate::{listeners::raw::Listener, types::single::TransactionTrace};
 
 pub struct Formatter;
 
@@ -12,7 +11,7 @@ impl super::ResponseFormatter for Formatter {
 			None
 		} else {
 			Some(TransactionTrace::Raw {
-				step_logs: listener.step_logs,
+				struct_logs: listener.struct_logs,
 				gas: listener.final_gas.into(),
 				return_value: listener.return_value,
 			})
