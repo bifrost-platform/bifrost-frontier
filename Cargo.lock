@@ -2591,6 +2591,7 @@ dependencies = [
  "fp-rpc-debug",
  "futures 0.3.28",
  "jsonrpsee",
+ "log",
  "sc-client-api",
  "sc-network",
  "sc-utils",
@@ -2603,6 +2604,7 @@ dependencies = [
  "sp-runtime",
  "sp-std",
  "sp-transaction-pool",
+ "substrate-prometheus-endpoint",
  "tokio",
  "tracing",
 ]
