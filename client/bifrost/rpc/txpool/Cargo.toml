@@ -1,20 +1,20 @@
 [package]
 name = "fc-rpc-txpool"
-authors = [ "bifrost-platform" ]
+authors = ["bifrost-platform"]
 edition = "2021"
-homepage = "https://thebifrost.io"
+homepage = "https://www.bifrostnetwork.com"
 license = "Apache-2.0"
 repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.6.0"
 
 [dependencies]
-jsonrpsee = { version = "0.16.2", default-features = false, features = [ "macros", "server" ] }
-rlp = "0.5"
-serde = { version = "1.0", features = [ "derive" ] }
-sha3 = "0.10"
+jsonrpsee = { workspace = true, features = ["macros", "server"] }
+rlp = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+sha3 = { workspace = true }
 
 fc-rpc-core-txpool = { workspace = true }
-fp-rpc-txpool = { workspace = true }
+fp-rpc-txpool = { workspace = true, features = ["std"] }
 
 # Substrate
 frame-system = { workspace = true }
@@ -27,5 +27,5 @@ sp-runtime = { workspace = true }
 sp-std = { workspace = true }
 
 # Frontier
-ethereum-types = "0.14"
-fc-rpc = { workspace = true, features = [ "rpc-binary-search-estimate" ] }
+ethereum-types = { workspace = true, features = ["std"] }
+fc-rpc = { workspace = true, features = ["rpc-binary-search-estimate"] }
