@@ -2,18 +2,21 @@
 name = "fc-rpc-core-debug"
 authors = ["bifrost-platform"]
 edition = "2021"
-homepage = "https://thebifrost.io"
+homepage = "https://www.bifrostnetwork.com"
 license = "Apache-2.0"
 repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-ethereum-types = { version = "0.14", features = ["std"] }
+ethereum-types = { workspace = true, features = ["std"] }
+futures = { workspace = true, features = ["compat"] }
+jsonrpsee = { workspace = true, features = ["macros", "server"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# Substrate
+sp-core = { workspace = true, features = ["std"] }
+
+# Frontier
 fc-evm-tracing = { workspace = true }
 fc-rpc-core-types = { workspace = true }
-futures = { version = "0.3.21", features = ["compat"] }
-jsonrpsee = { version = "0.16.2", default-features = false, features = ["macros", "server"] }
-serde = { version = "1.0.101", features = ["derive"] }
-serde_json = { version = "1.0" }
-
-sp-core = { workspace = true, features = ["std"] }
