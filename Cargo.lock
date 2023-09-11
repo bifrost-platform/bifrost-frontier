@@ -857,12 +857,6 @@ checksum = "6107fe1be6682a68940da878d9e9f5e90ca5745b3dec9fd1bb393c8777d4f581"
 
 [[package]]
 name = "base64"
-version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
-
-[[package]]
-name = "base64"
 version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d297deb1925b89f2ccc13d7635fa0714f12c87adce1c75356b39ca9b7178567"
@@ -880,20 +874,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55248b47b0caf0546f7988906588779981c43bb1bc9d0c44087278f80cdb44ba"
 
 [[package]]
-name = "beef"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a8241f3ebb85c056b509d4327ad0358fbbba6ffb340bf388f26350aeda225b1"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "binary-merkle-tree"
 version = "16.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "parity-scale-codec",
 ]
@@ -2007,7 +1992,7 @@ dependencies = [
  "async-trait",
  "cumulus-primitives-core",
  "futures 0.3.31",
- "jsonrpsee-core 0.24.9",
+ "jsonrpsee-core",
  "parity-scale-codec",
  "polkadot-overseer",
  "sc-client-api",
@@ -2686,50 +2671,17 @@ dependencies = [
 
 [[package]]
 name = "ethbloom"
-version = "0.13.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c22d4b5885b6aa2fe5e8b9329fb8d232bf739e434e6b87347c63bdd00c120f60"
-dependencies = [
- "crunchy",
- "fixed-hash",
- "impl-codec 0.6.0",
- "impl-rlp 0.3.0",
- "impl-serde 0.4.0",
- "scale-info",
- "tiny-keccak",
-]
-
-[[package]]
-name = "ethbloom"
 version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c321610643004cf908ec0f5f2aa0d8f1f8e14b540562a2887a1111ff1ecbf7b"
 dependencies = [
  "crunchy",
  "fixed-hash",
- "impl-codec 0.7.1",
- "impl-rlp 0.4.0",
- "impl-serde 0.5.0",
+ "impl-codec",
+ "impl-rlp",
+ "impl-serde",
  "scale-info",
  "tiny-keccak",
-]
-
-[[package]]
-name = "ethereum"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a89fb87a9e103f71b903b80b670200b54cc67a07578f070681f1fffb7396fb7"
-dependencies = [
- "bytes",
- "ethereum-types 0.14.1",
- "hash-db 0.15.2",
- "hash256-std-hasher",
- "parity-scale-codec",
- "rlp 0.5.2",
- "scale-info",
- "serde",
- "sha3",
- "triehash",
 ]
 
 [[package]]
@@ -2739,12 +2691,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ee371ebb7479ed3258617557ab0b3247e741075cb6b02b820d188f68da44441"
 dependencies = [
  "bytes",
- "ethereum-types 0.15.1",
- "hash-db 0.16.0",
+ "ethereum-types",
+ "hash-db",
  "hash256-std-hasher",
  "k256",
  "parity-scale-codec",
- "rlp 0.6.1",
+ "rlp",
  "scale-info",
  "serde",
  "sha3",
@@ -2753,32 +2705,16 @@ dependencies = [
 
 [[package]]
 name = "ethereum-types"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02d215cbf040552efcbe99a38372fe80ab9d00268e20012b79fcd0f073edd8ee"
-dependencies = [
- "ethbloom 0.13.0",
- "fixed-hash",
- "impl-codec 0.6.0",
- "impl-rlp 0.3.0",
- "impl-serde 0.4.0",
- "primitive-types 0.12.2",
- "scale-info",
- "uint 0.9.5",
-]
-
-[[package]]
-name = "ethereum-types"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1ab15ed80916029f878e0267c3a9f92b67df55e79af370bf66199059ae2b4ee3"
 dependencies = [
- "ethbloom 0.14.1",
+ "ethbloom",
  "fixed-hash",
- "impl-codec 0.7.1",
- "impl-rlp 0.4.0",
- "impl-serde 0.5.0",
- "primitive-types 0.13.1",
+ "impl-codec",
+ "impl-rlp",
+ "impl-serde",
+ "primitive-types",
  "scale-info",
  "uint 0.10.0",
 ]
@@ -2818,14 +2754,14 @@ checksum = "b54f188e7563c1702ecefdef92c8b2c4be8941b84a50684907a747f87121aace"
 dependencies = [
  "auto_impl",
  "environmental",
- "ethereum 0.18.2",
+ "ethereum",
  "evm-core",
  "evm-gasometer",
  "evm-runtime",
  "log",
  "parity-scale-codec",
- "primitive-types 0.13.1",
- "rlp 0.6.1",
+ "primitive-types",
+ "rlp",
  "scale-info",
  "serde",
  "sha3",
@@ -2837,7 +2773,7 @@ version = "0.43.0"
 source = "git+https://github.com/rust-ethereum/evm?branch=v0.x#5afc2663b77244031c74f693efecd0f8a7df561f"
 dependencies = [
  "parity-scale-codec",
- "primitive-types 0.13.1",
+ "primitive-types",
  "scale-info",
  "serde",
 ]
@@ -2850,7 +2786,7 @@ dependencies = [
  "environmental",
  "evm-core",
  "evm-runtime",
- "primitive-types 0.13.1",
+ "primitive-types",
 ]
 
 [[package]]
@@ -2861,7 +2797,7 @@ dependencies = [
  "auto_impl",
  "environmental",
  "evm-core",
- "primitive-types 0.13.1",
+ "primitive-types",
  "sha3",
 ]
 
@@ -2869,7 +2805,7 @@ dependencies = [
 name = "evm-tracer"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.15.1",
+ "ethereum-types",
  "evm",
  "evm-gasometer",
  "evm-runtime",
@@ -2966,7 +2902,7 @@ name = "fc-cli"
 version = "1.0.0-dev"
 dependencies = [
  "clap",
- "ethereum-types 0.15.1",
+ "ethereum-types",
  "fc-api",
  "fc-db",
  "fp-rpc",
@@ -3008,7 +2944,7 @@ name = "fc-db"
 version = "2.0.0-dev"
 dependencies = [
  "async-trait",
- "ethereum 0.18.2",
+ "ethereum",
  "fc-api",
  "fc-storage",
  "fp-consensus",
@@ -3041,7 +2977,7 @@ dependencies = [
 name = "fc-evm-tracing"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "fp-rpc-debug",
  "fp-rpc-evm-tracing-events",
  "hex",
@@ -3055,8 +2991,8 @@ dependencies = [
 name = "fc-mapping-sync"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "fc-db",
  "fc-storage",
  "fp-consensus",
@@ -3088,8 +3024,8 @@ dependencies = [
 name = "fc-rpc"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "evm",
  "fc-api",
  "fc-db",
@@ -3101,14 +3037,14 @@ dependencies = [
  "fp-storage",
  "futures 0.3.31",
  "hex",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "libsecp256k1",
  "log",
  "pallet-evm",
  "parity-scale-codec",
  "prometheus",
  "rand 0.9.1",
- "rlp 0.6.1",
+ "rlp",
  "sc-block-builder",
  "sc-client-api",
  "sc-client-db",
@@ -3146,10 +3082,10 @@ dependencies = [
 name = "fc-rpc-core"
 version = "1.1.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
- "jsonrpsee 0.24.9",
- "rlp 0.6.1",
+ "ethereum",
+ "ethereum-types",
+ "jsonrpsee",
+ "rlp",
  "rustc-hex",
  "serde",
  "serde_json",
@@ -3160,11 +3096,11 @@ dependencies = [
 name = "fc-rpc-core-debug"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "fc-evm-tracing",
  "fc-rpc-core-types",
  "futures 0.3.31",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
  "sp-core",
@@ -3174,11 +3110,11 @@ dependencies = [
 name = "fc-rpc-core-trace"
 version = "0.6.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "fc-evm-tracing",
  "fc-rpc-core-types",
  "futures 0.3.31",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
 ]
@@ -3187,10 +3123,10 @@ dependencies = [
 name = "fc-rpc-core-txpool"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
- "ethereum-types 0.14.1",
+ "ethereum",
+ "ethereum-types",
  "fc-rpc-core",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
 ]
@@ -3199,7 +3135,7 @@ dependencies = [
 name = "fc-rpc-core-types"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "serde",
  "serde_json",
 ]
@@ -3208,8 +3144,8 @@ dependencies = [
 name = "fc-rpc-debug"
 version = "0.1.0"
 dependencies = [
- "ethereum 0.14.0",
- "ethereum-types 0.14.1",
+ "ethereum",
+ "ethereum-types",
  "fc-consensus",
  "fc-db",
  "fc-evm-tracing",
@@ -3220,8 +3156,8 @@ dependencies = [
  "fp-rpc",
  "fp-rpc-debug",
  "futures 0.3.31",
- "hex-literal 0.3.4",
- "jsonrpsee 0.16.3",
+ "hex-literal",
+ "jsonrpsee",
  "sc-client-api",
  "sc-utils",
  "sp-api",
@@ -3237,8 +3173,8 @@ dependencies = [
 name = "fc-rpc-trace"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
- "ethereum-types 0.14.1",
+ "ethereum",
+ "ethereum-types",
  "fc-consensus",
  "fc-evm-tracing",
  "fc-rpc",
@@ -3249,7 +3185,7 @@ dependencies = [
  "fp-rpc",
  "fp-rpc-debug",
  "futures 0.3.31",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "log",
  "sc-client-api",
  "sc-network",
@@ -3272,13 +3208,13 @@ dependencies = [
 name = "fc-rpc-txpool"
 version = "0.6.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "fc-rpc",
  "fc-rpc-core-txpool",
  "fp-rpc-txpool",
  "frame-system",
- "jsonrpsee 0.16.3",
- "rlp 0.5.2",
+ "jsonrpsee",
+ "rlp",
  "sc-transaction-pool",
  "sc-transaction-pool-api",
  "serde",
@@ -3298,9 +3234,9 @@ version = "2.0.0-dev"
 name = "fc-rpc-v2-api"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.15.1",
+ "ethereum-types",
  "fc-rpc-v2-types",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
 ]
 
 [[package]]
@@ -3308,7 +3244,7 @@ name = "fc-rpc-v2-types"
 version = "0.1.0"
 dependencies = [
  "const-hex",
- "ethereum-types 0.15.1",
+ "ethereum-types",
  "serde",
  "serde_json",
 ]
@@ -3317,8 +3253,8 @@ dependencies = [
 name = "fc-storage"
 version = "1.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "fp-rpc",
  "fp-storage",
  "parity-scale-codec",
@@ -3497,7 +3433,7 @@ name = "fp-account"
 version = "1.0.0-dev"
 dependencies = [
  "hex",
- "impl-serde 0.5.0",
+ "impl-serde",
  "libsecp256k1",
  "log",
  "parity-scale-codec",
@@ -3514,7 +3450,7 @@ dependencies = [
 name = "fp-consensus"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
+ "ethereum",
  "parity-scale-codec",
  "sp-core",
  "sp-runtime",
@@ -3533,8 +3469,8 @@ dependencies = [
 name = "fp-ethereum"
 version = "1.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "fp-evm",
  "frame-support",
  "parity-scale-codec",
@@ -3559,7 +3495,7 @@ dependencies = [
 name = "fp-ext"
 version = "0.1.0"
 dependencies = [
- "ethereum-types 0.14.1",
+ "ethereum-types",
  "fp-rpc-evm-tracing-events",
  "parity-scale-codec",
  "sp-externalities",
@@ -3571,8 +3507,8 @@ dependencies = [
 name = "fp-rpc"
 version = "3.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "fp-evm",
  "parity-scale-codec",
  "scale-info",
@@ -3587,12 +3523,11 @@ name = "fp-rpc-debug"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "hex",
  "parity-scale-codec",
  "serde",
- "serde_json",
  "sp-api",
  "sp-core",
  "sp-io",
@@ -3605,8 +3540,8 @@ name = "fp-rpc-evm-tracing-events"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "evm",
  "evm-gasometer",
  "evm-runtime",
@@ -3618,7 +3553,7 @@ dependencies = [
 name = "fp-rpc-txpool"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
+ "ethereum",
  "parity-scale-codec",
  "scale-info",
  "sp-api",
@@ -3997,8 +3932,8 @@ dependencies = [
  "frame-system-rpc-runtime-api",
  "frontier-template-runtime",
  "futures 0.3.31",
- "hex-literal 0.4.1",
- "jsonrpsee 0.24.9",
+ "hex-literal",
+ "jsonrpsee",
  "log",
  "pallet-transaction-payment",
  "pallet-transaction-payment-rpc",
@@ -4390,19 +4325,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
 
 [[package]]
-name = "globset"
-version = "0.4.16"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54a1028dfc5f5df5da8a56a73e6c153c9a9708ec57232470703592a3f18e49f5"
-dependencies = [
- "aho-corasick",
- "bstr",
- "log",
- "regex-automata 0.4.9",
- "regex-syntax 0.8.5",
-]
-
-[[package]]
 name = "governor"
 version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4484,12 +4406,6 @@ dependencies = [
  "serde_json",
  "thiserror 1.0.69",
 ]
-
-[[package]]
-name = "hash-db"
-version = "0.15.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d23bd4e7b5eda0d0f3a307e8b381fdc8ba9000f26fbe912250c0a4cc3956364a"
 
 [[package]]
 name = "hash-db"
@@ -4602,12 +4518,6 @@ checksum = "5313b072ce3c597065a808dbf612c4c8e8590bdbf8b579508bf7a762c5eae6cd"
 dependencies = [
  "arrayvec 0.7.6",
 ]
-
-[[package]]
-name = "hex-literal"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
 name = "hex-literal"
@@ -5095,15 +5005,6 @@ dependencies = [
 
 [[package]]
 name = "impl-codec"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba6a270039626615617f3f36d15fc827041df3b78c439da2cadfa47455a77f2f"
-dependencies = [
- "parity-scale-codec",
-]
-
-[[package]]
-name = "impl-codec"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d40b9d5e17727407e55028eafc22b2dc68781786e6d7eb8a21103f5058e3a14"
@@ -5124,29 +5025,11 @@ dependencies = [
 
 [[package]]
 name = "impl-rlp"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f28220f89297a075ddc7245cd538076ee98b01f2a9c23a53a4f1105d5a322808"
-dependencies = [
- "rlp 0.5.2",
-]
-
-[[package]]
-name = "impl-rlp"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "54ed8ad1f3877f7e775b8cbf30ed1bd3209a95401817f19a0eb4402d13f8cf90"
 dependencies = [
- "rlp 0.6.1",
-]
-
-[[package]]
-name = "impl-serde"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebc88fc67028ae3db0c853baa36269d398d5f45b6982f95549ff5def78c935cd"
-dependencies = [
- "serde",
+ "rlp",
 ]
 
 [[package]]
@@ -5400,28 +5283,15 @@ dependencies = [
 
 [[package]]
 name = "jsonrpsee"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "367a292944c07385839818bb71c8d76611138e2dedb0677d035b8da21d29c78b"
-dependencies = [
- "jsonrpsee-core 0.16.3",
- "jsonrpsee-proc-macros 0.16.3",
- "jsonrpsee-server 0.16.3",
- "jsonrpsee-types 0.16.3",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee"
 version = "0.24.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37b26c20e2178756451cfeb0661fb74c47dd5988cb7e3939de7e9241fd604d42"
 dependencies = [
  "jsonrpsee-client-transport",
- "jsonrpsee-core 0.24.9",
- "jsonrpsee-proc-macros 0.24.9",
- "jsonrpsee-server 0.24.9",
- "jsonrpsee-types 0.24.9",
+ "jsonrpsee-core",
+ "jsonrpsee-proc-macros",
+ "jsonrpsee-server",
+ "jsonrpsee-types",
  "jsonrpsee-ws-client",
  "tokio",
  "tracing",
@@ -5436,44 +5306,18 @@ dependencies = [
  "base64 0.22.1",
  "futures-util",
  "http 1.3.1",
- "jsonrpsee-core 0.24.9",
+ "jsonrpsee-core",
  "pin-project",
  "rustls",
  "rustls-pki-types",
  "rustls-platform-verifier",
- "soketto 0.8.1",
+ "soketto",
  "thiserror 1.0.69",
  "tokio",
  "tokio-rustls",
  "tokio-util",
  "tracing",
  "url",
-]
-
-[[package]]
-name = "jsonrpsee-core"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b5dde66c53d6dcdc8caea1874a45632ec0fcf5b437789f1e45766a1512ce803"
-dependencies = [
- "anyhow",
- "arrayvec 0.7.6",
- "async-trait",
- "beef",
- "futures-channel",
- "futures-util",
- "globset",
- "hyper 0.14.32",
- "jsonrpsee-types 0.16.3",
- "parking_lot 0.12.4",
- "rand 0.8.5",
- "rustc-hash 1.1.0",
- "serde",
- "serde_json",
- "soketto 0.7.1",
- "thiserror 1.0.69",
- "tokio",
- "tracing",
 ]
 
 [[package]]
@@ -5489,7 +5333,7 @@ dependencies = [
  "http 1.3.1",
  "http-body 1.0.1",
  "http-body-util",
- "jsonrpsee-types 0.24.9",
+ "jsonrpsee-types",
  "parking_lot 0.12.4",
  "pin-project",
  "rand 0.8.5",
@@ -5500,19 +5344,6 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-proc-macros"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44e8ab85614a08792b9bff6c8feee23be78c98d0182d4c622c05256ab553892a"
-dependencies = [
- "heck 0.4.1",
- "proc-macro-crate 1.1.3",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -5530,28 +5361,6 @@ dependencies = [
 
 [[package]]
 name = "jsonrpsee-server"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf4d945a6008c9b03db3354fb3c83ee02d2faa9f2e755ec1dfb69c3551b8f4ba"
-dependencies = [
- "futures-channel",
- "futures-util",
- "http 0.2.12",
- "hyper 0.14.32",
- "jsonrpsee-core 0.16.3",
- "jsonrpsee-types 0.16.3",
- "serde",
- "serde_json",
- "soketto 0.7.1",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-server"
 version = "0.24.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55e363146da18e50ad2b51a0a7925fc423137a0b1371af8235b1c231a0647328"
@@ -5562,32 +5371,18 @@ dependencies = [
  "http-body-util",
  "hyper 1.6.0",
  "hyper-util",
- "jsonrpsee-core 0.24.9",
- "jsonrpsee-types 0.24.9",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
  "pin-project",
  "route-recognizer",
  "serde",
  "serde_json",
- "soketto 0.8.1",
+ "soketto",
  "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "tokio-util",
  "tower",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-types"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "245ba8e5aa633dd1c1e4fae72bce06e71f42d34c14a2767c6b4d173b57bee5e5"
-dependencies = [
- "anyhow",
- "beef",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
  "tracing",
 ]
 
@@ -5611,8 +5406,8 @@ checksum = "01b3323d890aa384f12148e8d2a1fd18eb66e9e7e825f9de4fa53bcc19b93eef"
 dependencies = [
  "http 1.3.1",
  "jsonrpsee-client-transport",
- "jsonrpsee-core 0.24.9",
- "jsonrpsee-types 0.24.9",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
  "url",
 ]
 
@@ -5645,7 +5440,7 @@ version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e1b8590eb6148af2ea2d75f38e7d29f5ca970d5a4df456b3ef19b8b415d0264"
 dependencies = [
- "primitive-types 0.13.1",
+ "primitive-types",
  "tiny-keccak",
 ]
 
@@ -6127,7 +5922,7 @@ dependencies = [
  "parking_lot 0.12.4",
  "pin-project-lite",
  "rw-stream-sink",
- "soketto 0.8.1",
+ "soketto",
  "thiserror 1.0.69",
  "tracing",
  "url",
@@ -6580,7 +6375,7 @@ version = "0.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "808b50db46293432a45e63bc15ea51e0ab4c0a1647b8eb114e31a3e698dd6fbe"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
 ]
 
 [[package]]
@@ -7497,8 +7292,8 @@ dependencies = [
 name = "pallet-ethereum"
 version = "4.0.0-dev"
 dependencies = [
- "ethereum 0.18.2",
- "ethereum-types 0.15.1",
+ "ethereum",
+ "ethereum-types",
  "evm",
  "fp-consensus",
  "fp-ethereum",
@@ -7514,7 +7309,7 @@ dependencies = [
  "pallet-evm",
  "pallet-timestamp",
  "parity-scale-codec",
- "rlp 0.6.1",
+ "rlp",
  "scale-info",
  "sp-core",
  "sp-io",
@@ -7535,9 +7330,9 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "hash-db 0.16.0",
+ "hash-db",
  "hex",
- "hex-literal 0.4.1",
+ "hex-literal",
  "impl-trait-for-tuples",
  "log",
  "pallet-balances",
@@ -7936,7 +7731,7 @@ name = "pallet-transaction-payment-rpc"
 version = "43.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "pallet-transaction-payment-rpc-runtime-api",
  "parity-scale-codec",
  "sp-api",
@@ -8466,7 +8261,7 @@ version = "18.1.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
  "bitvec",
- "hex-literal 0.4.1",
+ "hex-literal",
  "log",
  "parity-scale-codec",
  "polkadot-core-primitives",
@@ -8884,7 +8679,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "hex",
- "hex-literal 0.4.1",
+ "hex-literal",
  "impl-trait-for-tuples",
  "log",
  "num_enum",
@@ -8927,7 +8722,7 @@ dependencies = [
  "fp-evm",
  "frame-support",
  "frame-system",
- "hex-literal 0.4.1",
+ "hex-literal",
  "pallet-balances",
  "pallet-evm",
  "pallet-timestamp",
@@ -8977,29 +8772,15 @@ dependencies = [
 
 [[package]]
 name = "primitive-types"
-version = "0.12.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b34d9fd68ae0b74a41b21c03c2f62847aa0ffea044eee893b4c140b37e244e2"
-dependencies = [
- "fixed-hash",
- "impl-codec 0.6.0",
- "impl-rlp 0.3.0",
- "impl-serde 0.4.0",
- "scale-info",
- "uint 0.9.5",
-]
-
-[[package]]
-name = "primitive-types"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d15600a7d856470b7d278b3fe0e311fe28c2526348549f8ef2ff7db3299c87f5"
 dependencies = [
  "fixed-hash",
- "impl-codec 0.7.1",
+ "impl-codec",
  "impl-num-traits",
- "impl-rlp 0.4.0",
- "impl-serde 0.5.0",
+ "impl-rlp",
+ "impl-serde",
  "scale-info",
  "uint 0.10.0",
 ]
@@ -9664,35 +9445,13 @@ dependencies = [
 
 [[package]]
 name = "rlp"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb919243f34364b6bd2fc10ef797edbfa75f33c252e7998527479c6d6b47e1ec"
-dependencies = [
- "bytes",
- "rlp-derive 0.1.0",
- "rustc-hex",
-]
-
-[[package]]
-name = "rlp"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fa24e92bb2a83198bb76d661a71df9f7076b8c420b8696e4d3d97d50d94479e3"
 dependencies = [
  "bytes",
- "rlp-derive 0.2.0",
+ "rlp-derive",
  "rustc-hex",
-]
-
-[[package]]
-name = "rlp-derive"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e33d7b2abe0c340d8797fe2907d3f20d3b5ea5908683618bfe80df7f621f672a"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -10173,7 +9932,7 @@ name = "sc-client-db"
 version = "0.46.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "kvdb",
  "kvdb-memorydb",
  "kvdb-rocksdb",
@@ -10348,7 +10107,7 @@ dependencies = [
  "async-trait",
  "futures 0.3.31",
  "futures-timer",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "sc-client-api",
@@ -10740,7 +10499,7 @@ version = "44.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
  "futures 0.3.31",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.4",
@@ -10771,7 +10530,7 @@ name = "sc-rpc-api"
 version = "0.48.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "parity-scale-codec",
  "sc-chain-spec",
  "sc-mixnet",
@@ -10799,7 +10558,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.6.0",
  "ip_network",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "sc-rpc-api",
  "serde",
@@ -10820,7 +10579,7 @@ dependencies = [
  "futures-util",
  "hex",
  "itertools 0.11.0",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.4",
@@ -10867,7 +10626,7 @@ dependencies = [
  "exit-future",
  "futures 0.3.31",
  "futures-timer",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.4",
@@ -11106,7 +10865,7 @@ checksum = "f8ae9cc099ae85ff28820210732b00f019546f36f33225f509fe25d5816864a0"
 dependencies = [
  "derive_more 1.0.0",
  "parity-scale-codec",
- "primitive-types 0.13.1",
+ "primitive-types",
  "scale-bits",
  "scale-decode-derive",
  "scale-type-resolver",
@@ -11133,7 +10892,7 @@ checksum = "5f9271284d05d0749c40771c46180ce89905fd95aa72a2a2fddb4b7c0aa424db"
 dependencies = [
  "derive_more 1.0.0",
  "parity-scale-codec",
- "primitive-types 0.13.1",
+ "primitive-types",
  "scale-bits",
  "scale-encode-derive",
  "scale-type-resolver",
@@ -11501,19 +11260,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sha-1"
-version = "0.9.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99cd6713db3cf16b6c84e06321e049a9b9f699826e16096d23bbcc44d15d51a6"
-dependencies = [
- "block-buffer 0.9.0",
- "cfg-if",
- "cpufeatures",
- "digest 0.9.0",
- "opaque-debug 0.3.1",
-]
-
-[[package]]
 name = "sha1"
 version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11745,7 +11491,7 @@ dependencies = [
  "siphasher 1.0.1",
  "slab",
  "smallvec",
- "soketto 0.8.1",
+ "soketto",
  "twox-hash",
  "wasmi",
  "x25519-dalek",
@@ -11823,22 +11569,6 @@ dependencies = [
 
 [[package]]
 name = "soketto"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41d1c5305e39e09653383c2c7244f2f78b3bcae37cf50c64cb4789c9f5096ec2"
-dependencies = [
- "base64 0.13.1",
- "bytes",
- "futures 0.3.31",
- "http 0.2.12",
- "httparse",
- "log",
- "rand 0.8.5",
- "sha-1",
-]
-
-[[package]]
-name = "soketto"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2e859df029d160cb88608f5d7df7fb4753fd20fdfb4de5644f3d8b8440841721"
@@ -11859,7 +11589,7 @@ version = "36.0.1"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
  "docify",
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "parity-scale-codec",
  "scale-info",
@@ -12046,9 +11776,9 @@ dependencies = [
  "dyn-clonable",
  "ed25519-zebra",
  "futures 0.3.31",
- "hash-db 0.16.0",
+ "hash-db",
  "hash256-std-hasher",
- "impl-serde 0.5.0",
+ "impl-serde",
  "itertools 0.11.0",
  "k256",
  "libsecp256k1",
@@ -12058,7 +11788,7 @@ dependencies = [
  "parity-scale-codec",
  "parking_lot 0.12.4",
  "paste",
- "primitive-types 0.13.1",
+ "primitive-types",
  "rand 0.8.5",
  "scale-info",
  "schnorrkel",
@@ -12344,7 +12074,7 @@ dependencies = [
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "polkavm-derive 0.18.0",
- "primitive-types 0.13.1",
+ "primitive-types",
  "sp-externalities",
  "sp-runtime-interface-proc-macro",
  "sp-std",
@@ -12399,7 +12129,7 @@ name = "sp-state-machine"
 version = "0.45.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.4",
@@ -12448,7 +12178,7 @@ name = "sp-storage"
 version = "22.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "impl-serde 0.5.0",
+ "impl-serde",
  "parity-scale-codec",
  "ref-cast",
  "serde",
@@ -12507,7 +12237,7 @@ version = "39.1.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
  "ahash",
- "hash-db 0.16.0",
+ "hash-db",
  "memory-db",
  "nohash-hasher",
  "parity-scale-codec",
@@ -12528,7 +12258,7 @@ name = "sp-version"
 version = "39.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2503#2982c32b3a9014b73abdb2d5544ae291ad5b7d01"
 dependencies = [
- "impl-serde 0.5.0",
+ "impl-serde",
  "parity-scale-codec",
  "parity-wasm",
  "scale-info",
@@ -12763,7 +12493,7 @@ dependencies = [
  "derive-where",
  "environmental",
  "frame-support",
- "hex-literal 0.4.1",
+ "hex-literal",
  "impl-trait-for-tuples",
  "log",
  "parity-scale-codec",
@@ -12947,7 +12677,7 @@ dependencies = [
  "docify",
  "frame-system-rpc-runtime-api",
  "futures 0.3.31",
- "jsonrpsee 0.24.9",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "sc-rpc-api",
@@ -13114,11 +12844,11 @@ dependencies = [
  "frame-metadata 17.0.0",
  "futures 0.3.31",
  "hex",
- "impl-serde 0.5.0",
- "jsonrpsee 0.24.9",
+ "impl-serde",
+ "jsonrpsee",
  "parity-scale-codec",
  "polkadot-sdk",
- "primitive-types 0.13.1",
+ "primitive-types",
  "scale-bits",
  "scale-decode 0.14.0",
  "scale-encode",
@@ -13168,11 +12898,11 @@ dependencies = [
  "frame-metadata 17.0.0",
  "hashbrown 0.14.5",
  "hex",
- "impl-serde 0.5.0",
+ "impl-serde",
  "keccak-hash",
  "parity-scale-codec",
  "polkadot-sdk",
- "primitive-types 0.13.1",
+ "primitive-types",
  "scale-bits",
  "scale-decode 0.14.0",
  "scale-encode",
@@ -13828,7 +13558,7 @@ version = "0.30.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c0670ab45a6b7002c7df369fee950a27cf29ae0474343fd3a15aa15f691e7a6"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "rustc-hex",
  "smallvec",
@@ -13840,17 +13570,7 @@ version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4ed310ef5ab98f5fa467900ed906cb9232dd5376597e00fd4cba2a449d06c0b"
 dependencies = [
- "hash-db 0.16.0",
-]
-
-[[package]]
-name = "triehash"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1631b201eb031b563d2e85ca18ec8092508e262a3196ce9bd10a67ec87b9f5c"
-dependencies = [
- "hash-db 0.15.2",
- "rlp 0.5.2",
+ "hash-db",
 ]
 
 [[package]]

@@ -9,8 +9,8 @@ use crate::listeners::call_list::Listener;
 use crate::types::serialization::*;
 use serde::Serialize;
 
-use codec::{Decode, Encode};
 use ethereum_types::{H160, U256};
+use scale_codec::{Decode, Encode};
 use sp_std::{cmp::Ordering, vec::Vec};
 
 pub struct Formatter;
