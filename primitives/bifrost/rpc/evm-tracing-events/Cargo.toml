@@ -2,29 +2,29 @@
 name = "fp-rpc-evm-tracing-events"
 authors = ["bifrost-platform"]
 edition = "2021"
-homepage = "https://thebifrost.io"
+homepage = "https://www.bifrostnetwork.com"
 license = "Apache-2.0"
 repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-environmental = { version = "1.1.2", default-features = false }
+environmental = { workspace = true }
 
 # Substrate
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+scale-codec = { workspace = true }
 sp-runtime-interface = { workspace = true }
 
 # Ethereum
-ethereum = { workspace = true }
+ethereum = { workspace = true, features = ["with-codec"] }
 ethereum-types = { workspace = true }
-evm = { workspace = true }
+evm = { workspace = true, features = ["with-codec"] }
 evm-gasometer = { workspace = true }
 evm-runtime = { workspace = true }
 
 [features]
 default = ["std"]
 std = [
-	"codec/std",
+	"scale-codec/std",
 	"environmental/std",
 	"ethereum-types/std",
 	"ethereum/std",

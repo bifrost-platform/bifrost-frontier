@@ -1998,31 +1998,13 @@ dependencies = [
 
 [[package]]
 name = "ethereum"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a89fb87a9e103f71b903b80b670200b54cc67a07578f070681f1fffb7396fb7"
-dependencies = [
- "bytes",
- "ethereum-types",
- "hash-db 0.15.2",
- "hash256-std-hasher",
- "parity-scale-codec",
- "rlp",
- "scale-info",
- "serde",
- "sha3",
- "triehash",
-]
-
-[[package]]
-name = "ethereum"
 version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2e04d24d20b8ff2235cffbf242d5092de3aa45f77c5270ddbfadd2778ca13fea"
 dependencies = [
  "bytes",
  "ethereum-types",
- "hash-db 0.16.0",
+ "hash-db",
  "hash256-std-hasher",
  "parity-scale-codec",
  "rlp",
@@ -2083,7 +2065,7 @@ checksum = "767f43e9630cc36cf8ff2777cbb0121b055f0d1fd6eaaa13b46a1808f0d0e7e9"
 dependencies = [
  "auto_impl",
  "environmental",
- "ethereum 0.15.0",
+ "ethereum",
  "evm-core",
  "evm-gasometer",
  "evm-runtime",
@@ -2252,7 +2234,7 @@ name = "fc-db"
 version = "2.0.0-dev"
 dependencies = [
  "async-trait",
- "ethereum 0.15.0",
+ "ethereum",
  "fc-api",
  "fc-storage",
  "fp-consensus",
@@ -2299,7 +2281,7 @@ dependencies = [
 name = "fc-mapping-sync"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "fc-db",
  "fc-storage",
@@ -2332,7 +2314,7 @@ dependencies = [
 name = "fc-rpc"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "evm",
  "fc-api",
@@ -2345,7 +2327,7 @@ dependencies = [
  "fp-storage",
  "futures 0.3.30",
  "hex",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "libsecp256k1",
  "log",
  "pallet-evm",
@@ -2390,9 +2372,9 @@ dependencies = [
 name = "fc-rpc-core"
 version = "1.1.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "rlp",
  "rustc-hex",
  "serde",
@@ -2408,7 +2390,7 @@ dependencies = [
  "fc-evm-tracing",
  "fc-rpc-core-types",
  "futures 0.3.30",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
  "sp-core",
@@ -2422,7 +2404,7 @@ dependencies = [
  "fc-evm-tracing",
  "fc-rpc-core-types",
  "futures 0.3.30",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
 ]
@@ -2431,10 +2413,10 @@ dependencies = [
 name = "fc-rpc-core-txpool"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
+ "ethereum",
  "ethereum-types",
  "fc-rpc-core",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "serde",
  "serde_json",
 ]
@@ -2452,7 +2434,7 @@ dependencies = [
 name = "fc-rpc-debug"
 version = "0.1.0"
 dependencies = [
- "ethereum 0.14.0",
+ "ethereum",
  "ethereum-types",
  "fc-consensus",
  "fc-db",
@@ -2464,8 +2446,8 @@ dependencies = [
  "fp-rpc",
  "fp-rpc-debug",
  "futures 0.3.30",
- "hex-literal 0.3.4",
- "jsonrpsee 0.16.3",
+ "hex-literal",
+ "jsonrpsee",
  "sc-client-api",
  "sc-utils",
  "sp-api",
@@ -2481,7 +2463,7 @@ dependencies = [
 name = "fc-rpc-trace"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
+ "ethereum",
  "ethereum-types",
  "fc-consensus",
  "fc-evm-tracing",
@@ -2493,7 +2475,7 @@ dependencies = [
  "fp-rpc",
  "fp-rpc-debug",
  "futures 0.3.30",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "log",
  "sc-client-api",
  "sc-network",
@@ -2521,7 +2503,7 @@ dependencies = [
  "fc-rpc-core-txpool",
  "fp-rpc-txpool",
  "frame-system",
- "jsonrpsee 0.16.3",
+ "jsonrpsee",
  "rlp",
  "sc-transaction-pool",
  "sc-transaction-pool-api",
@@ -2544,7 +2526,7 @@ version = "0.1.0"
 dependencies = [
  "ethereum-types",
  "fc-rpc-v2-types",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
 ]
 
 [[package]]
@@ -2561,7 +2543,7 @@ dependencies = [
 name = "fc-storage"
 version = "1.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "fp-rpc",
  "fp-storage",
@@ -2755,7 +2737,7 @@ dependencies = [
 name = "fp-consensus"
 version = "2.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "parity-scale-codec",
  "sp-core",
  "sp-runtime",
@@ -2774,7 +2756,7 @@ dependencies = [
 name = "fp-ethereum"
 version = "1.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "fp-evm",
  "frame-support",
@@ -2811,7 +2793,7 @@ dependencies = [
 name = "fp-rpc"
 version = "3.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "fp-evm",
  "parity-scale-codec",
@@ -2827,12 +2809,11 @@ name = "fp-rpc-debug"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "hex",
  "parity-scale-codec",
  "serde",
- "serde_json",
  "sp-api",
  "sp-core",
  "sp-io",
@@ -2845,7 +2826,7 @@ name = "fp-rpc-evm-tracing-events"
 version = "0.1.0"
 dependencies = [
  "environmental",
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "evm",
  "evm-gasometer",
@@ -2858,7 +2839,7 @@ dependencies = [
 name = "fp-rpc-txpool"
 version = "0.6.0"
 dependencies = [
- "ethereum 0.14.0",
+ "ethereum",
  "parity-scale-codec",
  "scale-info",
  "sp-api",
@@ -3172,8 +3153,8 @@ dependencies = [
  "frame-system-rpc-runtime-api",
  "frontier-template-runtime",
  "futures 0.3.30",
- "hex-literal 0.4.1",
- "jsonrpsee 0.23.2",
+ "hex-literal",
+ "jsonrpsee",
  "log",
  "pallet-transaction-payment",
  "pallet-transaction-payment-rpc",
@@ -3535,19 +3516,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
-name = "globset"
-version = "0.4.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "15f1ce686646e7f1e19bf7d5533fe443a45dbfb990e00629110797578b42fb19"
-dependencies = [
- "aho-corasick",
- "bstr",
- "log",
- "regex-automata 0.4.7",
- "regex-syntax 0.8.4",
-]
-
-[[package]]
 name = "governor"
 version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3629,12 +3597,6 @@ dependencies = [
  "serde_json",
  "thiserror",
 ]
-
-[[package]]
-name = "hash-db"
-version = "0.15.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d23bd4e7b5eda0d0f3a307e8b381fdc8ba9000f26fbe912250c0a4cc3956364a"
 
 [[package]]
 name = "hash-db"
@@ -3726,12 +3688,6 @@ name = "hex-conservative"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "212ab92002354b4819390025006c897e8140934349e8635c9b077f47b4dcbd20"
-
-[[package]]
-name = "hex-literal"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ebdb29d2ea9ed0083cd8cece49bbd968021bd99b0849edb4a9a7ee0fdf6a4e0"
 
 [[package]]
 name = "hex-literal"
@@ -4261,53 +4217,14 @@ dependencies = [
 
 [[package]]
 name = "jsonrpsee"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "367a292944c07385839818bb71c8d76611138e2dedb0677d035b8da21d29c78b"
-dependencies = [
- "jsonrpsee-core 0.16.3",
- "jsonrpsee-proc-macros 0.16.3",
- "jsonrpsee-server 0.16.3",
- "jsonrpsee-types 0.16.3",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee"
 version = "0.23.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b089779ad7f80768693755a031cc14a7766aba707cbe886674e3f79e9b7e47"
 dependencies = [
- "jsonrpsee-core 0.23.2",
- "jsonrpsee-proc-macros 0.23.2",
- "jsonrpsee-server 0.23.2",
- "jsonrpsee-types 0.23.2",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-core"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b5dde66c53d6dcdc8caea1874a45632ec0fcf5b437789f1e45766a1512ce803"
-dependencies = [
- "anyhow",
- "arrayvec",
- "async-trait",
- "beef",
- "futures-channel",
- "futures-util",
- "globset",
- "hyper 0.14.30",
- "jsonrpsee-types 0.16.3",
- "parking_lot 0.12.3",
- "rand",
- "rustc-hash",
- "serde",
- "serde_json",
- "soketto 0.7.1",
- "thiserror",
+ "jsonrpsee-core",
+ "jsonrpsee-proc-macros",
+ "jsonrpsee-server",
+ "jsonrpsee-types",
  "tokio",
  "tracing",
 ]
@@ -4326,7 +4243,7 @@ dependencies = [
  "http 1.1.0",
  "http-body 1.0.1",
  "http-body-util",
- "jsonrpsee-types 0.23.2",
+ "jsonrpsee-types",
  "parking_lot 0.12.3",
  "rand",
  "rustc-hash",
@@ -4335,19 +4252,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-proc-macros"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44e8ab85614a08792b9bff6c8feee23be78c98d0182d4c622c05256ab553892a"
-dependencies = [
- "heck 0.4.1",
- "proc-macro-crate 1.1.3",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -4365,28 +4269,6 @@ dependencies = [
 
 [[package]]
 name = "jsonrpsee-server"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf4d945a6008c9b03db3354fb3c83ee02d2faa9f2e755ec1dfb69c3551b8f4ba"
-dependencies = [
- "futures-channel",
- "futures-util",
- "http 0.2.12",
- "hyper 0.14.30",
- "jsonrpsee-core 0.16.3",
- "jsonrpsee-types 0.16.3",
- "serde",
- "serde_json",
- "soketto 0.7.1",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-server"
 version = "0.23.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "654afab2e92e5d88ebd8a39d6074483f3f2bfdf91c5ac57fe285e7127cdd4f51"
@@ -4398,32 +4280,18 @@ dependencies = [
  "http-body-util",
  "hyper 1.4.1",
  "hyper-util",
- "jsonrpsee-core 0.23.2",
- "jsonrpsee-types 0.23.2",
+ "jsonrpsee-core",
+ "jsonrpsee-types",
  "pin-project",
  "route-recognizer",
  "serde",
  "serde_json",
- "soketto 0.8.0",
+ "soketto",
  "thiserror",
  "tokio",
  "tokio-stream",
  "tokio-util",
  "tower",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-types"
-version = "0.16.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "245ba8e5aa633dd1c1e4fae72bce06e71f42d34c14a2767c6b4d173b57bee5e5"
-dependencies = [
- "anyhow",
- "beef",
- "serde",
- "serde_json",
- "thiserror",
  "tracing",
 ]
 
@@ -4954,7 +4822,7 @@ dependencies = [
  "parking_lot 0.12.3",
  "pin-project-lite",
  "rw-stream-sink",
- "soketto 0.8.0",
+ "soketto",
  "thiserror",
  "url",
  "webpki-roots",
@@ -5139,7 +5007,7 @@ dependencies = [
  "ed25519-dalek",
  "futures 0.3.30",
  "futures-timer",
- "hex-literal 0.4.1",
+ "hex-literal",
  "indexmap 2.5.0",
  "libc",
  "mockall 0.12.1",
@@ -5392,7 +5260,7 @@ version = "0.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "808b50db46293432a45e63bc15ea51e0ab4c0a1647b8eb114e31a3e698dd6fbe"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
 ]
 
 [[package]]
@@ -6207,7 +6075,7 @@ dependencies = [
 name = "pallet-ethereum"
 version = "4.0.0-dev"
 dependencies = [
- "ethereum 0.15.0",
+ "ethereum",
  "ethereum-types",
  "evm",
  "fp-consensus",
@@ -6242,9 +6110,9 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "hash-db 0.16.0",
+ "hash-db",
  "hex",
- "hex-literal 0.4.1",
+ "hex-literal",
  "impl-trait-for-tuples",
  "log",
  "pallet-balances",
@@ -6527,7 +6395,7 @@ name = "pallet-transaction-payment-rpc"
 version = "40.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "pallet-transaction-payment-rpc-runtime-api",
  "parity-scale-codec",
  "sp-api",
@@ -6996,7 +6864,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "hex",
- "hex-literal 0.4.1",
+ "hex-literal",
  "impl-trait-for-tuples",
  "log",
  "num_enum",
@@ -7039,7 +6907,7 @@ dependencies = [
  "fp-evm",
  "frame-support",
  "frame-system",
- "hex-literal 0.4.1",
+ "hex-literal",
  "pallet-balances",
  "pallet-evm",
  "pallet-timestamp",
@@ -8194,7 +8062,7 @@ name = "sc-client-db"
 version = "0.44.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "kvdb",
  "kvdb-memorydb",
  "kvdb-rocksdb",
@@ -8370,7 +8238,7 @@ dependencies = [
  "async-trait",
  "futures 0.3.30",
  "futures-timer",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "sc-client-api",
@@ -8775,7 +8643,7 @@ version = "39.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
  "futures 0.3.30",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.3",
@@ -8806,7 +8674,7 @@ name = "sc-rpc-api"
 version = "0.43.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "parity-scale-codec",
  "sc-chain-spec",
  "sc-mixnet",
@@ -8833,7 +8701,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.4.1",
  "ip_network",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "serde",
  "serde_json",
@@ -8852,7 +8720,7 @@ dependencies = [
  "futures 0.3.30",
  "futures-util",
  "hex",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.3",
@@ -8885,7 +8753,7 @@ dependencies = [
  "exit-future",
  "futures 0.3.30",
  "futures-timer",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.3",
@@ -9378,19 +9246,6 @@ dependencies = [
 
 [[package]]
 name = "sha-1"
-version = "0.9.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99cd6713db3cf16b6c84e06321e049a9b9f699826e16096d23bbcc44d15d51a6"
-dependencies = [
- "block-buffer 0.9.0",
- "cfg-if",
- "cpufeatures",
- "digest 0.9.0",
- "opaque-debug 0.3.1",
-]
-
-[[package]]
-name = "sha-1"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f5058ada175748e33390e40e872bd0fe59a19f265d0158daa551c5a88a76009c"
@@ -9609,22 +9464,6 @@ dependencies = [
 
 [[package]]
 name = "soketto"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41d1c5305e39e09653383c2c7244f2f78b3bcae37cf50c64cb4789c9f5096ec2"
-dependencies = [
- "base64 0.13.1",
- "bytes",
- "futures 0.3.30",
- "http 0.2.12",
- "httparse",
- "log",
- "rand",
- "sha-1 0.9.8",
-]
-
-[[package]]
-name = "soketto"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37468c595637c10857701c990f93a40ce0e357cedb0953d1c26c8d8027f9bb53"
@@ -9645,7 +9484,7 @@ version = "34.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
  "docify",
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "parity-scale-codec",
  "scale-info",
@@ -9820,7 +9659,7 @@ dependencies = [
  "dyn-clonable",
  "ed25519-zebra",
  "futures 0.3.30",
- "hash-db 0.16.0",
+ "hash-db",
  "hash256-std-hasher",
  "impl-serde",
  "itertools 0.11.0",
@@ -10127,7 +9966,7 @@ name = "sp-state-machine"
 version = "0.43.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "parity-scale-codec",
  "parking_lot 0.12.3",
@@ -10235,7 +10074,7 @@ version = "37.0.0"
 source = "git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-stable2407#d8e2d11864ca21deb9a753b86cb2396b1c531acb"
 dependencies = [
  "ahash",
- "hash-db 0.16.0",
+ "hash-db",
  "lazy_static",
  "memory-db",
  "nohash-hasher",
@@ -10548,7 +10387,7 @@ dependencies = [
  "openssl-sys",
  "sctp-proto",
  "serde",
- "sha-1 0.10.1",
+ "sha-1",
  "thiserror",
  "tracing",
 ]
@@ -10638,7 +10477,7 @@ dependencies = [
  "docify",
  "frame-system-rpc-runtime-api",
  "futures 0.3.30",
- "jsonrpsee 0.23.2",
+ "jsonrpsee",
  "log",
  "parity-scale-codec",
  "sc-rpc-api",
@@ -11265,7 +11104,7 @@ version = "0.29.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c992b4f40c234a074d48a757efeabb1a6be88af84c0c23f7ca158950cb0ae7f"
 dependencies = [
- "hash-db 0.16.0",
+ "hash-db",
  "log",
  "rustc-hex",
  "smallvec",
@@ -11277,17 +11116,7 @@ version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4ed310ef5ab98f5fa467900ed906cb9232dd5376597e00fd4cba2a449d06c0b"
 dependencies = [
- "hash-db 0.16.0",
-]
-
-[[package]]
-name = "triehash"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1631b201eb031b563d2e85ca18ec8092508e262a3196ce9bd10a67ec87b9f5c"
-dependencies = [
- "hash-db 0.15.2",
- "rlp",
+ "hash-db",
 ]
 
 [[package]]

@@ -2,8 +2,8 @@
 
 extern crate alloc;
 
-use codec::{Decode, Encode};
 use ethereum_types::{H160, H256};
+use scale_codec::{Decode, Encode};
 use sp_std::vec::Vec;
 
 pub mod block;
