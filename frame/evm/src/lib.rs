@@ -76,9 +76,8 @@ use frame_support::{
 	traits::{
 		tokens::{
 			currency::Currency,
-			fungible::Inspect,
 			imbalance::{Imbalance, OnUnbalanced, SignedImbalance},
-			ExistenceRequirement, Fortitude, Preservation, WithdrawReasons,
+			ExistenceRequirement, Preservation, WithdrawReasons,
 		},
 		FindAuthor, Get, Time,
 	},
@@ -139,7 +138,7 @@ pub mod pallet {
 		/// Mapping from address to account id.
 		type AddressMapping: AddressMapping<Self::AccountId>;
 		/// Currency type for withdraw and balance storage.
-		type Currency: Currency<Self::AccountId> + Inspect<Self::AccountId>;
+		type Currency: Currency<Self::AccountId>;
 
 		/// The overarching event type.
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
@@ -851,8 +850,7 @@ impl<T: Config> Pallet<T> {
 
 		let nonce = frame_system::Pallet::<T>::account_nonce(&account_id);
 		// keepalive `true` takes into account ExistentialDeposit as part of what's considered liquid balance.
-		let balance =
-			T::Currency::evm_reducible_balance(&account_id, Preservation::Preserve, Fortitude::Polite);
+		let balance = T::Currency::evm_reducible_balance(&account_id, Preservation::Preserve);
 
 		(
 			Account {
