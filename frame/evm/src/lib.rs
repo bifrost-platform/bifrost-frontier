@@ -850,7 +850,7 @@ impl<T: Config> Pallet<T> {
 
 		let nonce = frame_system::Pallet::<T>::account_nonce(&account_id);
 		// keepalive `true` takes into account ExistentialDeposit as part of what's considered liquid balance.
-		let balance = T::Currency::evm_reducible_balance(&account_id, Preservation::Preserve);
+		let balance = T::Currency::transferrable_balance(&account_id, Preservation::Preserve);
 
 		(
 			Account {
