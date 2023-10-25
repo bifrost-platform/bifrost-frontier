@@ -84,7 +84,6 @@ use frame_support::{
 		fungible::{Balanced, Credit, Debt},
 		tokens::{
 			currency::Currency,
-			fungible::Inspect,
 			imbalance::{Imbalance, OnUnbalanced, SignedImbalance},
 			ExistenceRequirement, Fortitude, Precision, Preservation, WithdrawReasons,
 		},
@@ -145,7 +144,7 @@ pub mod pallet {
 		/// Mapping from address to account id.
 		type AddressMapping: AddressMapping<Self::AccountId>;
 		/// Currency type for withdraw and balance storage.
-		type Currency: Currency<Self::AccountId> + Inspect<Self::AccountId>;
+		type Currency: Currency<Self::AccountId>;
 
 		/// The overarching event type.
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
@@ -907,7 +906,7 @@ impl<T: Config> Pallet<T> {
 		let account_id = T::AddressMapping::into_account_id(*address);
 		let nonce = frame_system::Pallet::<T>::account_nonce(&account_id);
 		let balance =
-			T::Currency::evm_reducible_balance(&account_id, Preservation::Preserve, Fortitude::Polite);
+			T::Currency::reducible_balance(&account_id, Preservation::Preserve, Fortitude::Polite);
 
 		(
 			Account {
