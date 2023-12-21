@@ -4,7 +4,7 @@ use super::Context;
 use alloc::vec::Vec;
 use ethereum_types::{H160, H256, U256};
 pub use evm::{ExitError, ExitReason, ExitSucceed, Opcode};
-use parity_scale_codec::{Decode, Encode};
+use scale_codec::{Decode, Encode};
 
 #[derive(Clone, Debug, Encode, Decode, PartialEq, Eq)]
 pub struct Stack {

@@ -11,12 +11,11 @@ repository = { workspace = true }
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-scale-codec = { package = "parity-scale-codec", workspace = true }
+scale-codec = { workspace = true }
 scale-info = { workspace = true }
 # Substrate
 frame-support = { workspace = true }
 frame-system = { workspace = true }
-sp-runtime = { workspace = true }
 
 [features]
 default = ["std"]
@@ -26,7 +25,6 @@ std = [
 	# Substrate
 	"frame-support/std",
 	"frame-system/std",
-	"sp-runtime/std",
 ]
 try-runtime = [
 	"frame-support/try-runtime",

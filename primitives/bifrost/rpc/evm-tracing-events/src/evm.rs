@@ -3,7 +3,7 @@ extern crate alloc;
 use alloc::vec::Vec;
 use ethereum_types::{H160, H256, U256};
 use evm::ExitReason;
-use parity_scale_codec::{Decode, Encode};
+use scale_codec::{Decode, Encode};
 
 #[derive(Clone, Debug, Encode, Decode, PartialEq, Eq)]
 pub struct Transfer {

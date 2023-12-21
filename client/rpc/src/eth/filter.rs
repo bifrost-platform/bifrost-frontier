@@ -710,8 +710,8 @@ where
 	BE: Backend<B> + 'static,
 {
 	// Max request duration of 10 seconds.
-	let max_duration = time::Duration::from_secs(logs_request_timeout);
-	let begin_request = time::Instant::now();
+	let max_duration = Duration::from_secs(logs_request_timeout);
+	let begin_request = Instant::now();
 
 	let mut current_number = from;
 

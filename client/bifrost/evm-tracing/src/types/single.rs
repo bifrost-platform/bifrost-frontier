@@ -7,7 +7,7 @@ use super::serialization::*;
 use serde::Serialize;
 
 use ethereum_types::{H256, U256};
-use parity_scale_codec::{Decode, Encode};
+use scale_codec::{Decode, Encode};
 use sp_std::{collections::btree_map::BTreeMap, vec::Vec};
 
 #[derive(Clone, Eq, PartialEq, Debug, Encode, Decode, Serialize)]

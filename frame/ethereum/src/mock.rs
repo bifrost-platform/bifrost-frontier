@@ -95,6 +95,7 @@ impl pallet_balances::Config for Test {
 	type AccountStore = System;
 	type ReserveIdentifier = ();
 	type RuntimeHoldReason = ();
+	type RuntimeFreezeReason = ();
 	type FreezeIdentifier = ();
 	type MaxLocks = MaxLocks;
 	type MaxReserves = ();

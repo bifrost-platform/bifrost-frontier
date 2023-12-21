@@ -24,6 +24,7 @@ fc-rpc-core-types = { workspace = true }
 fp-rpc-debug = { workspace = true }
 
 # Substrate
+prometheus-endpoint = { workspace = true }
 sc-client-api = { workspace = true }
 sc-network = { workspace = true }
 sc-utils = { workspace = true }
@@ -34,7 +35,6 @@ sp-io = { workspace = true }
 sp-runtime = { workspace = true }
 sp-std = { workspace = true }
 sp-transaction-pool = { workspace = true }
-substrate-prometheus-endpoint = { workspace = true }
 
 # Frontier
 fc-consensus = { workspace = true }

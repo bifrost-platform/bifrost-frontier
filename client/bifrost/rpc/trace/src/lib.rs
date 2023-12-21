@@ -24,7 +24,7 @@ use sp_blockchain::{
 	Backend as BlockchainBackend, Error as BlockChainError, HeaderBackend, HeaderMetadata,
 };
 use sp_runtime::traits::{BlakeTwo256, Block as BlockT};
-use substrate_prometheus_endpoint::{
+use prometheus_endpoint::{
 	register, Counter, PrometheusError, Registry as PrometheusRegistry, U64,
 };
 

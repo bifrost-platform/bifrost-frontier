@@ -1,4 +1,4 @@
-use parity_scale_codec::{Decode, Encode};
+use scale_codec::{Decode, Encode};
 
 #[derive(Debug, Default, Copy, Clone, Encode, Decode, PartialEq, Eq)]
 pub struct Snapshot {

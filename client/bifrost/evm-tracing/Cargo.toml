@@ -17,5 +17,5 @@ fp-rpc-debug = { workspace = true, features = ["std"] }
 fp-rpc-evm-tracing-events = { workspace = true, features = ["std"] }
 
 # Substrate
-parity-scale-codec = { workspace = true, features = ["std"] }
+scale-codec = { workspace = true, features = ["std"] }
 sp-std = { workspace = true, features = ["std"] }
