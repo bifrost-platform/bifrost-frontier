@@ -61,7 +61,7 @@ edition = "2021"
 repository = "https://github.com/paritytech/frontier/"
 
 [workspace.dependencies]
-async-trait = "0.1"
+async-trait = "0.1.74"
 bn = { package = "substrate-bn", version = "0.6", default-features = false }
 clap = { version = "4.5", features = ["derive", "deprecated"] }
 const-hex = { version = "1.12", default-features = false, features = ["alloc"] }
