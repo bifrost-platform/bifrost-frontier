@@ -65,9 +65,9 @@ ethereum = { version = "0.14.0", default-features = false, features = [
 	"with-codec",
 ] }
 ethereum-types = { version = "0.14.1", default-features = false }
-evm = { git = "https://github.com/rust-blockchain/evm", rev = "b7b82c7e1fc57b7449d6dfa6826600de37cc1e65", default-features = false }
-evm-gasometer = { git = "https://github.com/rust-blockchain/evm", rev = "b7b82c7e1fc57b7449d6dfa6826600de37cc1e65", default-features = false }
-evm-runtime = { git = "https://github.com/rust-blockchain/evm", rev = "b7b82c7e1fc57b7449d6dfa6826600de37cc1e65", default-features = false }
+evm = { git = "https://github.com/bifrost-platform/evm", default-features = false, branch = "bifrost-polkadot-v1.3.0" }
+evm-gasometer = { git = "https://github.com/bifrost-platform/evm", default-features = false, branch = "bifrost-polkadot-v1.3.0" }
+evm-runtime = { git = "https://github.com/bifrost-platform/evm", default-features = false, branch = "bifrost-polkadot-v1.3.0" }
 futures = "0.3.28"
 hash-db = { version = "0.16.0", default-features = false }
 hex = { version = "0.4.3", default-features = false, features = ["alloc"] }

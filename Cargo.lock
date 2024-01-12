@@ -2129,7 +2129,7 @@ dependencies = [
 [[package]]
 name = "evm"
 version = "0.39.1"
-source = "git+https://github.com/rust-blockchain/evm?rev=b7b82c7e1fc57b7449d6dfa6826600de37cc1e65#b7b82c7e1fc57b7449d6dfa6826600de37cc1e65"
+source = "git+https://github.com/bifrost-platform/evm?branch=bifrost-polkadot-v1.3.0#e14df5ea28a431ed17a828c6c2597e0ccedfb0e7"
 dependencies = [
  "auto_impl",
  "environmental",
@@ -2149,7 +2149,7 @@ dependencies = [
 [[package]]
 name = "evm-core"
 version = "0.39.0"
-source = "git+https://github.com/rust-blockchain/evm?rev=b7b82c7e1fc57b7449d6dfa6826600de37cc1e65#b7b82c7e1fc57b7449d6dfa6826600de37cc1e65"
+source = "git+https://github.com/bifrost-platform/evm?branch=bifrost-polkadot-v1.3.0#e14df5ea28a431ed17a828c6c2597e0ccedfb0e7"
 dependencies = [
  "parity-scale-codec",
  "primitive-types",
@@ -2160,7 +2160,7 @@ dependencies = [
 [[package]]
 name = "evm-gasometer"
 version = "0.39.0"
-source = "git+https://github.com/rust-blockchain/evm?rev=b7b82c7e1fc57b7449d6dfa6826600de37cc1e65#b7b82c7e1fc57b7449d6dfa6826600de37cc1e65"
+source = "git+https://github.com/bifrost-platform/evm?branch=bifrost-polkadot-v1.3.0#e14df5ea28a431ed17a828c6c2597e0ccedfb0e7"
 dependencies = [
  "environmental",
  "evm-core",
@@ -2171,7 +2171,7 @@ dependencies = [
 [[package]]
 name = "evm-runtime"
 version = "0.39.0"
-source = "git+https://github.com/rust-blockchain/evm?rev=b7b82c7e1fc57b7449d6dfa6826600de37cc1e65#b7b82c7e1fc57b7449d6dfa6826600de37cc1e65"
+source = "git+https://github.com/bifrost-platform/evm?branch=bifrost-polkadot-v1.3.0#e14df5ea28a431ed17a828c6c2597e0ccedfb0e7"
 dependencies = [
  "auto_impl",
  "environmental",
