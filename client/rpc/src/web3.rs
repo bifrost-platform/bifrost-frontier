@@ -16,58 +16,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-use std::{marker::PhantomData, sync::Arc};
-
 use ethereum_types::H256;
 use jsonrpsee::core::RpcResult;
+use rustc_version;
+use target_info::Target;
 // Substrate
-use sp_api::{Core, ProvideRuntimeApi};
-use sp_blockchain::HeaderBackend;
 use sp_core::keccak_256;
-use sp_runtime::traits::Block as BlockT;
 // Frontier
 use fc_rpc_core::{types::Bytes, Web3ApiServer};
-use fp_rpc::EthereumRuntimeRPCApi;
-
-use crate::internal_err;
 
 /// Web3 API implementation.
-pub struct Web3<B, C> {
-	client: Arc<C>,
-	_marker: PhantomData<B>,
+pub struct Web3 {
+	client_version: String,
 }
 
-impl<B, C> Web3<B, C> {
-	pub fn new(client: Arc<C>) -> Self {
+impl Web3 {
+	pub fn new(client_version: &str) -> Self {
 		Self {
-			client,
-			_marker: PhantomData,
+			client_version: format!(
+				"bifrost-node/v{client_version}/{os}-{arch}/rustc{rustc_version}",
+				os = Target::os(),
+				arch = Target::arch(),
+				rustc_version = rustc_version::version().expect("Failed to fetch rustc version"),
+			),
 		}
 	}
 }
 
-impl<B, C> Web3ApiServer for Web3<B, C>
-where
-	B: BlockT,
-	C: ProvideRuntimeApi<B>,
-	C::Api: EthereumRuntimeRPCApi<B>,
-	C: HeaderBackend<B> + 'static,
-{
+impl Web3ApiServer for Web3 {
 	fn client_version(&self) -> RpcResult<String> {
-		let hash = self.client.info().best_hash;
-		let version = self
-			.client
-			.runtime_api()
-			.version(hash)
-			.map_err(|err| internal_err(format!("fetch runtime version failed: {:?}", err)))?;
-		Ok(format!(
-			"{spec_name}/v{spec_version}.{impl_version}/{pkg_name}-{pkg_version}",
-			spec_name = version.spec_name,
-			spec_version = version.spec_version,
-			impl_version = version.impl_version,
-			pkg_name = env!("CARGO_PKG_NAME"),
-			pkg_version = env!("CARGO_PKG_VERSION")
-		))
+		Ok(self.client_version.clone())
 	}
 
 	fn sha3(&self, input: Bytes) -> RpcResult<H256> {

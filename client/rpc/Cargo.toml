@@ -22,9 +22,11 @@ log = { workspace = true }
 prometheus = { version = "0.13.1", default-features = false }
 rand = "0.8"
 rlp = { workspace = true }
+rustc_version = { workspace = true }
 scale-codec = { workspace = true }
 schnellru = "0.2.1"
 serde = { workspace = true }
+target_info = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["sync"] }
 
@@ -75,9 +77,9 @@ fc-db = { workspace = true }
 [features]
 default = ["rocksdb"]
 rocksdb = [
-	"sc-service/rocksdb",
-	"fc-db/rocksdb",
-	"fc-mapping-sync/rocksdb",
+    "sc-service/rocksdb",
+    "fc-db/rocksdb",
+    "fc-mapping-sync/rocksdb",
 ]
 txpool = ["fc-rpc-core/txpool"]
 rpc-binary-search-estimate = []
