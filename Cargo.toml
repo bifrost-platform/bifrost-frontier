@@ -1,52 +1,53 @@
 [workspace]
 members = [
-	"frame/base-fee",
-	"frame/dynamic-fee",
-	"frame/ethereum",
-	"frame/evm",
-	"frame/evm-chain-id",
-	"frame/hotfix-sufficients",
-	"frame/evm/precompile/sha3fips",
-	"frame/evm/precompile/simple",
-	"frame/evm/precompile/modexp",
-	"frame/evm/precompile/ed25519",
-	"frame/evm/precompile/bn128",
-	"frame/evm/precompile/blake2",
-	"frame/evm/precompile/bw6761",
-	"frame/evm/precompile/bls12377",
-	"frame/evm/precompile/dispatch",
-	"frame/evm/precompile/curve25519",
-	"client/api",
-	"client/consensus",
-	"client/rpc-core",
-	"client/rpc",
-	"client/db",
-	"client/storage",
-	"client/mapping-sync",
-	"client/bifrost/evm-tracing",
-	"client/bifrost/rpc-core/types",
-	"client/bifrost/rpc-core/trace",
-	"client/bifrost/rpc-core/debug",
-	"client/bifrost/rpc-core/txpool",
-	"client/bifrost/rpc/debug",
-	"client/bifrost/rpc/trace",
-	"client/bifrost/rpc/txpool",
-	"primitives/account",
-	"primitives/consensus",
-	"primitives/dynamic-fee",
-	"primitives/evm",
-	"primitives/rpc",
-	"primitives/self-contained",
-	"primitives/bifrost/ext",
-	"primitives/bifrost/rpc/evm-tracing-events",
-	"primitives/bifrost/rpc/debug",
-	"primitives/bifrost/rpc/txpool",
-	"runtime/evm-tracer",
-	"template/node",
-	"template/runtime",
-	"precompiles",
-	"precompiles/macro",
-	"precompiles/tests-external",
+    "frame/base-fee",
+    "frame/dynamic-fee",
+    "frame/ethereum",
+    "frame/evm",
+    "frame/evm-chain-id",
+    "frame/hotfix-sufficients",
+    "frame/evm/precompile/sha3fips",
+    "frame/evm/precompile/simple",
+    "frame/evm/precompile/modexp",
+    "frame/evm/precompile/ed25519",
+    "frame/evm/precompile/bn128",
+    "frame/evm/precompile/blake2",
+    "frame/evm/precompile/bw6761",
+    "frame/evm/precompile/bls12377",
+    "frame/evm/precompile/dispatch",
+    "frame/evm/precompile/curve25519",
+    "client/api",
+    "client/consensus",
+    "client/rpc-core",
+    "client/rpc",
+    "client/db",
+    "client/storage",
+    "client/mapping-sync",
+    "client/bifrost/evm-tracing",
+    "client/bifrost/rpc-core/types",
+    "client/bifrost/rpc-core/trace",
+    "client/bifrost/rpc-core/debug",
+    "client/bifrost/rpc-core/txpool",
+    "client/bifrost/rpc/debug",
+    "client/bifrost/rpc/trace",
+    "client/bifrost/rpc/txpool",
+    "client/util/version",
+    "primitives/account",
+    "primitives/consensus",
+    "primitives/dynamic-fee",
+    "primitives/evm",
+    "primitives/rpc",
+    "primitives/self-contained",
+    "primitives/bifrost/ext",
+    "primitives/bifrost/rpc/evm-tracing-events",
+    "primitives/bifrost/rpc/debug",
+    "primitives/bifrost/rpc/txpool",
+    "runtime/evm-tracer",
+    "template/node",
+    "template/runtime",
+    "precompiles",
+    "precompiles/macro",
+    "precompiles/tests-external",
 ]
 resolver = "2"
 
@@ -57,12 +58,13 @@ repository = "https://github.com/paritytech/frontier/"
 
 [workspace.dependencies]
 async-trait = "0.1.74"
+bifrost-version = { path = "client/util/version" }
 bn = { package = "substrate-bn", version = "0.6", default-features = false }
 clap = { version = "4.4.3", features = ["derive", "deprecated"] }
 derive_more = "0.99"
 environmental = { version = "1.1.4", default-features = false }
 ethereum = { version = "0.14.0", default-features = false, features = [
-	"with-codec",
+    "with-codec",
 ] }
 ethereum-types = { version = "0.14.1", default-features = false }
 evm = { git = "https://github.com/bifrost-platform/evm", default-features = false, branch = "bifrost-polkadot-v1.3.0" }
@@ -82,7 +84,6 @@ num_enum = { version = "0.7.0", default-features = false }
 parity-db = "0.4.12"
 parking_lot = "0.12.1"
 rlp = { version = "0.5.2", default-features = false }
-rustc_version = "0.4.0"
 scale-codec = { package = "parity-scale-codec", version = "3.6.4", default-features = false, features = ["derive"] }
 scale-info = { version = "2.9.0", default-features = false, features = ["derive"] }
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
