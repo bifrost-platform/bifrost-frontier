@@ -31,7 +31,6 @@ members = [
     "client/bifrost/rpc/debug",
     "client/bifrost/rpc/trace",
     "client/bifrost/rpc/txpool",
-    "client/util/version",
     "primitives/account",
     "primitives/consensus",
     "primitives/dynamic-fee",
@@ -58,7 +57,6 @@ repository = "https://github.com/paritytech/frontier/"
 
 [workspace.dependencies]
 async-trait = "0.1.74"
-bifrost-version = { path = "client/util/version" }
 bn = { package = "substrate-bn", version = "0.6", default-features = false }
 clap = { version = "4.4.3", features = ["derive", "deprecated"] }
 derive_more = "0.99"

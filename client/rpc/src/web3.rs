@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
-use bifrost_version::meta_data::rustc_version;
 use ethereum_types::H256;
 use jsonrpsee::core::RpcResult;
 use target_info::Target;
@@ -36,7 +35,7 @@ impl Web3 {
 				"bifrost-node/v{client_version}/{os}-{arch}/rustc{rustc_version}",
 				os = Target::os(),
 				arch = Target::arch(),
-				rustc_version = rustc_version(),
+				rustc_version = env!("RUSTC_VERSION"),
 			),
 		}
 	}
