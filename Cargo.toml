@@ -100,6 +100,7 @@ sha3 = { version = "0.10", default-features = false }
 similar-asserts = "1.7.0"
 sqlx = { version = "0.7.4", default-features = false, features = ["macros"] }
 syn = "2.0.87"
+target_info = "0.1.0"
 thiserror = "2.0"
 tokio = "1.45.0"
 tracing = "0.1.37"
