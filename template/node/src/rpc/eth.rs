@@ -102,6 +102,7 @@ where
 	use fc_rpc::{TxPool, TxPoolApiServer};
 
 	let EthDeps {
+		client_version,
 		client,
 		pool,
 		graph,
@@ -189,7 +190,7 @@ where
 		.into_rpc(),
 	)?;
 
-	io.merge(Web3::new(client.clone()).into_rpc())?;
+	io.merge(Web3::new(&client_version).into_rpc())?;
 
 	io.merge(
 		Debug::new(
