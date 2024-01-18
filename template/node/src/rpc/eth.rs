@@ -27,6 +27,8 @@ use fp_rpc::{ConvertTransaction, ConvertTransactionRuntimeApi, EthereumRuntimeRP
 
 /// Extra dependencies for Ethereum compatibility.
 pub struct EthDeps<B: BlockT, C, P, A: ChainApi, CT, CIDP> {
+	/// Client version.
+	pub client_version: String,
 	/// The client instance to use.
 	pub client: Arc<C>,
 	/// Transaction pool instance.
@@ -104,6 +106,7 @@ where
 	use fc_rpc::{TxPool, TxPoolApiServer};
 
 	let EthDeps {
+		client_version,
 		client,
 		pool,
 		graph,
@@ -191,7 +194,7 @@ where
 		.into_rpc(),
 	)?;
 
-	io.merge(Web3::new(client.clone()).into_rpc())?;
+	io.merge(Web3::new(&client_version).into_rpc())?;
 
 	io.merge(
 		Debug::new(

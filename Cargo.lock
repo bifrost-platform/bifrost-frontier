@@ -2495,6 +2495,7 @@ dependencies = [
  "prometheus",
  "rand 0.8.5",
  "rlp",
+ "rustc_version",
  "sc-block-builder",
  "sc-client-api",
  "sc-client-db",
@@ -2523,6 +2524,7 @@ dependencies = [
  "sp-timestamp",
  "substrate-prometheus-endpoint",
  "substrate-test-runtime-client",
+ "target_info",
  "tempfile",
  "thiserror",
  "tokio",
@@ -10874,6 +10876,12 @@ name = "target-lexicon"
 version = "0.12.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4873307b7c257eddcb50c9bedf158eb669578359fb28428bef438fec8e6ba7c2"
+
+[[package]]
+name = "target_info"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c63f48baada5c52e65a29eef93ab4f8982681b67f9e8d29c7b05abcfec2b9ffe"
 
 [[package]]
 name = "tempfile"
