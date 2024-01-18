@@ -416,6 +416,7 @@ where
 	config.rpc.id_provider = Some(Box::new(fc_rpc::EthereumSubIdProvider));
 
 	let rpc_builder = {
+		let client_version = config.impl_version.clone();
 		let client = client.clone();
 		let pool = transaction_pool.clone();
 		let network = network.clone();
@@ -455,6 +456,7 @@ where
 
 		Box::new(move |subscription_task_executor| {
 			let eth_deps = crate::rpc::EthDeps {
+				client_version: client_version.clone(),
 				client: client.clone(),
 				pool: pool.clone(),
 				graph: pool.clone(),
