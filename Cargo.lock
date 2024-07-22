@@ -2434,6 +2434,7 @@ dependencies = [
  "parity-scale-codec",
  "serde",
  "serde_json",
+ "sp-runtime",
  "sp-std 14.0.0 (git+https://github.com/bifrost-platform/polkadot-sdk?branch=bifrost-polkadot-v1.12.0)",
 ]
 
