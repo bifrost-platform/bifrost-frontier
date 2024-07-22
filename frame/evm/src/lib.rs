@@ -85,6 +85,7 @@ use frame_support::{
 		fungible::{Balanced, Credit, Debt},
 		tokens::{
 			currency::Currency,
+			fungible::Inspect,
 			imbalance::{Imbalance, OnUnbalanced, SignedImbalance},
 			ExistenceRequirement, Fortitude, Precision, Preservation, WithdrawReasons,
 		},
