@@ -18,4 +18,5 @@ fp-rpc-evm-tracing-events = { workspace = true, features = ["std"] }
 
 # Substrate
 scale-codec = { workspace = true, features = ["std"] }
+sp-runtime = { workspace = true, features = ["std"] }
 sp-std = { workspace = true, features = ["std"] }
