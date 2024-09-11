@@ -20,6 +20,7 @@
 
 extern crate alloc;
 
+mod account_provider;
 mod precompile;
 mod storage_oog;
 mod validation;
@@ -39,6 +40,7 @@ pub use evm::{
 };
 
 pub use self::{
+	account_provider::AccountProvider,
 	precompile::{
 		Context, ExitError, ExitRevert, ExitSucceed, IsPrecompileResult, LinearCostPrecompile,
 		Precompile, PrecompileFailure, PrecompileHandle, PrecompileOutput, PrecompileResult,
