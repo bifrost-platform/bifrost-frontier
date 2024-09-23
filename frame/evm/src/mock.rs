@@ -134,7 +134,6 @@ parameter_types! {
 	pub SuicideQuickClearLimit: u32 = 0;
 }
 impl crate::Config for Test {
-	type AccountProvider = crate::FrameSystemAccountProvider<Self>;
 	type FeeCalculator = FixedGasPrice;
 	type GasWeightMapping = crate::FixedGasWeightMapping<Self>;
 	type WeightPerGas = WeightPerGas;

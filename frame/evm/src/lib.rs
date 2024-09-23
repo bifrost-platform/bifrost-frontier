@@ -102,10 +102,9 @@ use sp_runtime::{
 use fp_account::AccountId20;
 use fp_evm::GenesisAccount;
 pub use fp_evm::{
-	Account, AccountProvider, CallInfo, CreateInfo, ExecutionInfoV2 as ExecutionInfo,
-	FeeCalculator, IsPrecompileResult, LinearCostPrecompile, Log, Precompile, PrecompileFailure,
-	PrecompileHandle, PrecompileOutput, PrecompileResult, PrecompileSet,
-	TransactionValidationError, Vicinity,
+	Account, CallInfo, CreateInfo, ExecutionInfoV2 as ExecutionInfo, FeeCalculator,
+	IsPrecompileResult, LinearCostPrecompile, Log, Precompile, PrecompileFailure, PrecompileHandle,
+	PrecompileOutput, PrecompileResult, PrecompileSet, TransactionValidationError, Vicinity,
 };
 
 pub use self::{
@@ -126,9 +125,6 @@ pub mod pallet {
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
-		/// Account info provider.
-		type AccountProvider: AccountProvider;
-
 		/// Calculator for current gas price.
 		type FeeCalculator: FeeCalculator;
 
@@ -144,12 +140,12 @@ pub mod pallet {
 		/// Allow the origin to call on behalf of given address.
 		type CallOrigin: EnsureAddressOrigin<Self::RuntimeOrigin>;
 		/// Allow the origin to withdraw on behalf of given address.
-		type WithdrawOrigin: EnsureAddressOrigin<Self::RuntimeOrigin, Success = AccountIdOf<Self>>;
+		type WithdrawOrigin: EnsureAddressOrigin<Self::RuntimeOrigin, Success = Self::AccountId>;
 
 		/// Mapping from address to account id.
-		type AddressMapping: AddressMapping<AccountIdOf<Self>>;
+		type AddressMapping: AddressMapping<Self::AccountId>;
 		/// Currency type for withdraw and balance storage.
-		type Currency: Currency<AccountIdOf<Self>> + Inspect<AccountIdOf<Self>>;
+		type Currency: Currency<Self::AccountId> + Inspect<Self::AccountId>;
 
 		/// The overarching event type.
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
@@ -555,7 +551,7 @@ pub mod pallet {
 					MAX_ACCOUNT_NONCE,
 					UniqueSaturatedInto::<usize>::unique_saturated_into(account.nonce),
 				) {
-					T::AccountProvider::inc_account_nonce(&account_id);
+					frame_system::Pallet::<T>::inc_account_nonce(&account_id);
 				}
 
 				let _ = T::Currency::deposit_creating(
@@ -587,14 +583,13 @@ pub mod pallet {
 	pub type Suicided<T: Config> = StorageMap<_, Blake2_128Concat, H160, (), OptionQuery>;
 }
 
-/// Utility alias for easy access to the [`AccountProvider::AccountId`] type from a given config.
-pub type AccountIdOf<T> = <<T as Config>::AccountProvider as AccountProvider>::AccountId;
-
 /// Type alias for currency balance.
-pub type BalanceOf<T> = <<T as Config>::Currency as Currency<AccountIdOf<T>>>::Balance;
+pub type BalanceOf<T> =
+	<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
 /// Type alias for negative imbalance during fees
-type NegativeImbalanceOf<C, T> = <C as Currency<AccountIdOf<T>>>::NegativeImbalance;
+type NegativeImbalanceOf<C, T> =
+	<C as Currency<<T as frame_system::Config>::AccountId>>::NegativeImbalance;
 
 #[derive(
 	Debug,
@@ -832,7 +827,7 @@ impl<T: Config> Pallet<T> {
 			// In theory, we can always have pre-EIP161 contracts, so we
 			// make sure the account nonce is at least one.
 			let account_id = T::AddressMapping::into_account_id(*address);
-			T::AccountProvider::inc_account_nonce(&account_id);
+			frame_system::Pallet::<T>::inc_account_nonce(&account_id);
 		}
 
 		<AccountCodes<T>>::remove(address);
@@ -847,7 +842,7 @@ impl<T: Config> Pallet<T> {
 					<Suicided<T>>::remove(address);
 
 					let account_id = T::AddressMapping::into_account_id(*address);
-					T::AccountProvider::remove_account(&account_id);
+					let _ = frame_system::Pallet::<T>::dec_sufficients(&account_id);
 				}
 				KillStorageResult::SomeRemaining(_) => (),
 			}
@@ -870,7 +865,7 @@ impl<T: Config> Pallet<T> {
 
 		if !<AccountCodes<T>>::contains_key(address) {
 			let account_id = T::AddressMapping::into_account_id(address);
-			T::AccountProvider::create_account(&account_id);
+			let _ = frame_system::Pallet::<T>::inc_sufficients(&account_id);
 		}
 
 		// Update metadata.
@@ -910,7 +905,7 @@ impl<T: Config> Pallet<T> {
 	/// Get the account basic in EVM format.
 	pub fn account_basic(address: &H160) -> (Account, frame_support::weights::Weight) {
 		let account_id = T::AddressMapping::into_account_id(*address);
-		let nonce = T::AccountProvider::account_nonce(&account_id);
+		let nonce = frame_system::Pallet::<T>::account_nonce(&account_id);
 		let balance =
 			T::Currency::transferrable_balance(&account_id, Preservation::Preserve);
 
@@ -966,13 +961,17 @@ pub struct EVMCurrencyAdapter<C, OU>(core::marker::PhantomData<(C, OU)>);
 impl<T, C, OU> OnChargeEVMTransaction<T> for EVMCurrencyAdapter<C, OU>
 where
 	T: Config,
-	C: Currency<AccountIdOf<T>>,
-	C::PositiveImbalance:
-		Imbalance<<C as Currency<AccountIdOf<T>>>::Balance, Opposite = C::NegativeImbalance>,
-	C::NegativeImbalance:
-		Imbalance<<C as Currency<AccountIdOf<T>>>::Balance, Opposite = C::PositiveImbalance>,
+	C: Currency<<T as frame_system::Config>::AccountId>,
+	C::PositiveImbalance: Imbalance<
+		<C as Currency<<T as frame_system::Config>::AccountId>>::Balance,
+		Opposite = C::NegativeImbalance,
+	>,
+	C::NegativeImbalance: Imbalance<
+		<C as Currency<<T as frame_system::Config>::AccountId>>::Balance,
+		Opposite = C::PositiveImbalance,
+	>,
 	OU: OnUnbalanced<NegativeImbalanceOf<C, T>>,
-	U256: UniqueSaturatedInto<<C as Currency<AccountIdOf<T>>>::Balance>,
+	U256: UniqueSaturatedInto<<C as Currency<<T as frame_system::Config>::AccountId>>::Balance>,
 {
 	// Kept type as Option to satisfy bound of Default
 	type LiquidityInfo = Option<NegativeImbalanceOf<C, T>>;
@@ -1062,12 +1061,12 @@ pub struct EVMFungibleAdapter<F, OU>(core::marker::PhantomData<(F, OU)>);
 impl<T, F, OU> OnChargeEVMTransaction<T> for EVMFungibleAdapter<F, OU>
 where
 	T: Config,
-	F: Balanced<AccountIdOf<T>>,
-	OU: OnUnbalanced<Credit<AccountIdOf<T>, F>>,
-	U256: UniqueSaturatedInto<<F as Inspect<AccountIdOf<T>>>::Balance>,
+	F: Balanced<T::AccountId>,
+	OU: OnUnbalanced<Credit<T::AccountId, F>>,
+	U256: UniqueSaturatedInto<<F as Inspect<<T as frame_system::Config>::AccountId>>::Balance>,
 {
 	// Kept type as Option to satisfy bound of Default
-	type LiquidityInfo = Option<Credit<AccountIdOf<T>, F>>;
+	type LiquidityInfo = Option<Credit<T::AccountId, F>>;
 
 	fn withdraw_fee(who: &H160, fee: U256) -> Result<Self::LiquidityInfo, Error<T>> {
 		if fee.is_zero() {
@@ -1100,13 +1099,13 @@ where
 				.saturating_sub(corrected_fee.unique_saturated_into());
 			// refund to the account that paid the fees.
 			let refund_imbalance = F::deposit(&account_id, refund_amount, Precision::BestEffort)
-				.unwrap_or_else(|_| Debt::<AccountIdOf<T>, F>::zero());
+				.unwrap_or_else(|_| Debt::<T::AccountId, F>::zero());
 
 			// merge the imbalance caused by paying the fees and refunding parts of it again.
 			let adjusted_paid = paid
 				.offset(refund_imbalance)
 				.same()
-				.unwrap_or_else(|_| Credit::<AccountIdOf<T>, F>::zero());
+				.unwrap_or_else(|_| Credit::<T::AccountId, F>::zero());
 
 			let (base_fee, tip) = adjusted_paid.split(base_fee.unique_saturated_into());
 			// Handle base fee. Can be either burned, rationed, etc ...
@@ -1129,11 +1128,13 @@ where
 impl<T> OnChargeEVMTransaction<T> for ()
 where
 	T: Config,
-	T::Currency: Balanced<AccountIdOf<T>>,
-	U256: UniqueSaturatedInto<<<T as Config>::Currency as Inspect<AccountIdOf<T>>>::Balance>,
+	T::Currency: Balanced<T::AccountId>,
+	U256: UniqueSaturatedInto<
+		<<T as Config>::Currency as Inspect<<T as frame_system::Config>::AccountId>>::Balance,
+	>,
 {
 	// Kept type as Option to satisfy bound of Default
-	type LiquidityInfo = Option<Credit<AccountIdOf<T>, T::Currency>>;
+	type LiquidityInfo = Option<Credit<T::AccountId, T::Currency>>;
 
 	fn withdraw_fee(who: &H160, fee: U256) -> Result<Self::LiquidityInfo, Error<T>> {
 		EVMFungibleAdapter::<T::Currency, ()>::withdraw_fee(who, fee)
@@ -1172,31 +1173,5 @@ impl<T> OnCreate<T> for Tuple {
 		for_tuples!(#(
 			Tuple::on_create(owner, contract);
 		)*)
-	}
-}
-
-/// EVM account provider based on the [`frame_system`] accounts.
-///
-/// Uses standard Substrate accounts system to hold EVM accounts.
-pub struct FrameSystemAccountProvider<T>(core::marker::PhantomData<T>);
-
-impl<T: frame_system::Config> AccountProvider for FrameSystemAccountProvider<T> {
-	type AccountId = T::AccountId;
-	type Nonce = T::Nonce;
-
-	fn account_nonce(who: &Self::AccountId) -> Self::Nonce {
-		frame_system::Pallet::<T>::account_nonce(who)
-	}
-
-	fn inc_account_nonce(who: &Self::AccountId) {
-		frame_system::Pallet::<T>::inc_account_nonce(who)
-	}
-
-	fn create_account(who: &Self::AccountId) {
-		let _ = frame_system::Pallet::<T>::inc_sufficients(who);
-	}
-
-	fn remove_account(who: &Self::AccountId) {
-		let _ = frame_system::Pallet::<T>::dec_sufficients(who);
 	}
 }
