@@ -1101,7 +1101,7 @@ where
 
 	fn inc_nonce(&mut self, address: H160) -> Result<(), ExitError> {
 		let account_id = T::AddressMapping::into_account_id(address);
-		T::AccountProvider::inc_account_nonce(&account_id);
+		frame_system::Pallet::<T>::inc_account_nonce(&account_id);
 		Ok(())
 	}
 
