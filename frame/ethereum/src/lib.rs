@@ -297,6 +297,30 @@ pub mod pallet {
 
 			Self::apply_validated_transaction(source, transaction).map(|(post_info, _)| post_info)
 		}
+
+		/// Transact an Ethereum transaction.
+		#[pallet::call_index(1)]
+		#[pallet::weight({
+			let without_base_extrinsic_weight = true;
+			<T as pallet_evm::Config>::GasWeightMapping::gas_to_weight({
+				let transaction_data: TransactionData = transaction.into();
+				transaction_data.gas_limit.unique_saturated_into()
+			}, without_base_extrinsic_weight)
+		})]
+		pub fn transact_unsigned(
+			origin: OriginFor<T>,
+			source: H160,
+			transaction: Transaction,
+		) -> DispatchResultWithPostInfo {
+			ensure_none(origin)?;
+			// Disable transact functionality if PreLog exist.
+			assert!(
+				fp_consensus::find_pre_log(&frame_system::Pallet::<T>::digest()).is_err(),
+				"pre log already exists; block is invalid",
+			);
+
+			Self::apply_validated_transaction(source, transaction).map(|(post_info, _)| post_info)
+		}
 	}
 
 	#[pallet::event]
