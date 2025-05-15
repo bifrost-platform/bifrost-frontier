@@ -120,6 +120,8 @@ where
 					InvalidTransaction::Custom(TransactionValidationError::InvalidSignature as u8),
 				)?;
 
+				log::info!("origin: {:?}", origin);
+
 				Ok(origin)
 			};
 
@@ -436,6 +438,9 @@ impl<T: Config> Pallet<T> {
 			}
 		}
 		let pubkey = sp_io::crypto::secp256k1_ecdsa_recover(&sig, &msg).ok()?;
+
+		log::info!("pubkey: {:?}", pubkey);
+
 		Some(H160::from(H256::from(sp_io::hashing::keccak_256(&pubkey))))
 	}
 
