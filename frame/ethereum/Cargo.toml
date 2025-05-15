@@ -14,6 +14,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 ethereum = { workspace = true, features = ["with-codec"] }
 ethereum-types = { workspace = true }
 evm = { workspace = true, features = ["with-codec"] }
+log = { workspace = true }
 scale-codec = { workspace = true }
 scale-info = { workspace = true }
 # Substrate
@@ -27,7 +28,6 @@ fp-ethereum = { workspace = true }
 fp-evm = { workspace = true }
 fp-rpc = { workspace = true }
 fp-storage = { workspace = true }
-log = { workspace = true }
 pallet-evm = { workspace = true }
 
 [dev-dependencies]
