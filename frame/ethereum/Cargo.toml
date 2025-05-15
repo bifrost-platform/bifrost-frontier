@@ -27,6 +27,7 @@ fp-ethereum = { workspace = true }
 fp-evm = { workspace = true }
 fp-rpc = { workspace = true }
 fp-storage = { workspace = true }
+log = { workspace = true }
 pallet-evm = { workspace = true }
 
 [dev-dependencies]

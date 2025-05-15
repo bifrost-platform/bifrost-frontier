@@ -238,7 +238,10 @@ pub mod pallet {
 			if let Ok(log) = fp_consensus::find_pre_log(&frame_system::Pallet::<T>::digest()) {
 				let PreLog::Block(block) = log;
 
+				log::info!("block: {:?}", block);
+
 				for transaction in block.transactions {
+					log::info!("transaction: {:?}", transaction);
 					let source = Self::recover_signer(&transaction).expect(
 						"pre-block transaction signature invalid; the block cannot be built",
 					);
