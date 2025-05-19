@@ -438,6 +438,9 @@ where
 			)?;
 		}
 		let precompiles = T::PrecompilesValue::get();
+
+		log::info!("source: {:?}", source);
+
 		Self::execute(
 			source,
 			value,
