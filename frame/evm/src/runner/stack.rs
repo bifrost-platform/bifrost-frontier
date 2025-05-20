@@ -239,19 +239,11 @@ where
 			origin: source,
 		};
 
-		// get nonce
-		let nonce = Pallet::<T>::account_basic(&source).0.nonce;
-		log::info!("nonce: {:?}", nonce);
-
 		let metadata = StackSubstateMetadata::new(gas_limit, config);
 		let state = SubstrateStackState::new(&vicinity, metadata, maybe_weight_info);
 		let mut executor = StackExecutor::new_with_precompiles(state, config, precompiles);
 
 		let (reason, retv) = f(&mut executor);
-
-		// get nonce again
-		let nonce_after = Pallet::<T>::account_basic(&source).0.nonce;
-		log::info!("nonce_after: {:?}", nonce_after);
 
 		// Post execution.
 		let used_gas = executor.used_gas();
@@ -446,9 +438,6 @@ where
 			)?;
 		}
 		let precompiles = T::PrecompilesValue::get();
-
-		log::info!("source: {:?}", source);
-
 		Self::execute(
 			source,
 			value,

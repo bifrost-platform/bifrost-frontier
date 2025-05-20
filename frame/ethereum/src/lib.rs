@@ -233,23 +233,15 @@ pub mod pallet {
 		fn on_initialize(_: BlockNumberFor<T>) -> Weight {
 			let mut weight = T::SystemWeightInfo::kill_storage(1);
 
-			log::info!("on_initialize");
-
 			// If the digest contain an existing ethereum block(encoded as PreLog), If contains,
 			// execute the imported block firstly and disable transact dispatch function.
 			if let Ok(log) = fp_consensus::find_pre_log(&frame_system::Pallet::<T>::digest()) {
 				let PreLog::Block(block) = log;
 
-				log::info!("block: {:?}", block);
-
 				for transaction in block.transactions {
-					log::info!("transaction: {:?}", transaction);
-
 					let source = Self::recover_signer(&transaction).expect(
 						"pre-block transaction signature invalid; the block cannot be built",
 					);
-
-					log::info!("source: {:?}", source);
 
 					Self::validate_transaction_in_block(source, &transaction).expect(
 						"pre-block transaction verification failed; the block cannot be built",
