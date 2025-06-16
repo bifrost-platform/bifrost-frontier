@@ -256,6 +256,12 @@ impl<'config, E: From<TransactionValidationError>> CheckEvmTransaction<'config, 
 				return Err(TransactionValidationError::GasLimitTooLow.into());
 			}
 
+			// Add EIP-7702 authorization costs: 25,000 gas per authorization
+			let authorization_cost = self.transaction.authorization_list.len() as u64 * 25_000;
+			if gasometer.record_cost(authorization_cost).is_err() {
+				return Err(TransactionValidationError::GasLimitTooLow.into());
+			}
+
 			// Transaction gas limit is within the upper bound block gas limit.
 			if self.transaction.gas_limit > self.config.block_gas_limit {
 				return Err(TransactionValidationError::GasLimitTooHigh.into());
