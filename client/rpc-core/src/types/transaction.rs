@@ -220,6 +220,7 @@ impl BuildFrom for Transaction {
 				creates: None,
 				chain_id: Some(U64::from(t.chain_id)),
 				access_list: Some(t.access_list.clone()),
+				authorization_list: Some(t.authorization_list.clone()),
 				y_parity: Some(U256::from(t.odd_y_parity as u8)),
 				v: Some(U256::from(t.odd_y_parity as u8)),
 				r: U256::from_big_endian(t.r.as_bytes()),
