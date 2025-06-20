@@ -868,6 +868,18 @@ impl<T: Config> Pallet<T> {
 						.iter()
 						.map(|item| (item.address, item.storage_keys.clone()))
 						.collect();
+					let authorization_list: Vec<(U256, H160, U256, H160)> = t
+						.authorization_list
+						.iter()
+						.map(|d| {
+							(
+								U256::from(d.chain_id),
+								d.address,
+								d.nonce,
+								d.authorizing_address(),
+							)
+						})
+						.collect();
 					(
 						t.data.clone(),
 						t.value,
@@ -877,6 +889,7 @@ impl<T: Config> Pallet<T> {
 						Some(t.nonce),
 						t.destination,
 						access_list,
+						authorization_list,
 					)
 				}
 			}
