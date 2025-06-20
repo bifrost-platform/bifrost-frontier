@@ -497,7 +497,11 @@ impl From<&Transaction> for TransactionData {
 					.iter()
 					.map(|d| (d.address, d.storage_keys.clone()))
 					.collect(),
-				authorization_list: t.authorization_list.clone(),
+				authorization_list: t
+					.authorization_list
+					.iter()
+					.map(|d| (d.chain_id, d.address, d.nonce, d.authorizing_address()))
+					.collect(),
 			},
 		}
 	}
