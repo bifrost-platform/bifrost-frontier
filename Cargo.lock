@@ -2691,6 +2691,7 @@ dependencies = [
 [[package]]
 name = "ethereum-ext"
 version = "0.1.0"
+source = "git+https://github.com/manuelmauro/ethereum-ext#f545342f47115e2511f629df56ca6b7a21ad66de"
 dependencies = [
  "ethereum",
  "ethereum-types",
