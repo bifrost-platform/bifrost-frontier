@@ -38,6 +38,7 @@ pub use ethereum::{
 	AccessListItem, BlockV3 as Block, LegacyTransactionMessage, Log, ReceiptV4 as Receipt,
 	TransactionAction, TransactionV3 as Transaction,
 };
+use ethereum_ext::Authorizer;
 use ethereum_types::{Bloom, BloomInput, H160, H256, H64, U256};
 use evm::ExitReason;
 use scale_codec::{Decode, DecodeWithMemTracking, Encode, MaxEncodedLen};
@@ -860,36 +861,6 @@ impl<T: Config> Pallet<T> {
 						t.destination,
 						access_list,
 						t.authorization_list.clone(),
-					)
-				}
-				Transaction::EIP7702(t) => {
-					let access_list: Vec<(H160, Vec<H256>)> = t
-						.access_list
-						.iter()
-						.map(|item| (item.address, item.storage_keys.clone()))
-						.collect();
-					let authorization_list: Vec<(U256, H160, U256, H160)> = t
-						.authorization_list
-						.iter()
-						.map(|d| {
-							(
-								U256::from(d.chain_id),
-								d.address,
-								d.nonce,
-								d.authorizing_address(),
-							)
-						})
-						.collect();
-					(
-						t.data.clone(),
-						t.value,
-						t.gas_limit,
-						Some(t.max_fee_per_gas),
-						Some(t.max_priority_fee_per_gas),
-						Some(t.nonce),
-						t.destination,
-						access_list,
-						authorization_list,
 					)
 				}
 			}
