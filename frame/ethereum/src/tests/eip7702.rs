@@ -53,11 +53,6 @@ fn create_authorization_tuple(
 	private_key: &H256,
 ) -> AuthorizationListItem {
 	use rlp::RlpStream;
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> 66dbc16c (fix: :bug: fix authorization creation in tests)
 	let secret = {
 		let mut sk: [u8; 32] = [0u8; 32];
 		sk.copy_from_slice(&private_key[0..]);
@@ -71,17 +66,10 @@ fn create_authorization_tuple(
 	stream.append(&chain_id);
 	stream.append(&address);
 	stream.append(&nonce);
-<<<<<<< HEAD
 
 	let mut msg_data = vec![magic];
 	msg_data.extend_from_slice(&stream.out());
 
-=======
-	
-	let mut msg_data = vec![magic];
-	msg_data.extend_from_slice(&stream.out());
-	
->>>>>>> 66dbc16c (fix: :bug: fix authorization creation in tests)
 	let msg_hash = sp_io::hashing::keccak_256(&msg_data);
 	let signing_message = libsecp256k1::Message::parse_slice(&msg_hash).unwrap();
 	let (signature, recid) = libsecp256k1::sign(&signing_message, &secret);
