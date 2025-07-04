@@ -1159,16 +1159,12 @@ where
 		self.substate.set_created(address);
 	}
 
-<<<<<<< HEAD
 	fn set_code(
 		&mut self,
 		address: H160,
 		code: Vec<u8>,
 		caller: Option<H160>,
 	) -> Result<(), ExitError> {
-=======
-	fn set_code(&mut self, address: H160, code: Vec<u8>) {
->>>>>>> ac9598d (Cancun support (https://github.com/moonbeam-foundation/frontier/pull/206))
 		log::debug!(
 			target: "evm",
 			"Inserting code ({} bytes) at {:?}",
