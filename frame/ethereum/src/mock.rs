@@ -515,9 +515,11 @@ impl EIP7702UnsignedTransaction {
 			data: msg.data.clone(),
 			access_list: msg.access_list,
 			authorization_list: msg.authorization_list,
-			odd_y_parity: recid.serialize() != 0,
-			r,
-			s,
+			signature: EIP2930TransactionSignature::new(
+				recid.serialize() != 0,
+				r,
+				s,
+			).unwrap(),
 		})
 	}
 }
