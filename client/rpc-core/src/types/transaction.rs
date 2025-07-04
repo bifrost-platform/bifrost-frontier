@@ -199,33 +199,6 @@ impl BuildFrom for Transaction {
 				r: U256::from_big_endian(t.signature.r().as_bytes()),
 				s: U256::from_big_endian(t.signature.s().as_bytes()),
 			},
-			EthereumTransaction::EIP7702(t) => Self {
-				transaction_type: U256::from(4),
-				hash,
-				nonce: t.nonce,
-				block_hash: None,
-				block_number: None,
-				transaction_index: None,
-				from,
-				to: match t.destination {
-					TransactionAction::Call(to) => Some(to),
-					TransactionAction::Create => None,
-				},
-				value: t.value,
-				gas: t.gas_limit,
-				gas_price: Some(t.max_fee_per_gas),
-				max_fee_per_gas: Some(t.max_fee_per_gas),
-				max_priority_fee_per_gas: Some(t.max_priority_fee_per_gas),
-				input: Bytes(t.data.clone()),
-				creates: None,
-				chain_id: Some(U64::from(t.chain_id)),
-				access_list: Some(t.access_list.clone()),
-				authorization_list: Some(t.authorization_list.clone()),
-				y_parity: Some(U256::from(t.odd_y_parity as u8)),
-				v: Some(U256::from(t.odd_y_parity as u8)),
-				r: U256::from_big_endian(t.r.as_bytes()),
-				s: U256::from_big_endian(t.s.as_bytes()),
-			},
 		}
 	}
 }
