@@ -34,10 +34,8 @@ members = [
 	"client/bifrost/rpc-core/types",
 	"client/bifrost/rpc-core/trace",
 	"client/bifrost/rpc-core/debug",
-	"client/bifrost/rpc-core/txpool",
 	"client/bifrost/rpc/debug",
 	"client/bifrost/rpc/trace",
-	"client/bifrost/rpc/txpool",
 	"primitives/account",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
@@ -215,11 +213,9 @@ fc-storage = { path = "client/storage" }
 fc-evm-tracing = { path = "client/bifrost/evm-tracing" }
 fc-rpc-core-debug = { path = "client/bifrost/rpc-core/debug" }
 fc-rpc-core-trace = { path = "client/bifrost/rpc-core/trace" }
-fc-rpc-core-txpool = { path = "client/bifrost/rpc-core/txpool" }
 fc-rpc-core-types = { path = "client/bifrost/rpc-core/types" }
 fc-rpc-debug = { path = "client/bifrost/rpc/debug" }
 fc-rpc-trace = { path = "client/bifrost/rpc/trace" }
-fc-rpc-txpool = { path = "client/bifrost/rpc/txpool" }
 # Frontier Primitive
 fp-account = { path = "primitives/account", default-features = false }
 fp-consensus = { path = "primitives/consensus", default-features = false }
