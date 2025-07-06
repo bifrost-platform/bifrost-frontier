@@ -28,6 +28,7 @@ schnellru = "0.2.4"
 serde = { workspace = true, optional = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["sync"] }
+target_info = { workspace = true }
 
 # Substrate
 prometheus-endpoint = { workspace = true }
