@@ -3075,6 +3075,7 @@ dependencies = [
  "sp-trie",
  "substrate-prometheus-endpoint",
  "substrate-test-runtime-client",
+ "target_info",
  "tempfile",
  "thiserror 2.0.12",
  "tokio",
@@ -3118,18 +3119,6 @@ dependencies = [
  "fc-evm-tracing",
  "fc-rpc-core-types",
  "futures 0.3.31",
- "jsonrpsee",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "fc-rpc-core-txpool"
-version = "0.6.0"
-dependencies = [
- "ethereum",
- "ethereum-types",
- "fc-rpc-core",
  "jsonrpsee",
  "serde",
  "serde_json",
@@ -3207,28 +3196,6 @@ dependencies = [
  "substrate-prometheus-endpoint",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "fc-rpc-txpool"
-version = "0.6.0"
-dependencies = [
- "ethereum-types",
- "fc-rpc",
- "fc-rpc-core-txpool",
- "fp-rpc-txpool",
- "frame-system",
- "jsonrpsee",
- "rlp",
- "sc-transaction-pool",
- "sc-transaction-pool-api",
- "serde",
- "sha3",
- "sp-api",
- "sp-blockchain",
- "sp-io",
- "sp-runtime",
- "sp-std",
 ]
 
 [[package]]
@@ -13095,6 +13062,12 @@ name = "target-triple"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1ac9aa371f599d22256307c24a9d748c041e548cbf599f35d890f9d365361790"
+
+[[package]]
+name = "target_info"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c63f48baada5c52e65a29eef93ab4f8982681b67f9e8d29c7b05abcfec2b9ffe"
 
 [[package]]
 name = "tempfile"
