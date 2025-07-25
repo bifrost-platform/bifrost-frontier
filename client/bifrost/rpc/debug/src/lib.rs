@@ -23,7 +23,7 @@ use tokio::{
 };
 
 use ethereum_types::H256;
-use fc_evm_tracing::{formatters::ResponseFormatter, types::single};
+use fc_evm_tracing::{formatters::ResponseFormatter, types::{block, block::BlockTransactionTrace, single}};
 use fc_rpc::{frontier_backend_client, internal_err};
 use fc_rpc_core_types::{RequestBlockId, RequestBlockTag};
 use fc_storage::StorageOverride;
@@ -40,7 +40,7 @@ use sp_runtime::{
 	generic::BlockId,
 	traits::{BlakeTwo256, Block as BlockT, Header as HeaderT, UniqueSaturatedInto},
 };
-use std::{future::Future, marker::PhantomData, sync::Arc};
+use std::{future::Future, marker::PhantomData, sync::Arc, collections::BTreeMap};
 
 pub enum RequesterInput {
 	Call((RequestBlockId, TraceCallParams)),
@@ -50,7 +50,7 @@ pub enum RequesterInput {
 
 pub enum Response {
 	Single(single::TransactionTrace),
-	Block(Vec<single::TransactionTrace>),
+	Block(Vec<block::BlockTransactionTrace>),
 }
 
 pub type Responder = oneshot::Sender<RpcResult<Response>>;
@@ -102,7 +102,7 @@ impl DebugServer for Debug {
 		&self,
 		id: RequestBlockId,
 		params: Option<TraceParams>,
-	) -> RpcResult<Vec<single::TransactionTrace>> {
+	) -> RpcResult<Vec<BlockTransactionTrace>> {
 		let requester = self.requester.clone();
 
 		let (tx, rx) = oneshot::channel();
@@ -412,7 +412,12 @@ where
 			.unwrap_or_default();
 
 		// Known ethereum transaction hashes.
-		let eth_tx_hashes: Vec<_> = statuses.iter().map(|t| t.transaction_hash).collect();
+		let eth_transactions_by_index: BTreeMap<u32, H256> = statuses
+			.iter()
+			.map(|t| (t.transaction_index, t.transaction_hash))
+			.collect();
+
+		let eth_tx_hashes: Vec<_> = eth_transactions_by_index.values().cloned().collect();
 
 		// If there are no ethereum transactions in the block return empty trace right away.
 		if eth_tx_hashes.is_empty() {
@@ -496,9 +501,22 @@ where
 				proxy.finish_transaction();
 				let response = match tracer_input {
 					TracerInput::CallTracer => {
-						fc_evm_tracing::formatters::CallTracer::format(proxy)
-							.ok_or("Trace result is empty.")
-							.map_err(|e| internal_err(format!("{:?}", e)))
+						let result =
+							fc_evm_tracing::formatters::CallTracer::format(proxy)
+								.ok_or("Trace result is empty.")
+								.map_err(|e| internal_err(format!("{:?}", e)))?
+								.into_iter()
+								.map(|mut trace| {
+									if let Some(transaction_hash) =
+										eth_transactions_by_index.get(&trace.tx_position)
+									{
+										trace.tx_hash = *transaction_hash;
+									}
+									trace
+								})
+								.collect::<Vec<BlockTransactionTrace>>();
+
+						Ok(result)
 					}
 					_ => Err(internal_err(
 						"Bug: failed to resolve the tracer format.".to_string(),
@@ -704,7 +722,7 @@ where
 								let mut res = fc_evm_tracing::formatters::CallTracer::format(proxy)
 									.ok_or("Trace result is empty.")
 									.map_err(|e| internal_err(format!("{:?}", e)))?;
-								Ok(res.pop().expect("Trace result is empty."))
+								Ok(res.pop().expect("Trace result is empty.").result)
 							}
 							_ => Err(internal_err(
 								"Bug: failed to resolve the tracer format.".to_string(),
@@ -913,7 +931,7 @@ where
 						let mut res = fc_evm_tracing::formatters::CallTracer::format(proxy)
 							.ok_or("Trace result is empty.")
 							.map_err(|e| internal_err(format!("{:?}", e)))?;
-						Ok(res.pop().expect("Trace result is empty."))
+						Ok(res.pop().expect("Trace result is empty.").result)
 					}
 					_ => Err(internal_err(
 						"Bug: failed to resolve the tracer format.".to_string(),

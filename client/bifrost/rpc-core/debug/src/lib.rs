@@ -16,7 +16,7 @@
 
 use ethereum::AccessListItem;
 use ethereum_types::{H160, H256, U256};
-use fc_evm_tracing::types::single;
+use fc_evm_tracing::types::{block, single};
 use fc_rpc_core::types::Bytes;
 use fc_rpc_core_types::RequestBlockId;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
@@ -83,5 +83,5 @@ pub trait Debug {
 		&self,
 		id: RequestBlockId,
 		params: Option<TraceParams>,
-	) -> RpcResult<Vec<single::TransactionTrace>>;
+	) -> RpcResult<Vec<block::BlockTransactionTrace>>;
 }
