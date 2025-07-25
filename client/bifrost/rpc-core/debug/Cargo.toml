@@ -8,7 +8,7 @@ repository = "https://github.com/bifrost-platform/bifrost-frontier"
 version = "0.1.0"
 
 [dependencies]
-ethereum = { workspace = true, features = ["with-scale"] }
+ethereum = { workspace = true, features = ["with-scale", "with-serde"] }
 ethereum-types = { workspace = true, features = ["std"] }
 futures = { workspace = true, features = ["compat"] }
 jsonrpsee = { workspace = true, features = ["macros", "server"] }
