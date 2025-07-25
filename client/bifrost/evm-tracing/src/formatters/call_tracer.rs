@@ -5,7 +5,7 @@ use crate::types::{
 };
 
 use crate::listeners::call_list::Listener;
-
+use crate::types::block::BlockTransactionTrace;
 use crate::types::serialization::*;
 use serde::Serialize;
 
@@ -17,14 +17,14 @@ pub struct Formatter;
 
 impl super::ResponseFormatter for Formatter {
 	type Listener = Listener;
-	type Response = Vec<TransactionTrace>;
+	type Response = Vec<BlockTransactionTrace>;
 
-	fn format(mut listener: Listener) -> Option<Vec<TransactionTrace>> {
+	fn format(mut listener: Listener) -> Option<Vec<BlockTransactionTrace>> {
 		// Remove empty BTreeMaps pushed to `entries`.
 		// I.e. InvalidNonce or other pallet_evm::runner exits
 		listener.entries.retain(|x| !x.is_empty());
 		let mut traces = Vec::new();
-		for entry in listener.entries.iter() {
+		for (eth_tx_index, entry) in listener.entries.iter().enumerate() {
 			let mut result: Vec<Call> = entry
 				.into_iter()
 				.map(|(_, it)| {
@@ -225,9 +225,16 @@ impl super::ResponseFormatter for Formatter {
 				*trace_address = None;
 			}
 			if result.len() == 1 {
-				traces.push(TransactionTrace::CallListNested(result.pop().expect(
-					"result.len() == 1, so pop() necessarily returns this element",
-				)));
+				traces.push(BlockTransactionTrace {
+					tx_position: eth_tx_index as u32,
+					// Use default, the correct value will be set upstream
+					tx_hash: Default::default(),
+					result: TransactionTrace::CallListNested(
+						result
+							.pop()
+							.expect("result.len() == 1, so pop() necessarily returns this element"),
+					),
+				});
 			}
 		}
 		if traces.is_empty() {
