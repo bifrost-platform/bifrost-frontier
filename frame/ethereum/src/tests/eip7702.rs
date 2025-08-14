@@ -53,6 +53,7 @@ fn create_authorization_tuple(
 	private_key: &H256,
 ) -> AuthorizationListItem {
 	use rlp::RlpStream;
+
 	let secret = {
 		let mut sk: [u8; 32] = [0u8; 32];
 		sk.copy_from_slice(&private_key[0..]);
