@@ -108,7 +108,7 @@ pub(crate) fn upgrade_db<Block: BlockT, C: HeaderBackend<Block>>(
 				_ => panic!("DatabaseSource required for upgrade ParityDb | RocksDb"),
 			};
 			if !summary.error.is_empty() {
-				log::info!(
+				panic!(
 					"Inconsistent migration from version 1 to 2. Failed on {:?}",
 					summary.error
 				);
