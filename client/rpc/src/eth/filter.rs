@@ -305,7 +305,7 @@ where
 					}
 				}
 			} else {
-				FuturePath::Error(internal_err(format!("Filter id {:?} does not exist.", key)))
+				FuturePath::Error(internal_err(format!("Filter id {key:?} does not exist.")))
 			}
 		} else {
 			FuturePath::Error(internal_err("Filter pool is not available."))
@@ -323,9 +323,9 @@ where
 				let mut ethereum_hashes: Vec<H256> = Vec::new();
 				for n in last..next {
 					let id = BlockId::Number(n.unique_saturated_into());
-					let substrate_hash = client.expect_block_hash_from_id(&id).map_err(|_| {
-						internal_err(format!("Expect block number from id: {}", id))
-					})?;
+					let substrate_hash = client
+						.expect_block_hash_from_id(&id)
+						.map_err(|_| internal_err(format!("Expect block number from id: {id}")))?;
 
 					let block = block_data_cache.current_block(substrate_hash).await;
 					if let Some(block) = block {
@@ -385,13 +385,12 @@ where
 
 			let pool_item = pool
 				.get(&key)
-				.ok_or_else(|| internal_err(format!("Filter id {:?} does not exist.", key)))?;
+				.ok_or_else(|| internal_err(format!("Filter id {key:?} does not exist.")))?;
 
 			match &pool_item.filter_type {
 				FilterType::Log(filter) => Ok(filter.clone()),
 				_ => Err(internal_err(format!(
-					"Filter id {:?} is not a Log filter.",
-					key
+					"Filter id {key:?} is not a Log filter."
 				))),
 			}
 		})();
@@ -458,7 +457,7 @@ where
 			if locked.remove(&key).is_some() {
 				Ok(true)
 			} else {
-				Err(internal_err(format!("Filter id {:?} does not exist.", key)))
+				Err(internal_err(format!("Filter id {key:?} does not exist.")))
 			}
 		} else {
 			Err(internal_err("Filter pool is not available."))
@@ -481,7 +480,7 @@ where
 				hash,
 			)
 			.await
-			.map_err(|err| internal_err(format!("{:?}", err)))?
+			.map_err(|err| internal_err(format!("{err:?}")))?
 			{
 				Some(hash) => hash,
 				_ => return Err(crate::err(-32000, "unknown block", None)),
@@ -653,8 +652,7 @@ where
 			// Check for restrictions
 			if ret.len() as u32 > max_past_logs {
 				return Err(internal_err(format!(
-					"query returned more than {} results",
-					max_past_logs
+					"query returned more than {max_past_logs} results",
 				)));
 			}
 			if begin_request.elapsed() > max_duration {
@@ -669,9 +667,7 @@ where
 
 		log::info!(
 			target: "frontier-sql",
-			"OUTER-TIMER fetch={}, post={}",
-			time_fetch,
-			time_post,
+			"OUTER-TIMER fetch={time_fetch}, post={time_post}"
 		);
 	}
 
@@ -722,7 +718,7 @@ where
 		let id = BlockId::Number(current_number);
 		let substrate_hash = client
 			.expect_block_hash_from_id(&id)
-			.map_err(|_| internal_err(format!("Expect block number from id: {}", id)))?;
+			.map_err(|_| internal_err(format!("Expect block number from id: {id}")))?;
 
 		let block = block_data_cache.current_block(substrate_hash).await;
 
@@ -741,8 +737,7 @@ where
 		// Check for restrictions
 		if ret.len() as u32 > max_past_logs {
 			return Err(internal_err(format!(
-				"query returned more than {} results",
-				max_past_logs
+				"query returned more than {max_past_logs} results"
 			)));
 		}
 		if begin_request.elapsed() > max_duration {
