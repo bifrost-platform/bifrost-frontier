@@ -9,6 +9,9 @@ use serde::Deserialize;
 pub trait Trace {
 	#[method(name = "trace_filter")]
 	async fn filter(&self, filter: FilterRequest) -> RpcResult<Vec<TransactionTrace>>;
+
+	#[method(name = "trace_transaction")]
+	async fn transaction(&self, hash: ethereum_types::H256) -> RpcResult<Vec<TransactionTrace>>;
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]

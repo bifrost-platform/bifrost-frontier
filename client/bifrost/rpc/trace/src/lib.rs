@@ -52,6 +52,7 @@ use fc_evm_tracing::{
 	formatters::ResponseFormatter,
 	types::block::{self, TransactionTrace},
 };
+use fc_rpc::frontier_backend_client;
 pub use fc_rpc_core_trace::{FilterRequest, TraceServer};
 use fc_rpc_core_types::{RequestBlockId, RequestBlockTag};
 use fp_rpc_debug::DebugRuntimeApi;
@@ -64,6 +65,7 @@ pub struct Trace<B, C> {
 	client: Arc<C>,
 	requester: CacheRequester,
 	max_count: u32,
+	frontier_backend: Arc<dyn fc_api::Backend<B> + Send + Sync>,
 }
 
 impl<B, C> Clone for Trace<B, C> {
@@ -73,6 +75,7 @@ impl<B, C> Clone for Trace<B, C> {
 			client: Arc::clone(&self.client),
 			requester: self.requester.clone(),
 			max_count: self.max_count,
+			frontier_backend: Arc::clone(&self.frontier_backend),
 		}
 	}
 }
@@ -85,11 +88,17 @@ where
 	C: Send + Sync + 'static,
 {
 	/// Create a new RPC handler.
-	pub fn new(client: Arc<C>, requester: CacheRequester, max_count: u32) -> Self {
+	pub fn new(
+		client: Arc<C>,
+		requester: CacheRequester,
+		max_count: u32,
+		frontier_backend: Arc<dyn fc_api::Backend<B> + Send + Sync>,
+	) -> Self {
 		Self {
 			client,
 			requester,
 			max_count,
+			frontier_backend,
 			_phantom: PhantomData,
 		}
 	}
@@ -107,6 +116,70 @@ where
 			}
 			Some(RequestBlockId::Hash(_)) => Err("Block hash not supported"),
 		}
+	}
+
+	/// `trace_transaction` endpoint - get traces for a specific transaction
+	async fn trace_transaction(self, transaction_hash: H256) -> TxsTraceRes {
+		// Use the same approach as debug_traceTransaction to find the block containing the transaction
+		let (eth_block_hash, _index) = match frontier_backend_client::load_transactions::<B, C>(
+			self.client.as_ref(),
+			self.frontier_backend.as_ref(),
+			transaction_hash,
+			false,
+		)
+		.await
+		.map_err(|err| format!("{:?}", err))?
+		{
+			Some((eth_block_hash, index)) => (eth_block_hash, index),
+			None => {
+				return Err("Transaction not found".to_string());
+			}
+		};
+
+		// Get the substrate block hash from the ethereum block hash
+		let substrate_hash = match frontier_backend_client::load_hash::<B, C>(
+			self.client.as_ref(),
+			self.frontier_backend.as_ref(),
+			eth_block_hash,
+		)
+		.await
+		.map_err(|err| format!("{:?}", err))?
+		{
+			Some(substrate_hash) => substrate_hash,
+			None => {
+				return Err(format!(
+					"Could not find substrate block for ethereum block {}",
+					eth_block_hash
+				));
+			}
+		};
+
+		// Start a single-block batch to get traces for this block
+		let batch_id = self.requester.start_batch(vec![substrate_hash]).await?;
+
+		// Get traces for this block
+		let block_traces = match self.requester.get_traces(substrate_hash).await {
+			Ok(traces) => traces,
+			Err(e) => {
+				self.requester.stop_batch(batch_id).await;
+				return Err(format!("Failed to get traces for block: {}", e));
+			}
+		};
+
+		// Stop the batch
+		self.requester.stop_batch(batch_id).await;
+
+		// Filter traces to only those for the requested transaction
+		let transaction_traces: Vec<_> = block_traces
+			.into_iter()
+			.filter(|trace| trace.transaction_hash == transaction_hash)
+			.collect();
+
+		if transaction_traces.is_empty() {
+			return Err("Transaction traces not found in block".to_string());
+		}
+
+		Ok(transaction_traces)
 	}
 
 	/// `trace_filter` endpoint (wrapped in the trait implementation with futures compatibilty)
@@ -243,6 +316,16 @@ where
 	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
 		self.clone()
 			.filter(filter)
+			.await
+			.map_err(|e| fc_rpc::internal_err(e))
+	}
+
+	async fn transaction(
+		&self,
+		hash: ethereum_types::H256,
+	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
+		self.clone()
+			.trace_transaction(hash)
 			.await
 			.map_err(|e| fc_rpc::internal_err(e))
 	}
@@ -933,11 +1016,11 @@ where
 					}
 					None => {
 						log::warn!(
-								target: "tracing",
-								"A trace in block {} does not map to any known ethereum transaction. Trace: {:?}",
-								height,
-								trace,
-							);
+							target: "tracing",
+							"A trace in block {} does not map to any known ethereum transaction. Trace: {:?}",
+							height,
+							trace,
+						);
 						None
 					}
 				}
