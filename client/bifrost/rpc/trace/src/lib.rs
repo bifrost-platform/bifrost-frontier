@@ -119,7 +119,7 @@ where
 	}
 
 	/// `trace_transaction` endpoint - get traces for a specific transaction
-	async fn trace_transaction(self, transaction_hash: H256) -> TxsTraceRes {
+	async fn transaction(self, transaction_hash: H256) -> TxsTraceRes {
 		// Use the same approach as debug_traceTransaction to find the block containing the transaction
 		let (eth_block_hash, _index) = match frontier_backend_client::load_transactions::<B, C>(
 			self.client.as_ref(),
@@ -183,7 +183,7 @@ where
 	}
 
 	/// `trace_block` endpoint - get traces for all transactions in a specific block
-	async fn trace_block(self, block_id: RequestBlockId) -> TxsTraceRes {
+	async fn block(self, block_id: RequestBlockId) -> TxsTraceRes {
 		// Convert block ID to block number
 		let block_number = self.block_id(Some(block_id))?;
 
@@ -363,7 +363,7 @@ where
 		hash: ethereum_types::H256,
 	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
 		self.clone()
-			.trace_transaction(hash)
+			.transaction(hash)
 			.await
 			.map_err(|e| fc_rpc::internal_err(e))
 	}
@@ -373,7 +373,7 @@ where
 		block_number: RequestBlockId,
 	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
 		self.clone()
-			.trace_block(block_number)
+			.block(block_number)
 			.await
 			.map_err(|e| fc_rpc::internal_err(e))
 	}
