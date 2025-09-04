@@ -182,6 +182,44 @@ where
 		Ok(transaction_traces)
 	}
 
+	/// `trace_block` endpoint - get traces for all transactions in a specific block
+	async fn trace_block(self, block_id: RequestBlockId) -> TxsTraceRes {
+		// Convert block ID to block number
+		let block_number = self.block_id(Some(block_id))?;
+
+		// Get the substrate block hash for this block number
+		let substrate_hash = match self.client.hash(block_number) {
+			Ok(Some(hash)) => hash,
+			Ok(None) => {
+				return Err(format!("Block {} not found", block_number));
+			}
+			Err(e) => {
+				return Err(format!("Error fetching block {}: {:?}", block_number, e));
+			}
+		};
+
+		// Start a single-block batch to get traces for this block
+		let batch_id = self.requester.start_batch(vec![substrate_hash]).await?;
+
+		// Get traces for this block
+		let block_traces = match self.requester.get_traces(substrate_hash).await {
+			Ok(traces) => traces,
+			Err(e) => {
+				self.requester.stop_batch(batch_id).await;
+				return Err(format!(
+					"Failed to get traces for block {}: {}",
+					block_number, e
+				));
+			}
+		};
+
+		// Stop the batch
+		self.requester.stop_batch(batch_id).await;
+
+		// Return all traces in the block (no filtering needed for trace_block)
+		Ok(block_traces)
+	}
+
 	/// `trace_filter` endpoint (wrapped in the trait implementation with futures compatibilty)
 	async fn filter(self, req: FilterRequest) -> TxsTraceRes {
 		let from_block = self.block_id(req.from_block)?;
@@ -326,6 +364,16 @@ where
 	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
 		self.clone()
 			.trace_transaction(hash)
+			.await
+			.map_err(|e| fc_rpc::internal_err(e))
+	}
+
+	async fn block(
+		&self,
+		block_number: RequestBlockId,
+	) -> jsonrpsee::core::RpcResult<Vec<TransactionTrace>> {
+		self.clone()
+			.trace_block(block_number)
 			.await
 			.map_err(|e| fc_rpc::internal_err(e))
 	}
