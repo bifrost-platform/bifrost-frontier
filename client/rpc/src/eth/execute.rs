@@ -302,8 +302,7 @@ where
 						info.value
 					} else {
 						return Err(internal_err(format!(
-							"Unsupported EthereumRuntimeRPCApi version: {}",
-							api_version
+							"Unsupported EthereumRuntimeRPCApi version: {api_version}"
 						)));
 					};
 
@@ -858,7 +857,7 @@ where
 
 							(info.exit_reason, info.value, info.used_gas.effective)
 						} else {
-							return Err(internal_err(format!("Unsupported EthereumRuntimeRPCApi version: {}", api_version)));
+							return Err(internal_err(format!("Unsupported EthereumRuntimeRPCApi version: {api_version}")));
 						}
 					}
 					None => {
@@ -1032,7 +1031,7 @@ where
 
 							(info.exit_reason, Vec::new(), info.used_gas.effective)
 						} else {
-							return Err(internal_err(format!("Unsupported EthereumRuntimeRPCApi version: {}", api_version)));
+							return Err(internal_err(format!("Unsupported EthereumRuntimeRPCApi version: {api_version}")));
 						}
 					}
 				};
@@ -1070,8 +1069,7 @@ where
 			ExitReason::Succeed(_) => (),
 			ExitReason::Error(ExitError::OutOfGas) => {
 				return Err(internal_err(format!(
-					"gas required exceeds allowance {}",
-					cap
+					"gas required exceeds allowance {cap}"
 				)))
 			}
 			// If the transaction reverts, there are two possible cases,

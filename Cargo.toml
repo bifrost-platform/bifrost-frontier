@@ -5,6 +5,7 @@ members = [
 	"frame/ethereum",
 	"frame/evm",
 	"frame/evm/precompile/sha3fips",
+	"frame/evm/precompile/sha3fips/benchmarking",
 	"frame/evm/precompile/simple",
 	"frame/evm/precompile/modexp",
 	"frame/evm/precompile/ed25519",
@@ -15,6 +16,7 @@ members = [
 	"frame/evm/precompile/bls12381",
 	"frame/evm/precompile/dispatch",
 	"frame/evm/precompile/curve25519",
+	"frame/evm/precompile/curve25519/benchmarking",
 	"frame/evm-chain-id",
 	"frame/evm-polkavm",
 	"frame/evm-polkavm/proc-macro",
@@ -52,6 +54,7 @@ members = [
 	"precompiles",
 	"precompiles/macro",
 	"precompiles/tests-external",
+	"template/fuzz",
 ]
 resolver = "2"
 
@@ -96,14 +99,15 @@ rlp = { version = "0.6", default-features = false }
 scale-codec = { package = "parity-scale-codec", version = "3.7.5", default-features = false, features = ["derive"] }
 scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
-serde_json = "1.0"
+serde_json = { version = "1.0", default-features = false }
+sha2 = { version = "0.10.9", default-features = false }
 sha3 = { version = "0.10", default-features = false }
 similar-asserts = "1.7.0"
 sqlx = { version = "0.7.4", default-features = false, features = ["macros"] }
 syn = "2.0.87"
 target_info = "0.1.0"
 thiserror = "2.0"
-tokio = "1.45.0"
+tokio = { version = "1.45.0", default-features = false }
 tracing = "0.1.37"
 
 # Substrate Client
@@ -198,7 +202,7 @@ ark-bls12-381 = { version = "0.4.0", default-features = false, features = ["curv
 ark-bw6-761 = { version = "0.4.0", default-features = false }
 ark-ec = { version = "0.4.0", default-features = false }
 ark-ff = { version = "0.4.0", default-features = false }
-ark-std = { version = "0.4.0", default-features = false }
+ark-std = { version = "0.5.0", default-features = false }
 
 # Frontier Client
 fc-api = { path = "client/api" }
@@ -244,8 +248,11 @@ pallet-evm-chain-id = { path = "frame/evm-chain-id", default-features = false }
 pallet-evm-polkavm = { path = "frame/evm-polkavm", default-features = false }
 pallet-evm-polkavm-proc-macro = { path = "frame/evm-polkavm/proc-macro" }
 pallet-evm-polkavm-uapi = { path = "frame/evm-polkavm/uapi", default-features = false }
+pallet-evm-precompile-curve25519 = { path = "frame/evm/precompile/curve25519", default-features = false }
+pallet-evm-precompile-curve25519-benchmarking = { path = "frame/evm/precompile/curve25519/benchmarking", default-features = false }
 pallet-evm-precompile-modexp = { path = "frame/evm/precompile/modexp", default-features = false }
 pallet-evm-precompile-sha3fips = { path = "frame/evm/precompile/sha3fips", default-features = false }
+pallet-evm-precompile-sha3fips-benchmarking = { path = "frame/evm/precompile/sha3fips/benchmarking", default-features = false }
 pallet-evm-precompile-simple = { path = "frame/evm/precompile/simple", default-features = false }
 pallet-evm-test-vector-support = { path = "frame/evm/test-vector-support" }
 pallet-hotfix-sufficients = { path = "frame/hotfix-sufficients", default-features = false }

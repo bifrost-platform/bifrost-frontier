@@ -490,7 +490,6 @@ where
 						reference_id, e
 					))
 				})?;
-
 			Ok(fp_rpc_debug::Response::Block)
 		};
 
