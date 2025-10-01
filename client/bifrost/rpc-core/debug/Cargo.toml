@@ -10,15 +10,10 @@ version = "0.1.0"
 [dependencies]
 ethereum = { workspace = true, features = ["with-scale", "with-serde"] }
 ethereum-types = { workspace = true, features = ["std"] }
-futures = { workspace = true, features = ["compat"] }
 jsonrpsee = { workspace = true, features = ["macros", "server"] }
 serde = { workspace = true, features = ["derive"] }
-serde_json = { workspace = true }
-
-# Substrate
-fc-rpc-core = { workspace = true }
-sp-core = { workspace = true, features = ["std"] }
 
 # Frontier
 fc-evm-tracing = { workspace = true }
+fc-rpc-core = { workspace = true }
 fc-rpc-core-types = { workspace = true }
