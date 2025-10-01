@@ -1,18 +1,3 @@
-// Copyright 2019-2022 PureStake Inc.
-// This file is part of Moonbeam.
-
-// Moonbeam is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// Moonbeam is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with Moonbeam.  If not, see <http://www.gnu.org/licenses/>.
 pub use fc_rpc_core_debug::{DebugServer, TraceCallParams, TraceParams};
 use futures::StreamExt;
 use jsonrpsee::core::{async_trait, RpcResult};
@@ -24,7 +9,11 @@ use tokio::{
 
 use ethereum;
 use ethereum_types::H256;
-use fc_evm_tracing::{formatters::ResponseFormatter, types::{block, block::BlockTransactionTrace, single}};
+use fc_evm_tracing::formatters::call_tracer::CallTracerInner;
+use fc_evm_tracing::types::block;
+use fc_evm_tracing::types::block::BlockTransactionTrace;
+use fc_evm_tracing::types::single::TransactionTrace;
+use fc_evm_tracing::{formatters::ResponseFormatter, types::single};
 use fc_rpc::{frontier_backend_client, internal_err};
 use fc_rpc_core_types::{RequestBlockId, RequestBlockTag};
 use fc_storage::StorageOverride;
@@ -37,11 +26,13 @@ use sp_block_builder::BlockBuilder;
 use sp_blockchain::{
 	Backend as BlockchainBackend, Error as BlockChainError, HeaderBackend, HeaderMetadata,
 };
+use sp_core::H160;
 use sp_runtime::{
 	generic::BlockId,
 	traits::{BlakeTwo256, Block as BlockT, Header as HeaderT, UniqueSaturatedInto},
 };
-use std::{future::Future, marker::PhantomData, sync::Arc, collections::BTreeMap};
+use std::collections::BTreeMap;
+use std::{future::Future, marker::PhantomData, sync::Arc};
 
 pub enum RequesterInput {
 	Call((RequestBlockId, TraceCallParams)),
@@ -392,8 +383,16 @@ where
 			}
 		}?;
 
-		// Get ApiRef. This handle allow to keep changes between txs in an internal buffer.
-		let api = client.runtime_api();
+		// Get ApiRef. This handle allows to keep changes between txs in an internal buffer.
+		let mut api = client.runtime_api();
+
+		// Enable proof recording
+		api.record_proof();
+		api.proof_recorder().map(|recorder| {
+			let ext = sp_trie::proof_size_extension::ProofSizeExt::new(recorder);
+			api.register_extension(ext);
+		});
+
 		// Get Blockchain backend
 		let blockchain = backend.blockchain();
 		// Get the header I want to work with.
@@ -412,13 +411,32 @@ where
 			.current_transaction_statuses(hash)
 			.unwrap_or_default();
 
+		// Partial ethereum transaction data to check if a trace match an ethereum transaction
+		struct EthTxPartial {
+			transaction_hash: H256,
+			from: H160,
+			to: Option<H160>,
+		}
+
 		// Known ethereum transaction hashes.
-		let eth_transactions_by_index: BTreeMap<u32, H256> = statuses
+		let eth_transactions_by_index: BTreeMap<u32, EthTxPartial> = statuses
 			.iter()
-			.map(|t| (t.transaction_index, t.transaction_hash))
+			.map(|status| {
+				(
+					status.transaction_index,
+					EthTxPartial {
+						transaction_hash: status.transaction_hash,
+						from: status.from,
+						to: status.to,
+					},
+				)
+			})
 			.collect();
 
-		let eth_tx_hashes: Vec<_> = eth_transactions_by_index.values().cloned().collect();
+		let eth_tx_hashes: Vec<_> = eth_transactions_by_index
+			.values()
+			.map(|tx| tx.transaction_hash)
+			.collect();
 
 		// If there are no ethereum transactions in the block return empty trace right away.
 		if eth_tx_hashes.is_empty() {
@@ -490,8 +508,12 @@ where
 						reference_id, e
 					))
 				})?;
+
 			Ok(fp_rpc_debug::Response::Block)
 		};
+
+		// Offset to account for old buggy transactions that are in trace not in the ethereum block
+		let mut tx_position_offset = 0;
 
 		return match trace_type {
 			single::TraceType::CallList => {
@@ -501,20 +523,65 @@ where
 				proxy.finish_transaction();
 				let response = match tracer_input {
 					TracerInput::CallTracer => {
-						let result =
-							fc_evm_tracing::formatters::CallTracer::format(proxy)
-								.ok_or("Trace result is empty.")
-								.map_err(|e| internal_err(format!("{:?}", e)))?
-								.into_iter()
-								.map(|mut trace| {
-									if let Some(transaction_hash) =
-										eth_transactions_by_index.get(&trace.tx_position)
-									{
+						let result = fc_evm_tracing::formatters::CallTracer::format(proxy)
+							.ok_or("Trace result is empty.")
+							.map_err(|e| internal_err(format!("{:?}", e)))?
+							.into_iter()
+							.filter_map(|mut trace: BlockTransactionTrace| {
+								if let Some(EthTxPartial {
+									transaction_hash,
+									from,
+									to,
+								}) = eth_transactions_by_index
+									.get(&(trace.tx_position - tx_position_offset))
+								{
+									// verify that the trace matches the ethereum transaction
+									let (trace_from, trace_to) = match trace.result {
+										TransactionTrace::Raw { .. } => (Default::default(), None),
+										TransactionTrace::CallList(_) => (Default::default(), None),
+										TransactionTrace::CallListNested(ref call) => match call {
+											single::Call::Blockscout(_) => {
+												(Default::default(), None)
+											}
+											single::Call::CallTracer(call) => (
+												call.from,
+												match call.inner {
+													CallTracerInner::Call { to, .. } => Some(to),
+													CallTracerInner::Create { .. } => None,
+													CallTracerInner::SelfDestruct { .. } => None,
+												},
+											),
+										},
+									};
+									if trace_from == *from && trace_to == *to {
 										trace.tx_hash = *transaction_hash;
+										Some(trace)
+									} else {
+										// if the trace does not match the ethereum transaction
+										// it means that the trace is about a buggy transaction that is not in the block
+										// we need to offset the tx_position
+										tx_position_offset += 1;
+										None
 									}
-									trace
-								})
-								.collect::<Vec<BlockTransactionTrace>>();
+								} else {
+									// If the transaction is not in the ethereum block
+									// it should not appear in the block trace
+									tx_position_offset += 1;
+									None
+								}
+							})
+							.collect::<Vec<BlockTransactionTrace>>();
+
+						let n_txs = eth_transactions_by_index.len();
+						let n_traces = result.len();
+						if n_txs != n_traces {
+							log::warn!(
+								"The traces in block {:?} don't match with the number of ethereum transactions. (txs: {}, traces: {})",
+								request_block_id,
+								n_txs,
+								n_traces
+							);
+						}
 
 						Ok(result)
 					}
@@ -535,11 +602,11 @@ where
 
 	/// Replays a transaction in the Runtime at a given block height.
 	///
-	/// In order to succesfully reproduce the result of the original transaction we need a correct
+	/// In order to successfully reproduce the result of the original transaction we need a correct
 	/// state to replay over.
 	///
-	/// Substrate allows to apply extrinsics in the Runtime and thus creating an overlayed state.
-	/// This overlayed changes will live in-memory for the lifetime of the ApiRef.
+	/// Substrate allows to apply extrinsics in the Runtime and thus creating an overlaid state.
+	/// These overlaid changes will live in-memory for the lifetime of the ApiRef.
 	fn handle_transaction_request(
 		client: Arc<C>,
 		backend: Arc<BE>,
@@ -574,7 +641,15 @@ where
 				Err(e) => return Err(e),
 			};
 		// Get ApiRef. This handle allow to keep changes between txs in an internal buffer.
-		let api = client.runtime_api();
+		let mut api = client.runtime_api();
+
+		// Enable proof recording
+		api.record_proof();
+		api.proof_recorder().map(|recorder| {
+			let ext = sp_trie::proof_size_extension::ProofSizeExt::new(recorder);
+			api.register_extension(ext);
+		});
+
 		// Get Blockchain backend
 		let blockchain = backend.blockchain();
 		// Get the header I want to work with.
@@ -615,6 +690,32 @@ where
 					let result = if trace_api_version >= 7 {
 						// The block is initialized inside "trace_transaction"
 						api.trace_transaction(parent_block_hash, exts, &transaction, &header)
+					} else if trace_api_version == 5 || trace_api_version == 6 {
+						// API version 5 and 6 expect TransactionV2, so we need to convert from TransactionV3
+						let tx_v2 = match transaction {
+							ethereum::TransactionV3::Legacy(tx) => {
+								ethereum::TransactionV2::Legacy(tx.clone())
+							}
+							ethereum::TransactionV3::EIP2930(tx) => {
+								ethereum::TransactionV2::EIP2930(tx.clone())
+							}
+							ethereum::TransactionV3::EIP1559(tx) => {
+								ethereum::TransactionV2::EIP1559(tx.clone())
+							}
+							ethereum::TransactionV3::EIP7702(_) => return Err(internal_err(
+								"EIP-7702 transactions are supported starting from API version 7"
+									.to_string(),
+							)),
+						};
+
+						// The block is initialized inside "trace_transaction"
+						#[allow(deprecated)]
+						api.trace_transaction_before_version_7(
+							parent_block_hash,
+							exts,
+							&tx_v2,
+							&header,
+						)
 					} else {
 						// Get core runtime api version
 						let core_api_version = if let Ok(Some(api_version)) =
@@ -645,8 +746,8 @@ where
 								})?;
 						}
 
-						if trace_api_version >= 4 {
-							// API version 6 expects TransactionV2, so we need to convert from TransactionV3
+						if trace_api_version == 4 {
+							// API version 4 expect TransactionV2, so we need to convert from TransactionV3
 							let tx_v2 = match transaction {
 								ethereum::TransactionV3::Legacy(tx) => {
 									ethereum::TransactionV2::Legacy(tx.clone())
@@ -659,29 +760,15 @@ where
 								}
 								ethereum::TransactionV3::EIP7702(_) => {
 									return Err(internal_err(
-										"EIP-7702 transactions are not supported in API version 5"
+										"EIP-7702 transactions are supported starting from API version 7"
 											.to_string(),
 									))
 								}
 							};
 
-							if trace_api_version == 4 {
-								// Pre pallet-message-queue
-								#[allow(deprecated)]
-								api.trace_transaction_before_version_5(
-									parent_block_hash,
-									exts,
-									&tx_v2,
-								)
-							} else {
-								#[allow(deprecated)]
-								api.trace_transaction_before_version_7(
-									parent_block_hash,
-									exts,
-									&tx_v2,
-									&header,
-								)
-							}
+							// Pre pallet-message-queue
+							#[allow(deprecated)]
+							api.trace_transaction_before_version_5(parent_block_hash, exts, &tx_v2)
 						} else {
 							// Pre-london update, legacy transactions.
 							match transaction {
@@ -804,7 +891,15 @@ where
 		}?;
 
 		// Get ApiRef. This handle allow to keep changes between txs in an internal buffer.
-		let api = client.runtime_api();
+		let mut api = client.runtime_api();
+
+		// Enable proof recording
+		api.record_proof();
+		api.proof_recorder().map(|recorder| {
+			let ext = sp_trie::proof_size_extension::ProofSizeExt::new(recorder);
+			api.register_extension(ext);
+		});
+
 		// Get the header I want to work with.
 		let Ok(hash) = client.expect_block_hash_from_id(&reference_id) else {
 			return Err(internal_err("Block header not found"));

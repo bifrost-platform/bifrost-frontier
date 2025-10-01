@@ -3196,11 +3196,8 @@ dependencies = [
  "fc-evm-tracing",
  "fc-rpc-core",
  "fc-rpc-core-types",
- "futures 0.3.31",
  "jsonrpsee",
  "serde",
- "serde_json",
- "sp-core",
 ]
 
 [[package]]
@@ -3232,8 +3229,6 @@ dependencies = [
  "ethereum",
  "ethereum-types",
  "fc-api",
- "fc-consensus",
- "fc-db",
  "fc-evm-tracing",
  "fc-rpc",
  "fc-rpc-core-debug",
@@ -3244,6 +3239,7 @@ dependencies = [
  "futures 0.3.31",
  "hex-literal",
  "jsonrpsee",
+ "log",
  "sc-client-api",
  "sc-utils",
  "sp-api",
@@ -3252,6 +3248,7 @@ dependencies = [
  "sp-core",
  "sp-io",
  "sp-runtime",
+ "sp-trie",
  "tokio",
 ]
 
@@ -3586,15 +3583,10 @@ dependencies = [
 name = "fp-rpc-debug"
 version = "0.1.0"
 dependencies = [
- "environmental",
  "ethereum",
  "ethereum-types",
- "hex",
  "parity-scale-codec",
- "serde",
  "sp-api",
- "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]
