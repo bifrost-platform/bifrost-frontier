@@ -102,4 +102,31 @@ pub trait Runner<T: Config> {
 		proof_size_base_cost: Option<u64>,
 		config: &evm::Config,
 	) -> Result<CreateInfo, RunnerError<Self::Error>>;
+
+	/// Execute an EVM call bypassing reentrancy protection.
+	///
+	/// This function is specifically designed for fee payment operations
+	/// (Oracle price queries, ERC20 transfers) that need to be executed
+	/// during the `OnChargeEVMTransaction::withdraw_fee` phase.
+	///
+	/// # Security
+	/// - This bypasses reentrancy protection, use with caution
+	/// - Should only be called from trusted fee payment pallets
+	/// - Limited to simple view calls or token transfers
+	///
+	/// # Arguments
+	/// * `source` - The sender address (typically Treasury)
+	/// * `target` - The contract to call (Oracle or ERC20)
+	/// * `input` - Encoded function call data
+	/// * `gas_limit` - Maximum gas for the call
+	/// * `is_transactional` - Whether to persist state changes
+	/// * `config` - EVM configuration
+	fn call_bypassing_reentrancy(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		is_transactional: bool,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>>;
 }

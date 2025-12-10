@@ -752,6 +752,48 @@ where
 			},
 		)
 	}
+
+	fn call_bypassing_reentrancy(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		is_transactional: bool,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>> {
+		let measured_proof_size_before = get_proof_size().unwrap_or_default();
+		let precompiles = T::PrecompilesValue::get();
+		let (base_fee, weight) = T::FeeCalculator::min_gas_price();
+
+		// Directly call execute_inner, bypassing the reentrancy check in execute()
+		// Note: max_fee_per_gas = Some(U256::zero()) indicates fees are handled elsewhere
+		Self::execute_inner(
+			source,
+			U256::zero(), // value: no ETH transfer
+			gas_limit,
+			Some(U256::zero()), // max_fee_per_gas: zero means fees already handled
+			Some(U256::zero()), // max_priority_fee_per_gas
+			config,
+			&precompiles,
+			is_transactional,
+			|executor| {
+				executor.transact_call(
+					source,
+					target,
+					U256::zero(), // value
+					input,
+					gas_limit,
+					Vec::new(), // access_list
+					Vec::new(), // authorization_list
+				)
+			},
+			base_fee,
+			weight,
+			None, // weight_limit
+			None, // proof_size_base_cost
+			measured_proof_size_before,
+		)
+	}
 }
 
 struct SubstrateStackSubstate<'config> {
