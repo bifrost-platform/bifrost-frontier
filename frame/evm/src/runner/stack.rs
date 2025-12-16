@@ -54,7 +54,8 @@ use super::meter::StorageMeter;
 use crate::{
 	runner::Runner as RunnerT, AccountCodes, AccountCodesMetadata, AccountProvider,
 	AccountStorages, AddressMapping, BalanceOf, BlockHashMapping, Config, EnsureCreateOrigin,
-	Error, Event, FeeCalculator, OnChargeEVMTransaction, OnCreate, Pallet, RunnerError,
+	Error, Event, FeeCalculator, FeelessCallFilter, OnChargeEVMTransaction, OnCreate, Pallet,
+	RunnerError,
 };
 
 #[cfg(feature = "forbid-evm-reentrancy")]
@@ -536,6 +537,19 @@ where
 			})
 			.collect::<Vec<(U256, sp_core::H160, U256, Option<sp_core::H160>)>>();
 
+		// Check if this call should be feeless
+		let is_feeless = T::FeelessCallFilter::is_feeless(Some(target), &input);
+		let effective_max_fee_per_gas = if is_feeless {
+			Some(U256::zero())
+		} else {
+			max_fee_per_gas
+		};
+		let effective_max_priority_fee_per_gas = if is_feeless {
+			Some(U256::zero())
+		} else {
+			max_priority_fee_per_gas
+		};
+
 		if validate {
 			Self::validate(
 				source,
@@ -543,8 +557,8 @@ where
 				input.clone(),
 				value,
 				gas_limit,
-				max_fee_per_gas,
-				max_priority_fee_per_gas,
+				effective_max_fee_per_gas,
+				effective_max_priority_fee_per_gas,
 				nonce,
 				access_list.clone(),
 				authorization_list.clone(),
@@ -560,8 +574,8 @@ where
 			source,
 			value,
 			gas_limit,
-			max_fee_per_gas,
-			max_priority_fee_per_gas,
+			effective_max_fee_per_gas,
+			effective_max_priority_fee_per_gas,
 			config,
 			&precompiles,
 			is_transactional,

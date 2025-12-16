@@ -208,6 +208,12 @@ pub mod pallet {
 		/// Weight information for extrinsics in this pallet.
 		type WeightInfo: WeightInfo;
 
+		/// Filter to determine if a call should be feeless (zero gas fee).
+		/// Calls matching this filter will not charge any gas fees.
+		/// Default implementation returns false for all calls.
+		#[pallet::no_default_bounds]
+		type FeelessCallFilter: FeelessCallFilter;
+
 		/// EVM config used in the module.
 		fn config() -> &'static EvmConfig {
 			&PECTRA_CONFIG
@@ -261,6 +267,7 @@ pub mod pallet {
 			type CreateOriginFilter = ();
 			type CreateInnerOriginFilter = ();
 			type WeightInfo = ();
+			type FeelessCallFilter = ();
 		}
 
 		impl FixedGasWeightMappingAssociatedTypes for TestDefaultConfig {
@@ -897,6 +904,35 @@ impl<T: Config> BlockHashMapping for SubstrateBlockHashMapping<T> {
 pub trait GasWeightMapping {
 	fn gas_to_weight(gas: u64, without_base_weight: bool) -> Weight;
 	fn weight_to_gas(weight: Weight) -> u64;
+}
+
+/// Filter to determine if an EVM call should be feeless (zero gas fee).
+///
+/// Implement this trait to whitelist specific contract calls that should not
+/// charge gas fees. This is useful for protocol-level operations like fee token
+/// preference changes.
+///
+/// # Security
+/// - Always combine with rate limiting to prevent DoS attacks
+/// - Only whitelist simple, non-state-heavy operations
+pub trait FeelessCallFilter {
+	/// Check if the call should be feeless.
+	///
+	/// # Arguments
+	/// * `target` - The target contract address (None for contract creation)
+	/// * `input` - The call input data (first 4 bytes are the function selector)
+	///
+	/// # Returns
+	/// * `true` if the call should not charge gas fees
+	/// * `false` if normal gas fees apply
+	fn is_feeless(target: Option<H160>, input: &[u8]) -> bool;
+}
+
+/// Default implementation that charges fees for all calls.
+impl FeelessCallFilter for () {
+	fn is_feeless(_target: Option<H160>, _input: &[u8]) -> bool {
+		false
+	}
 }
 
 pub trait FixedGasWeightMappingAssociatedTypes {
