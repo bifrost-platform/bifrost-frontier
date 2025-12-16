@@ -538,7 +538,7 @@ where
 			.collect::<Vec<(U256, sp_core::H160, U256, Option<sp_core::H160>)>>();
 
 		// Check if this call should be feeless
-		let is_feeless = T::FeelessCallFilter::is_feeless(Some(target), &input);
+		let is_feeless = T::FeelessCallFilter::is_feeless(source, Some(target), &input);
 		let effective_max_fee_per_gas = if is_feeless {
 			Some(U256::zero())
 		} else {

@@ -919,18 +919,19 @@ pub trait FeelessCallFilter {
 	/// Check if the call should be feeless.
 	///
 	/// # Arguments
+	/// * `caller` - The address initiating the call
 	/// * `target` - The target contract address (None for contract creation)
 	/// * `input` - The call input data (first 4 bytes are the function selector)
 	///
 	/// # Returns
 	/// * `true` if the call should not charge gas fees
 	/// * `false` if normal gas fees apply
-	fn is_feeless(target: Option<H160>, input: &[u8]) -> bool;
+	fn is_feeless(caller: H160, target: Option<H160>, input: &[u8]) -> bool;
 }
 
 /// Default implementation that charges fees for all calls.
 impl FeelessCallFilter for () {
-	fn is_feeless(_target: Option<H160>, _input: &[u8]) -> bool {
+	fn is_feeless(_caller: H160, _target: Option<H160>, _input: &[u8]) -> bool {
 		false
 	}
 }
