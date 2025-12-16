@@ -542,13 +542,14 @@ impl<T: Config> Pallet<T> {
 		// Check if this is an EIP-7702 transaction
 		let is_eip7702 = matches!(transaction, Transaction::EIP7702(_));
 
-		// Check if this call should be feeless (skip gas fee validation)
+		// Check if this call can be submitted with zero native balance
+		// (e.g., ERC20 fee users or truly feeless calls)
 		let target = match transaction_data.action {
 			TransactionAction::Call(to) => Some(to),
 			TransactionAction::Create => None,
 		};
-		let is_feeless =
-			T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
+		let is_zero_balance_callable =
+			T::FeelessCallFilter::is_zero_balance_callable(origin, target, &transaction_data.input);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
@@ -557,7 +558,7 @@ impl<T: Config> Pallet<T> {
 				base_fee,
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
-				is_feeless,
+				is_zero_balance_callable,
 			},
 			transaction_data.clone().into(),
 			weight_limit,
@@ -967,13 +968,14 @@ impl<T: Config> Pallet<T> {
 		// Check if this is an EIP-7702 transaction
 		let is_eip7702 = matches!(transaction, Transaction::EIP7702(_));
 
-		// Check if this call should be feeless (skip gas fee validation)
+		// Check if this call can be submitted with zero native balance
+		// (e.g., ERC20 fee users or truly feeless calls)
 		let target = match transaction_data.action {
 			TransactionAction::Call(to) => Some(to),
 			TransactionAction::Create => None,
 		};
-		let is_feeless =
-			T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
+		let is_zero_balance_callable =
+			T::FeelessCallFilter::is_zero_balance_callable(origin, target, &transaction_data.input);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
@@ -982,7 +984,7 @@ impl<T: Config> Pallet<T> {
 				base_fee,
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
-				is_feeless,
+				is_zero_balance_callable,
 			},
 			transaction_data.into(),
 			weight_limit,

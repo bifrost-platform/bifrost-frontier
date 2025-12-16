@@ -615,30 +615,41 @@ where
 		};
 
 		// Recap the highest gas allowance with account's balance.
+		// Skip this check for zero-balance-callable transactions (e.g., ERC20 fee users).
 		if let Some(from) = request.from {
 			if fee_cap > U256::zero() {
-				let balance = api
-					.account_basic(substrate_hash, from)
-					.map_err(|err| internal_err(format!("runtime error: {err}")))?
-					.balance;
-				let mut available = balance;
-				if let Some(value) = request.value {
-					if value > available {
-						return Err(internal_err("insufficient funds for transfer"));
+				// Check if this call can be made with zero native balance
+				// (e.g., ERC20 fee users or feeless protocol calls)
+				let target = request.to;
+				let input = request.data().map(|d| d.0.clone()).unwrap_or_default();
+				let is_zero_balance_callable = api
+					.is_zero_balance_callable(substrate_hash, from, target, input)
+					.unwrap_or(false);
+
+				if !is_zero_balance_callable {
+					let balance = api
+						.account_basic(substrate_hash, from)
+						.map_err(|err| internal_err(format!("runtime error: {err}")))?
+						.balance;
+					let mut available = balance;
+					if let Some(value) = request.value {
+						if value > available {
+							return Err(internal_err("insufficient funds for transfer"));
+						}
+						available -= value;
 					}
-					available -= value;
-				}
-				let allowance = available / fee_cap;
-				if highest > allowance {
-					log::warn!(
-							"Gas estimation capped by limited funds original {} balance {} sent {} feecap {} fundable {}",
-							highest,
-							balance,
-							request.value.unwrap_or_default(),
-							fee_cap,
-							allowance
-						);
-					highest = allowance;
+					let allowance = available / fee_cap;
+					if highest > allowance {
+						log::warn!(
+								"Gas estimation capped by limited funds original {} balance {} sent {} feecap {} fundable {}",
+								highest,
+								balance,
+								request.value.unwrap_or_default(),
+								fee_cap,
+								allowance
+							);
+						highest = allowance;
+					}
 				}
 			}
 		}

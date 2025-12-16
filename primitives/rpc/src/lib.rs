@@ -291,6 +291,15 @@ sp_api::decl_runtime_apis! {
 		/// is supported.
 		fn gas_limit_multiplier_support();
 
+		/// Check if the call can be made with zero native balance.
+		///
+		/// This is used for:
+		/// - Feeless protocol calls (e.g., fee token setup)
+		/// - Users who pay fees in ERC20 tokens instead of native currency
+		///
+		/// Returns `true` if the balance check should be skipped during gas estimation.
+		fn is_zero_balance_callable(caller: Address, target: Option<Address>, input: Vec<u8>) -> bool;
+
 		/// Return the pending block.
 		fn pending_block(
 			xts: Vec<<Block as BlockT>::Extrinsic>,

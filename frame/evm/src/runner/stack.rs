@@ -475,8 +475,9 @@ where
 		let (source_account, inner_weight) = Pallet::<T>::account_basic(&source);
 		weight = weight.saturating_add(inner_weight);
 
-		// Check if this call should be feeless (skip gas fee validation)
-		let is_feeless = T::FeelessCallFilter::is_feeless(source, target, &input);
+		// Check if this call can be submitted with zero native balance (skip balance check)
+		let is_zero_balance_callable =
+			T::FeelessCallFilter::is_zero_balance_callable(source, target, &input);
 
 		let _ = fp_evm::CheckEvmTransaction::<Self::Error>::new(
 			fp_evm::CheckEvmTransactionConfig {
@@ -485,7 +486,7 @@ where
 				base_fee,
 				chain_id: T::ChainId::get(),
 				is_transactional,
-				is_feeless,
+				is_zero_balance_callable,
 			},
 			fp_evm::CheckEvmTransactionInput {
 				chain_id: Some(T::ChainId::get()),
@@ -541,7 +542,11 @@ where
 			})
 			.collect::<Vec<(U256, sp_core::H160, U256, Option<sp_core::H160>)>>();
 
-		// Check if this call should be feeless
+		// Check if this call should be feeless (zero gas fee)
+		// Note: is_feeless is different from is_zero_balance_callable.
+		// is_zero_balance_callable is used for pool validation to skip balance checks
+		// (e.g., for ERC20 fee users), while is_feeless is used here to determine
+		// if gas should actually be zero.
 		let is_feeless = T::FeelessCallFilter::is_feeless(source, Some(target), &input);
 		let effective_max_fee_per_gas = if is_feeless {
 			Some(U256::zero())
@@ -771,48 +776,6 @@ where
 		)
 	}
 
-	fn call_bypassing_reentrancy(
-		source: H160,
-		target: H160,
-		input: Vec<u8>,
-		gas_limit: u64,
-		is_transactional: bool,
-		config: &evm::Config,
-	) -> Result<CallInfo, RunnerError<Self::Error>> {
-		let measured_proof_size_before = get_proof_size().unwrap_or_default();
-		let precompiles = T::PrecompilesValue::get();
-		let (base_fee, weight) = T::FeeCalculator::min_gas_price();
-
-		// Directly call execute_inner, bypassing the reentrancy check in execute()
-		// Note: max_fee_per_gas = Some(U256::zero()) indicates fees are handled elsewhere
-		Self::execute_inner(
-			source,
-			U256::zero(), // value: no ETH transfer
-			gas_limit,
-			Some(U256::zero()), // max_fee_per_gas: zero means fees already handled
-			Some(U256::zero()), // max_priority_fee_per_gas
-			config,
-			&precompiles,
-			is_transactional,
-			|executor| {
-				executor.transact_call(
-					source,
-					target,
-					U256::zero(), // value
-					input,
-					gas_limit,
-					Vec::new(), // access_list
-					Vec::new(), // authorization_list
-				)
-			},
-			base_fee,
-			weight,
-			None, // weight_limit
-			None, // proof_size_base_cost
-			measured_proof_size_before,
-		)
-	}
-
 	fn view_call(
 		source: H160,
 		target: H160,
@@ -857,6 +820,53 @@ where
 
 		// Rollback all state changes (including nonce increment from transact_call)
 		sp_io::storage::rollback_transaction();
+
+		result
+	}
+
+	fn call_as_internal_call(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>> {
+		let measured_proof_size_before = get_proof_size().unwrap_or_default();
+		let precompiles = T::PrecompilesValue::get();
+		let (base_fee, weight) = T::FeeCalculator::min_gas_price();
+
+		// Execute the call using transact_call (which increments nonce)
+		let result = Self::execute_inner(
+			source,
+			U256::zero(), // value: no ETH transfer
+			gas_limit,
+			Some(U256::zero()), // max_fee_per_gas: zero (fees handled elsewhere)
+			Some(U256::zero()), // max_priority_fee_per_gas
+			config,
+			&precompiles,
+			true, // is_transactional: true to persist state changes
+			|executor| {
+				executor.transact_call(
+					source,
+					target,
+					U256::zero(), // value
+					input,
+					gas_limit,
+					Vec::new(), // access_list
+					Vec::new(), // authorization_list
+				)
+			},
+			base_fee,
+			weight,
+			None, // weight_limit
+			None, // proof_size_base_cost
+			measured_proof_size_before,
+		);
+
+		// Restore nonce: transact_call incremented it, but this is an internal call
+		// that should not consume a separate nonce (it's part of the parent transaction).
+		let account_id = T::AddressMapping::into_account_id(source);
+		T::AccountProvider::dec_account_nonce(&account_id);
 
 		result
 	}

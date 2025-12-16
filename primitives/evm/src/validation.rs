@@ -44,9 +44,10 @@ pub struct CheckEvmTransactionConfig<'config> {
 	pub base_fee: U256,
 	pub chain_id: u64,
 	pub is_transactional: bool,
-	/// Whether this call is feeless (no gas fee required).
-	/// When true, base_fee and balance checks are skipped.
-	pub is_feeless: bool,
+	/// Whether this call can be submitted with zero native balance.
+	/// When true, base_fee and balance checks are skipped during pool validation.
+	/// This is used for ERC20 fee users or truly feeless protocol calls.
+	pub is_zero_balance_callable: bool,
 }
 
 #[derive(Debug)]
@@ -150,7 +151,7 @@ impl<'config, E: From<TransactionValidationError>> CheckEvmTransaction<'config, 
 
 	pub fn with_base_fee(&self) -> Result<&Self, E> {
 		// Skip base fee check for feeless calls
-		if self.config.is_feeless {
+		if self.config.is_zero_balance_callable {
 			return Ok(self);
 		}
 
@@ -167,7 +168,7 @@ impl<'config, E: From<TransactionValidationError>> CheckEvmTransaction<'config, 
 
 	pub fn with_balance_for(&self, who: &Account) -> Result<&Self, E> {
 		// Skip balance check for feeless calls (only check value, not gas fee)
-		if self.config.is_feeless {
+		if self.config.is_zero_balance_callable {
 			// Still need to check if user has enough for tx value (if any)
 			if who.balance < self.transaction.value {
 				return Err(TransactionValidationError::BalanceTooLow.into());
@@ -424,7 +425,7 @@ mod tests {
 				base_fee: blockchain_base_fee,
 				chain_id: blockchain_chain_id,
 				is_transactional,
-				is_feeless: false,
+				is_zero_balance_callable: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id,
@@ -943,7 +944,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
-				is_feeless: false,
+				is_zero_balance_callable: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -981,7 +982,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
-				is_feeless: false,
+				is_zero_balance_callable: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -1019,7 +1020,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
-				is_feeless: false,
+				is_zero_balance_callable: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -1052,7 +1053,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
-				is_feeless: false,
+				is_zero_balance_callable: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),

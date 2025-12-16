@@ -58,7 +58,8 @@ use fp_evm::weight_per_gas;
 use fp_rpc::TransactionStatus;
 use pallet_ethereum::{Call::transact, PostLogContent, Transaction as EthereumTransaction};
 use pallet_evm::{
-	Account as EVMAccount, EnsureAccountId20, FeeCalculator, IdentityAddressMapping, Runner,
+	Account as EVMAccount, EnsureAccountId20, FeeCalculator, FeelessCallFilter,
+	IdentityAddressMapping, Runner,
 };
 
 // A few exports that help ease life for downstream crates.
@@ -1003,6 +1004,14 @@ impl_runtime_apis! {
 		}
 
 		fn gas_limit_multiplier_support() {}
+
+		fn is_zero_balance_callable(caller: H160, target: Option<H160>, input: Vec<u8>) -> bool {
+			<Runtime as pallet_evm::Config>::FeelessCallFilter::is_zero_balance_callable(
+				caller,
+				target,
+				&input,
+			)
+		}
 
 		fn pending_block(
 			xts: Vec<<Block as BlockT>::Extrinsic>,

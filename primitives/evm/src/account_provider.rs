@@ -59,4 +59,11 @@ pub trait AccountProvider {
 	///
 	/// Incremented with each new transaction submitted by the account.
 	fn inc_account_nonce(who: &Self::AccountId);
+
+	/// Decrement a particular account's nonce value.
+	///
+	/// Used to restore nonce after internal calls that should not consume nonce.
+	/// This is primarily used for fee payment operations where the ERC20 transfer
+	/// is considered part of the main transaction, not a separate one.
+	fn dec_account_nonce(who: &Self::AccountId);
 }

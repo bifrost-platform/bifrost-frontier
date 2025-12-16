@@ -103,40 +103,10 @@ pub trait Runner<T: Config> {
 		config: &evm::Config,
 	) -> Result<CreateInfo, RunnerError<Self::Error>>;
 
-	/// Execute an EVM call bypassing reentrancy protection.
-	///
-	/// This function is specifically designed for fee payment operations
-	/// (Oracle price queries, ERC20 transfers) that need to be executed
-	/// during the `OnChargeEVMTransaction::withdraw_fee` phase.
-	///
-	/// # Security
-	/// - This bypasses reentrancy protection, use with caution
-	/// - Should only be called from trusted fee payment pallets
-	/// - Limited to simple view calls or token transfers
-	///
-	/// # Arguments
-	/// * `source` - The sender address (typically Treasury)
-	/// * `target` - The contract to call (Oracle or ERC20)
-	/// * `input` - Encoded function call data
-	/// * `gas_limit` - Maximum gas for the call
-	/// * `is_transactional` - Whether to persist state changes
-	/// * `config` - EVM configuration
-	fn call_bypassing_reentrancy(
-		source: H160,
-		target: H160,
-		input: Vec<u8>,
-		gas_limit: u64,
-		is_transactional: bool,
-		config: &evm::Config,
-	) -> Result<CallInfo, RunnerError<Self::Error>>;
-
 	/// Execute a read-only EVM call without incrementing nonce.
 	///
 	/// This function is designed for view/pure function calls (e.g., Oracle price queries)
 	/// that should not modify any state, including the caller's nonce.
-	///
-	/// Unlike `call_bypassing_reentrancy` which uses `transact_call` (incrementing nonce),
-	/// this uses the internal `call` mechanism that doesn't touch nonce.
 	///
 	/// # Arguments
 	/// * `source` - The caller address (used for context, nonce not modified)
@@ -149,6 +119,34 @@ pub trait Runner<T: Config> {
 	/// * `Ok(CallInfo)` - Call result with return data
 	/// * `Err(RunnerError)` - If the call fails
 	fn view_call(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>>;
+
+	/// Execute an EVM call as an internal call without incrementing nonce.
+	///
+	/// This function is designed for internal operations (e.g., ERC20 fee transfers)
+	/// that need to persist state changes but should NOT increment the caller's nonce.
+	///
+	/// # Use Cases
+	/// - ERC20 fee payment transfers during `OnChargeEVMTransaction`
+	/// - Internal token transfers that are part of a larger transaction
+	/// - Any call that should not consume a separate nonce
+	///
+	/// # Arguments
+	/// * `source` - The caller address (msg.sender, nonce NOT modified)
+	/// * `target` - The contract to call
+	/// * `input` - Encoded function call data
+	/// * `gas_limit` - Maximum gas for the call
+	/// * `config` - EVM configuration
+	///
+	/// # Returns
+	/// * `Ok(CallInfo)` - Call result with return data
+	/// * `Err(RunnerError)` - If the call fails
+	fn call_as_internal_call(
 		source: H160,
 		target: H160,
 		input: Vec<u8>,
