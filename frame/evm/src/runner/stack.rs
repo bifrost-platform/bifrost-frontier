@@ -794,6 +794,54 @@ where
 			measured_proof_size_before,
 		)
 	}
+
+	fn view_call(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>> {
+		let measured_proof_size_before = get_proof_size().unwrap_or_default();
+		let precompiles = T::PrecompilesValue::get();
+		let (base_fee, weight) = T::FeeCalculator::min_gas_price();
+
+		// Start a storage transaction that will be rolled back after execution.
+		// This ensures no state changes persist (including nonce increments).
+		sp_io::storage::start_transaction();
+
+		let result = Self::execute_inner(
+			source,
+			U256::zero(), // value: no ETH transfer
+			gas_limit,
+			Some(U256::zero()), // max_fee_per_gas: zero (no fees for view calls)
+			Some(U256::zero()), // max_priority_fee_per_gas
+			config,
+			&precompiles,
+			false, // is_transactional: false for view calls
+			|executor| {
+				executor.transact_call(
+					source,
+					target,
+					U256::zero(), // value
+					input,
+					gas_limit,
+					Vec::new(), // access_list
+					Vec::new(), // authorization_list
+				)
+			},
+			base_fee,
+			weight,
+			None, // weight_limit
+			None, // proof_size_base_cost
+			measured_proof_size_before,
+		);
+
+		// Rollback all state changes (including nonce increment from transact_call)
+		sp_io::storage::rollback_transaction();
+
+		result
+	}
 }
 
 struct SubstrateStackSubstate<'config> {

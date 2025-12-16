@@ -129,4 +129,30 @@ pub trait Runner<T: Config> {
 		is_transactional: bool,
 		config: &evm::Config,
 	) -> Result<CallInfo, RunnerError<Self::Error>>;
+
+	/// Execute a read-only EVM call without incrementing nonce.
+	///
+	/// This function is designed for view/pure function calls (e.g., Oracle price queries)
+	/// that should not modify any state, including the caller's nonce.
+	///
+	/// Unlike `call_bypassing_reentrancy` which uses `transact_call` (incrementing nonce),
+	/// this uses the internal `call` mechanism that doesn't touch nonce.
+	///
+	/// # Arguments
+	/// * `source` - The caller address (used for context, nonce not modified)
+	/// * `target` - The contract to call
+	/// * `input` - Encoded function call data
+	/// * `gas_limit` - Maximum gas for the call
+	/// * `config` - EVM configuration
+	///
+	/// # Returns
+	/// * `Ok(CallInfo)` - Call result with return data
+	/// * `Err(RunnerError)` - If the call fails
+	fn view_call(
+		source: H160,
+		target: H160,
+		input: Vec<u8>,
+		gas_limit: u64,
+		config: &evm::Config,
+	) -> Result<CallInfo, RunnerError<Self::Error>>;
 }
