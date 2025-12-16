@@ -44,6 +44,9 @@ pub struct CheckEvmTransactionConfig<'config> {
 	pub base_fee: U256,
 	pub chain_id: u64,
 	pub is_transactional: bool,
+	/// Whether this call is feeless (no gas fee required).
+	/// When true, base_fee and balance checks are skipped.
+	pub is_feeless: bool,
 }
 
 #[derive(Debug)]
@@ -146,6 +149,11 @@ impl<'config, E: From<TransactionValidationError>> CheckEvmTransaction<'config, 
 	}
 
 	pub fn with_base_fee(&self) -> Result<&Self, E> {
+		// Skip base fee check for feeless calls
+		if self.config.is_feeless {
+			return Ok(self);
+		}
+
 		// Get fee data from either a legacy or typed transaction input.
 		let (gas_price, _) = self.transaction_fee_input()?;
 		if self.config.is_transactional || gas_price > U256::zero() {
@@ -158,6 +166,15 @@ impl<'config, E: From<TransactionValidationError>> CheckEvmTransaction<'config, 
 	}
 
 	pub fn with_balance_for(&self, who: &Account) -> Result<&Self, E> {
+		// Skip balance check for feeless calls (only check value, not gas fee)
+		if self.config.is_feeless {
+			// Still need to check if user has enough for tx value (if any)
+			if who.balance < self.transaction.value {
+				return Err(TransactionValidationError::BalanceTooLow.into());
+			}
+			return Ok(self);
+		}
+
 		// Get fee data from either a legacy or typed transaction input.
 		let (max_fee_per_gas, _) = self.transaction_fee_input()?;
 
@@ -407,6 +424,7 @@ mod tests {
 				base_fee: blockchain_base_fee,
 				chain_id: blockchain_chain_id,
 				is_transactional,
+				is_feeless: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id,
@@ -925,6 +943,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
+				is_feeless: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -962,6 +981,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
+				is_feeless: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -999,6 +1019,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
+				is_feeless: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),
@@ -1031,6 +1052,7 @@ mod tests {
 				base_fee: U256::from(1_000_000_000u128),
 				chain_id: 42u64,
 				is_transactional: true,
+				is_feeless: false,
 			},
 			CheckEvmTransactionInput {
 				chain_id: Some(42u64),

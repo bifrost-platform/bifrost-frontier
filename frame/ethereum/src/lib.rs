@@ -74,7 +74,7 @@ use fp_evm::{
 pub use fp_rpc::TransactionStatus;
 use fp_storage::{EthereumStorageSchema, PALLET_ETHEREUM_SCHEMA};
 use frame_support::traits::PalletInfoAccess;
-use pallet_evm::{BlockHashMapping, FeeCalculator, GasWeightMapping, Runner};
+use pallet_evm::{BlockHashMapping, FeeCalculator, FeelessCallFilter, GasWeightMapping, Runner};
 
 #[derive(Clone, Eq, PartialEq, RuntimeDebug)]
 #[derive(Encode, Decode, DecodeWithMemTracking, MaxEncodedLen, TypeInfo)]
@@ -542,6 +542,14 @@ impl<T: Config> Pallet<T> {
 		// Check if this is an EIP-7702 transaction
 		let is_eip7702 = matches!(transaction, Transaction::EIP7702(_));
 
+		// Check if this call should be feeless (skip gas fee validation)
+		let target = match transaction_data.action {
+			TransactionAction::Call(to) => Some(to),
+			TransactionAction::Create => None,
+		};
+		let is_feeless =
+			T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
+
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
 				evm_config: T::config(),
@@ -549,6 +557,7 @@ impl<T: Config> Pallet<T> {
 				base_fee,
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
+				is_feeless,
 			},
 			transaction_data.clone().into(),
 			weight_limit,
@@ -958,6 +967,14 @@ impl<T: Config> Pallet<T> {
 		// Check if this is an EIP-7702 transaction
 		let is_eip7702 = matches!(transaction, Transaction::EIP7702(_));
 
+		// Check if this call should be feeless (skip gas fee validation)
+		let target = match transaction_data.action {
+			TransactionAction::Call(to) => Some(to),
+			TransactionAction::Create => None,
+		};
+		let is_feeless =
+			T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
+
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
 				evm_config: T::config(),
@@ -965,6 +982,7 @@ impl<T: Config> Pallet<T> {
 				base_fee,
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
+				is_feeless,
 			},
 			transaction_data.into(),
 			weight_limit,
