@@ -23,7 +23,7 @@ use ethereum_types::{Address, H256, U256};
 use sp_api::{ApiExt, ApiRef, ProvideRuntimeApi};
 use sp_runtime::{traits::Block as BlockT, Permill};
 // Frontier
-use fp_rpc::{EthereumRuntimeRPCApi, TransactionStatus};
+use fp_rpc::{EthereumRuntimeRPCApi, FeePaymentInfo, TransactionStatus};
 
 use crate::overrides::StorageOverride;
 
@@ -145,5 +145,11 @@ where
 		} else {
 			false
 		}
+	}
+
+	fn fee_payment_info(&self, _block_hash: B::Hash, _who: Address, _tx_index: u32) -> Option<FeePaymentInfo> {
+		// RuntimeAPI fallback does not support fee_payment_info.
+		// This requires direct storage query via StorageQuerier.
+		None
 	}
 }

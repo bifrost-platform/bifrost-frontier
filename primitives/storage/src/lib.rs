@@ -37,6 +37,11 @@ pub mod constants {
 	pub const PALLET_BASE_FEE: &[u8] = b"BaseFee";
 	pub const BASE_FEE_PER_GAS: &[u8] = b"BaseFeePerGas";
 	pub const BASE_FEE_ELASTICITY: &[u8] = b"Elasticity";
+
+	/// Pallet TransactionPayment storage items for ERC20 fee payments.
+	/// Note: The pallet name in construct_runtime! should match this constant.
+	pub const PALLET_BIFROST_EVM_TX_PAYMENT: &[u8] = b"BifrostTransactionPayment";
+	pub const BIFROST_PENDING_FEE_PAYMENTS: &[u8] = b"PendingFeePayments";
 }
 
 /// Current version of pallet Ethereum's storage schema is stored under this key.

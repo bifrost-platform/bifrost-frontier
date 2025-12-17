@@ -23,7 +23,7 @@ use ethereum_types::{Address, H256, U256};
 use sc_client_api::backend::{Backend, StorageProvider};
 use sp_runtime::{traits::Block as BlockT, Permill};
 // Frontier
-use fp_rpc::TransactionStatus;
+use fp_rpc::{FeePaymentInfo, TransactionStatus};
 
 use crate::overrides::{StorageOverride, StorageQuerier};
 
@@ -75,6 +75,10 @@ pub mod v1 {
 
 		fn is_eip1559(&self, at: B::Hash) -> bool {
 			SchemaStorageOverrideRef::new(&self.querier).is_eip1559(at)
+		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			SchemaStorageOverrideRef::new(&self.querier).fee_payment_info(at, who, tx_index)
 		}
 	}
 
@@ -138,6 +142,10 @@ pub mod v1 {
 		fn is_eip1559(&self, _at: B::Hash) -> bool {
 			false
 		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			self.querier.fee_payment_info(at, who, tx_index)
+		}
 	}
 }
 
@@ -189,6 +197,10 @@ pub mod v2 {
 
 		fn is_eip1559(&self, at: B::Hash) -> bool {
 			SchemaStorageOverrideRef::new(&self.querier).is_eip1559(at)
+		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			SchemaStorageOverrideRef::new(&self.querier).fee_payment_info(at, who, tx_index)
 		}
 	}
 
@@ -250,6 +262,10 @@ pub mod v2 {
 		fn is_eip1559(&self, _at: B::Hash) -> bool {
 			true
 		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			self.querier.fee_payment_info(at, who, tx_index)
+		}
 	}
 }
 
@@ -302,6 +318,10 @@ pub mod v3 {
 		fn is_eip1559(&self, at: B::Hash) -> bool {
 			SchemaStorageOverrideRef::new(&self.querier).is_eip1559(at)
 		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			SchemaStorageOverrideRef::new(&self.querier).fee_payment_info(at, who, tx_index)
+		}
 	}
 
 	/// A storage override for runtimes that use schema v3.
@@ -347,6 +367,10 @@ pub mod v3 {
 
 		fn is_eip1559(&self, _at: B::Hash) -> bool {
 			true
+		}
+
+		fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+			self.querier.fee_payment_info(at, who, tx_index)
 		}
 	}
 }

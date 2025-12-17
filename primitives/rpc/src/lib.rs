@@ -55,6 +55,34 @@ pub struct TransactionStatus {
 	pub logs_bloom: Bloom,
 }
 
+/// Fee payment information for ERC20 gas fee payments.
+///
+/// This is returned when a transaction paid gas fees using an ERC20 token
+/// instead of the native currency.
+#[derive(
+	Clone,
+	Eq,
+	PartialEq,
+	Default,
+	RuntimeDebug,
+	Encode,
+	Decode,
+	DecodeWithMemTracking,
+	TypeInfo
+)]
+pub struct FeePaymentInfo {
+	/// The ERC20 token address used for fee payment.
+	pub token: Address,
+	/// Amount of ERC20 tokens paid as fee.
+	pub amount: U256,
+	/// Equivalent amount in native token.
+	pub native_equivalent: U256,
+	/// Oracle price of the ERC20 token (Token/USD) at the time of payment.
+	pub token_price: U256,
+	/// Oracle price of the native token (Native/USD) at the time of payment.
+	pub native_price: U256,
+}
+
 pub trait RuntimeStorageOverride<B: BlockT, C>: Send + Sync {
 	fn is_enabled() -> bool;
 

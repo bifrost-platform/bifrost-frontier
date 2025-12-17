@@ -26,7 +26,7 @@ use sp_io::hashing::{blake2_128, twox_128};
 use sp_runtime::{traits::Block as BlockT, Permill};
 use sp_storage::StorageKey;
 // Frontier
-use fp_rpc::TransactionStatus;
+use fp_rpc::{FeePaymentInfo, TransactionStatus};
 use fp_storage::{constants::*, EthereumStorageSchema, PALLET_ETHEREUM_SCHEMA};
 
 mod runtime_api;
@@ -68,6 +68,13 @@ pub trait StorageOverride<Block: BlockT>: Send + Sync {
 	fn elasticity(&self, at: Block::Hash) -> Option<Permill>;
 	/// Return `true` if the request block is post-eip1559.
 	fn is_eip1559(&self, at: Block::Hash) -> bool;
+
+	/// Return fee payment info for a specific transaction.
+	///
+	/// This is used to retrieve ERC20 fee payment information for a transaction
+	/// by its sender address and index within the block.
+	fn fee_payment_info(&self, at: Block::Hash, who: Address, tx_index: u32)
+		-> Option<FeePaymentInfo>;
 }
 
 fn storage_prefix_build(module: &[u8], storage: &[u8]) -> Vec<u8> {
@@ -148,5 +155,18 @@ where
 	pub fn elasticity(&self, at: B::Hash) -> Option<Permill> {
 		let key = storage_prefix_build(PALLET_BASE_FEE, BASE_FEE_ELASTICITY);
 		self.query::<Permill>(at, &StorageKey(key))
+	}
+
+	/// Query fee payment info for a specific transaction.
+	///
+	/// This queries the DoubleMap PendingFeePayments with (who, tx_index) as keys.
+	pub fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+		let mut key: Vec<u8> =
+			storage_prefix_build(PALLET_BIFROST_EVM_TX_PAYMENT, BIFROST_PENDING_FEE_PAYMENTS);
+		// First key: user address with Blake2_128Concat hasher
+		key.extend(blake2_128_extend(who.as_bytes()));
+		// Second key: tx_index (u32) with Blake2_128Concat hasher
+		key.extend(blake2_128_extend(&tx_index.to_le_bytes()));
+		self.query::<FeePaymentInfo>(at, &StorageKey(key))
 	}
 }

@@ -21,6 +21,25 @@ use serde::Serialize;
 
 use crate::types::Log;
 
+/// ERC20 fee payment information.
+///
+/// This is included in the receipt when a transaction paid gas fees
+/// using an ERC20 token instead of the native currency.
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FeePayment {
+	/// The ERC20 token address used for fee payment.
+	pub token: H160,
+	/// Amount of ERC20 tokens paid as fee.
+	pub amount: U256,
+	/// Equivalent amount in native token.
+	pub native_equivalent: U256,
+	/// Oracle price of the ERC20 token (Token/USD) at the time of payment.
+	pub token_price: U256,
+	/// Oracle price of the native token (Native/USD) at the time of payment.
+	pub native_price: U256,
+}
+
 /// Receipt
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -60,4 +79,8 @@ pub struct Receipt {
 	/// EIP-2718 type
 	#[serde(rename = "type")]
 	pub transaction_type: U256,
+	/// ERC20 fee payment information.
+	/// This is included when the transaction paid gas fees using an ERC20 token.
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub fee_payment: Option<FeePayment>,
 }

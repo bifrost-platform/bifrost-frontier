@@ -29,7 +29,7 @@ use sc_client_api::{backend::Backend, StorageProvider};
 use sp_api::ProvideRuntimeApi;
 use sp_runtime::{traits::Block as BlockT, Permill};
 // Frontier
-use fp_rpc::{EthereumRuntimeRPCApi, TransactionStatus};
+use fp_rpc::{EthereumRuntimeRPCApi, FeePaymentInfo, TransactionStatus};
 use fp_storage::EthereumStorageSchema;
 
 pub use self::overrides::*;
@@ -164,5 +164,11 @@ where
 			}
 			None => self.fallback.is_eip1559(at),
 		}
+	}
+
+	fn fee_payment_info(&self, at: B::Hash, who: Address, tx_index: u32) -> Option<FeePaymentInfo> {
+		// This is not schema-dependent as it's from the evm-tx-payment pallet.
+		// We query storage directly rather than going through schema overrides.
+		self.querier.fee_payment_info(at, who, tx_index)
 	}
 }

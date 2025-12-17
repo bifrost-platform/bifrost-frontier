@@ -19,7 +19,7 @@
 use std::sync::Arc;
 
 use ethereum::TransactionV3 as EthereumTransaction;
-use ethereum_types::{H256, U256, U64};
+use ethereum_types::{H160, H256, U256, U64};
 use jsonrpsee::core::RpcResult;
 // Substrate
 use sc_client_api::backend::{Backend, StorageProvider};
@@ -46,6 +46,28 @@ where
 	BE: Backend<B> + 'static,
 	P: TransactionPool<Block = B, Hash = B::Hash> + 'static,
 {
+	/// Query ERC20 fee payment information for a transaction.
+	///
+	/// Fee payment info is stored as a DoubleMap indexed by (user_address, tx_index),
+	/// allowing precise matching for each transaction in the block.
+	fn query_fee_payment(
+		&self,
+		substrate_hash: B::Hash,
+		from: H160,
+		tx_index: u32,
+	) -> Option<FeePayment> {
+		// Query fee payment info by (from_address, tx_index)
+		self.storage_override
+			.fee_payment_info(substrate_hash, from, tx_index)
+			.map(|info| FeePayment {
+				token: info.token,
+				amount: info.amount,
+				native_equivalent: info.native_equivalent,
+				token_price: info.token_price,
+				native_price: info.native_price,
+			})
+	}
+
 	pub async fn transaction_by_hash(&self, hash: H256) -> RpcResult<Option<Transaction>> {
 		let client = Arc::clone(&self.client);
 		let backend = Arc::clone(&self.backend);
@@ -329,6 +351,13 @@ where
 					}
 				};
 
+				// Query ERC20 fee payment information
+				let fee_payment = self.query_fee_payment(
+					substrate_hash,
+					status.from,
+					status.transaction_index,
+				);
+
 				Ok(Some(Receipt {
 					transaction_hash: Some(status.transaction_hash),
 					transaction_index: Some(status.transaction_index.into()),
@@ -383,6 +412,7 @@ where
 						ethereum::ReceiptV4::EIP1559(_) => U256::from(2),
 						ethereum::ReceiptV4::EIP7702(_) => U256::from(4),
 					},
+					fee_payment,
 				}))
 			}
 			_ => Ok(None),
