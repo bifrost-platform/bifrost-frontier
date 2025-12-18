@@ -352,11 +352,8 @@ where
 				};
 
 				// Query ERC20 fee payment information
-				let fee_payment = self.query_fee_payment(
-					substrate_hash,
-					status.from,
-					status.transaction_index,
-				);
+				let alternative_fee_payment =
+					self.query_fee_payment(substrate_hash, status.from, status.transaction_index);
 
 				Ok(Some(Receipt {
 					transaction_hash: Some(status.transaction_hash),
@@ -412,7 +409,7 @@ where
 						ethereum::ReceiptV4::EIP1559(_) => U256::from(2),
 						ethereum::ReceiptV4::EIP7702(_) => U256::from(4),
 					},
-					fee_payment,
+					alternative_fee_payment,
 				}))
 			}
 			_ => Ok(None),
