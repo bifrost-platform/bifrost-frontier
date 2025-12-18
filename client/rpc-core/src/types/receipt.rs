@@ -82,5 +82,5 @@ pub struct Receipt {
 	/// ERC20 fee payment information.
 	/// This is included when the transaction paid gas fees using an ERC20 token.
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub fee_payment: Option<FeePayment>,
+	pub alternative_fee_payment: Option<FeePayment>,
 }
