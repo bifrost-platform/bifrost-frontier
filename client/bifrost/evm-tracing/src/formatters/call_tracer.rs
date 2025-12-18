@@ -201,10 +201,12 @@ impl super::ResponseFormatter for Formatter {
 										..
 									}),
 								) => {
-									&b[..]
-										== a.get(0..a.len() - 1).expect(
-											"non-root element while traversing trace result",
-										)
+									// Root elements (empty trace_address) have no parent
+									if a.is_empty() {
+										false
+									} else {
+										&b[..] == &a[0..a.len() - 1]
+									}
 								}
 								_ => unreachable!(),
 							}) {
