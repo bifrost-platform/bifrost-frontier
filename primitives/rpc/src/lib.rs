@@ -326,7 +326,20 @@ sp_api::decl_runtime_apis! {
 		/// - Users who pay fees in ERC20 tokens instead of native currency
 		///
 		/// Returns `true` if the balance check should be skipped during gas estimation.
-		fn is_zero_balance_callable(caller: Address, target: Option<Address>, input: Vec<u8>) -> bool;
+		///
+		/// # Arguments
+		/// * `caller` - The address initiating the call
+		/// * `target` - The target contract address (None for contract creation)
+		/// * `input` - The call input data
+		/// * `gas_limit` - The gas limit for the transaction
+		/// * `base_fee` - The current base fee per gas
+		fn is_zero_balance_callable(
+			caller: Address,
+			target: Option<Address>,
+			input: Vec<u8>,
+			gas_limit: U256,
+			base_fee: U256,
+		) -> bool;
 
 		/// Return the pending block.
 		fn pending_block(

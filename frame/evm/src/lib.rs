@@ -910,13 +910,13 @@ pub trait GasWeightMapping {
 ///
 /// This trait supports two levels of "feeless" behavior:
 ///
-/// 1. **`is_feeless`**: Returns `true` if native balance check should be skipped during
-///    pool validation. This is used for:
+/// 1. **`is_zero_balance_callable`**: Returns `true` if native balance check should be skipped
+///    during pool validation. This is used for:
 ///    - Users paying fees in ERC20 tokens (they don't need native balance)
 ///    - Truly feeless calls like fee token setup
 ///
-/// 2. **`is_truly_feeless`**: Returns `true` if the call should have zero gas fee.
-///    This is a subset of `is_feeless` and is used only for protocol operations
+/// 2. **`is_feeless`**: Returns `true` if the call should have zero gas fee.
+///    This is a subset of `is_zero_balance_callable` and is used only for protocol operations
 ///    like fee token preference changes.
 ///
 /// # Security
@@ -931,29 +931,44 @@ pub trait FeelessCallFilter {
 	/// - Calls from users who will pay fees in a different way (e.g., ERC20)
 	///
 	/// This is used during pool validation to skip native balance checks.
+	/// The fee information allows for precise validation
+	/// (e.g., checking if user has enough ERC20 tokens to cover the estimated fee).
 	///
 	/// # Arguments
 	/// * `caller` - The address initiating the call
 	/// * `target` - The target contract address (None for contract creation)
 	/// * `input` - The call input data (first 4 bytes are the function selector)
-	fn is_zero_balance_callable(caller: H160, target: Option<H160>, input: &[u8]) -> bool;
+	/// * `gas_limit` - The gas limit for the transaction
+	/// * `base_fee` - The current base fee per gas
+	fn is_zero_balance_callable(
+		caller: H160,
+		target: Option<H160>,
+		input: &[u8],
+		gas_limit: U256,
+		base_fee: U256,
+	) -> bool;
 
 	/// Check if the call should have zero gas fee (truly free).
 	///
 	/// This is used by the Runner to determine if `effective_max_fee_per_gas`
 	/// should be set to zero. Only return `true` for protocol operations that
 	/// should genuinely not charge any fees.
-	///
-	/// By default, this returns the same value as `is_zero_balance_callable` for backward
-	/// compatibility. Override this to have different behavior.
-	fn is_feeless(caller: H160, target: Option<H160>, input: &[u8]) -> bool {
-		Self::is_zero_balance_callable(caller, target, input)
-	}
+	fn is_feeless(caller: H160, target: Option<H160>, input: &[u8]) -> bool;
 }
 
 /// Default implementation that charges fees for all calls.
 impl FeelessCallFilter for () {
-	fn is_zero_balance_callable(_caller: H160, _target: Option<H160>, _input: &[u8]) -> bool {
+	fn is_zero_balance_callable(
+		_caller: H160,
+		_target: Option<H160>,
+		_input: &[u8],
+		_gas_limit: U256,
+		_base_fee: U256,
+	) -> bool {
+		false
+	}
+
+	fn is_feeless(_caller: H160, _target: Option<H160>, _input: &[u8]) -> bool {
 		false
 	}
 }

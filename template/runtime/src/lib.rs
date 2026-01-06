@@ -1005,11 +1005,19 @@ impl_runtime_apis! {
 
 		fn gas_limit_multiplier_support() {}
 
-		fn is_zero_balance_callable(caller: H160, target: Option<H160>, input: Vec<u8>) -> bool {
+		fn is_zero_balance_callable(
+			caller: H160,
+			target: Option<H160>,
+			input: Vec<u8>,
+			gas_limit: U256,
+			base_fee: U256,
+		) -> bool {
 			<Runtime as pallet_evm::Config>::FeelessCallFilter::is_zero_balance_callable(
 				caller,
 				target,
 				&input,
+				gas_limit,
+				base_fee,
 			)
 		}
 

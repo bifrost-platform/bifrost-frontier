@@ -548,8 +548,13 @@ impl<T: Config> Pallet<T> {
 			TransactionAction::Call(to) => Some(to),
 			TransactionAction::Create => None,
 		};
-		let is_zero_balance_callable =
-			T::FeelessCallFilter::is_zero_balance_callable(origin, target, &transaction_data.input);
+		let is_zero_balance_callable = T::FeelessCallFilter::is_zero_balance_callable(
+			origin,
+			target,
+			&transaction_data.input,
+			transaction_data.gas_limit,
+			base_fee,
+		);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
@@ -974,8 +979,13 @@ impl<T: Config> Pallet<T> {
 			TransactionAction::Call(to) => Some(to),
 			TransactionAction::Create => None,
 		};
-		let is_zero_balance_callable =
-			T::FeelessCallFilter::is_zero_balance_callable(origin, target, &transaction_data.input);
+		let is_zero_balance_callable = T::FeelessCallFilter::is_zero_balance_callable(
+			origin,
+			target,
+			&transaction_data.input,
+			transaction_data.gas_limit,
+			base_fee,
+		);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {

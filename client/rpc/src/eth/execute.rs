@@ -623,7 +623,7 @@ where
 				let target = request.to;
 				let input = request.data().map(|d| d.0.clone()).unwrap_or_default();
 				let is_zero_balance_callable = api
-					.is_zero_balance_callable(substrate_hash, from, target, input)
+					.is_zero_balance_callable(substrate_hash, from, target, input, highest, fee_cap)
 					.unwrap_or(false);
 
 				if !is_zero_balance_callable {

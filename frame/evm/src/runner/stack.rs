@@ -476,8 +476,13 @@ where
 		weight = weight.saturating_add(inner_weight);
 
 		// Check if this call can be submitted with zero native balance (skip balance check)
-		let is_zero_balance_callable =
-			T::FeelessCallFilter::is_zero_balance_callable(source, target, &input);
+		let is_zero_balance_callable = T::FeelessCallFilter::is_zero_balance_callable(
+			source,
+			target,
+			&input,
+			U256::from(gas_limit),
+			base_fee,
+		);
 
 		let _ = fp_evm::CheckEvmTransaction::<Self::Error>::new(
 			fp_evm::CheckEvmTransactionConfig {
