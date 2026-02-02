@@ -32,12 +32,23 @@ members = [
 	"client/db",
 	"client/storage",
 	"client/mapping-sync",
+	"client/bifrost/evm-tracing",
+	"client/bifrost/rpc-core/types",
+	"client/bifrost/rpc-core/trace",
+	"client/bifrost/rpc-core/debug",
+	"client/bifrost/rpc/debug",
+	"client/bifrost/rpc/trace",
 	"primitives/account",
 	"primitives/consensus",
 	"primitives/dynamic-fee",
 	"primitives/evm",
 	"primitives/rpc",
 	"primitives/self-contained",
+	"primitives/bifrost/ext",
+	"primitives/bifrost/rpc/evm-tracing-events",
+	"primitives/bifrost/rpc/debug",
+	"primitives/bifrost/rpc/txpool",
+	"runtime/evm-tracer",
 	"template/node",
 	"template/runtime",
 	"precompiles",
@@ -63,6 +74,8 @@ environmental = { version = "1.1.4", default-features = false }
 ethereum = { version = "0.18.2", default-features = false }
 ethereum-types = { version = "0.15", default-features = false }
 evm = { git = "https://github.com/rust-ethereum/evm.git", branch = "v0.x", default-features = false }
+evm-gasometer = { git = "https://github.com/rust-ethereum/evm.git", branch = "v0.x", default-features = false }
+evm-runtime = { git = "https://github.com/rust-ethereum/evm.git", branch = "v0.x", default-features = false }
 futures = "0.3.31"
 hash-db = { version = "0.16.0", default-features = false }
 hex = { version = "0.4.3", default-features = false, features = ["alloc"] }
@@ -85,97 +98,100 @@ scale-info = { version = "2.11.6", default-features = false, features = ["derive
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1.0", default-features = false }
 sha2 = { version = "0.10.9", default-features = false }
+sha3 = { version = "0.10", default-features = false }
 similar-asserts = "1.7.0"
 sqlx = { version = "0.8.6", default-features = false, features = ["macros"] }
 syn = "2.0.87"
 thiserror = "2.0"
 tokio = { version = "1.45.0", default-features = false }
+target_info = "0.1.0"
+tracing = "0.1.37"
 
 # Substrate Client
-sc-basic-authorship = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-block-builder = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-chain-spec = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-cli = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sc-client-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-client-db = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sc-consensus = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-consensus-aura = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-consensus-grandpa = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-consensus-manual-seal = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-executor = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-keystore = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-network = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-network-common = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-network-sync = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-offchain = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-rpc = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-rpc-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-service = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sc-telemetry = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-transaction-pool = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-transaction-pool-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-sc-utils = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
+sc-basic-authorship = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-block-builder = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-chain-spec = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-cli = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sc-client-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-client-db = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sc-consensus = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-consensus-aura = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-consensus-grandpa = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-consensus-manual-seal = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-executor = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-keystore = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-network = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-network-common = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-network-sync = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-offchain = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-rpc = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-rpc-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-service = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sc-telemetry = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-transaction-pool = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-transaction-pool-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+sc-utils = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
 # Substrate Primitive
-sp-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-block-builder = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-blockchain = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-consensus = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-consensus-aura = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-consensus-grandpa = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-core = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-crypto-hashing = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-database = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-externalities = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-genesis-builder = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-inherents = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-io = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-keyring = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-offchain = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-runtime-interface = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-session = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-state-machine = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-std = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-storage = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-timestamp = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-transaction-pool = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-trie = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-version = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-sp-weights = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
+sp-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-block-builder = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-blockchain = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-consensus = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-consensus-aura = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-consensus-grandpa = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-core = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-crypto-hashing = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-database = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-externalities = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-genesis-builder = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-inherents = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-io = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-keyring = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-offchain = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-runtime = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-runtime-interface = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-session = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-state-machine = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-std = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-storage = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-timestamp = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-transaction-pool = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-trie = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-version = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+sp-weights = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
 # Substrate FRAME
-frame-benchmarking = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-frame-executive = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-frame-support = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-frame-system = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-frame-system-benchmarking = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-frame-system-rpc-runtime-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-aura = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-balances = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-grandpa = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-sudo = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-timestamp = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-transaction-payment = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-transaction-payment-rpc = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-pallet-transaction-payment-rpc-runtime-api = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-pallet-utility = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
+frame-benchmarking = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+frame-executive = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+frame-support = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+frame-system = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+frame-system-benchmarking = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+frame-system-rpc-runtime-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-aura = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-balances = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-grandpa = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-sudo = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-timestamp = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-transaction-payment = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-transaction-payment-rpc = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+pallet-transaction-payment-rpc-runtime-api = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+pallet-utility = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
 # Substrate Utility
-frame-benchmarking-cli = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-prometheus-endpoint = { package = "substrate-prometheus-endpoint", git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-substrate-build-script-utils = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-substrate-frame-rpc-system = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-substrate-test-runtime-client = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
-substrate-wasm-builder = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512" }
+frame-benchmarking-cli = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+prometheus-endpoint = { package = "substrate-prometheus-endpoint", git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+substrate-build-script-utils = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+substrate-frame-rpc-system = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+substrate-test-runtime-client = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
+substrate-wasm-builder = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512" }
 
 # Polkadot
-polkadot-runtime-common = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
+polkadot-runtime-common = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
 
 # Cumulus primitives
-cumulus-pallet-weight-reclaim = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-cumulus-primitives-proof-size-hostfunction = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
-cumulus-primitives-storage-weight-reclaim = { git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
+cumulus-pallet-weight-reclaim = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+cumulus-primitives-proof-size-hostfunction = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
+cumulus-primitives-storage-weight-reclaim = { git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
 
 # XCM
-xcm = { package = "staging-xcm", git = "https://github.com/paritytech/polkadot-sdk", branch = "stable2512", default-features = false }
+xcm = { package = "staging-xcm", git = "https://github.com/bifrost-platform/polkadot-sdk", branch = "bifrost-polkadot-stable2512", default-features = false }
 
 # Arkworks
 ark-bls12-377 = { version = "0.4.0", default-features = false, features = ["curve"] }
@@ -197,6 +213,13 @@ fc-rpc-v2 = { path = "client/rpc-v2" }
 fc-rpc-v2-api = { path = "client/rpc-v2/api" }
 fc-rpc-v2-types = { path = "client/rpc-v2/types" }
 fc-storage = { path = "client/storage" }
+# Bifrost Frontier Client
+fc-evm-tracing = { path = "client/bifrost/evm-tracing" }
+fc-rpc-core-debug = { path = "client/bifrost/rpc-core/debug" }
+fc-rpc-core-trace = { path = "client/bifrost/rpc-core/trace" }
+fc-rpc-core-types = { path = "client/bifrost/rpc-core/types" }
+fc-rpc-debug = { path = "client/bifrost/rpc/debug" }
+fc-rpc-trace = { path = "client/bifrost/rpc/trace" }
 # Frontier Primitive
 fp-account = { path = "primitives/account", default-features = false }
 fp-consensus = { path = "primitives/consensus", default-features = false }
@@ -206,6 +229,11 @@ fp-evm = { path = "primitives/evm", default-features = false }
 fp-rpc = { path = "primitives/rpc", default-features = false }
 fp-self-contained = { path = "primitives/self-contained", default-features = false }
 fp-storage = { path = "primitives/storage", default-features = false }
+# Bifrost Frontier Primitive
+fp-ext = { path = "primitives/bifrost/ext", default-features = false }
+fp-rpc-debug = { path = "primitives/bifrost/rpc/debug", default-features = false }
+fp-rpc-evm-tracing-events = { path = "primitives/bifrost/rpc/evm-tracing-events", default-features = false }
+fp-rpc-txpool = { path = "primitives/bifrost/rpc/txpool", default-features = false }
 # Frontier FRAME
 pallet-base-fee = { path = "frame/base-fee", default-features = false }
 pallet-dynamic-fee = { path = "frame/dynamic-fee", default-features = false }
@@ -223,6 +251,8 @@ pallet-evm-precompile-sha3fips-benchmarking = { path = "frame/evm/precompile/sha
 pallet-evm-precompile-simple = { path = "frame/evm/precompile/simple", default-features = false }
 pallet-evm-test-vector-support = { path = "frame/evm/test-vector-support" }
 pallet-hotfix-sufficients = { path = "frame/hotfix-sufficients", default-features = false }
+# Bifrost EVM Tracer
+evm-tracer = { path = "runtime/evm-tracer", default-features = false }
 # Frontier Utility
 precompile-utils = { path = "precompiles", default-features = false }
 # Frontier Template

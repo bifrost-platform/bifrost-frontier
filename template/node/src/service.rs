@@ -425,6 +425,7 @@ where
 		let enable_dev_signer = eth_config.enable_dev_signer;
 		let max_past_logs = eth_config.max_past_logs;
 		let max_block_range = eth_config.max_block_range;
+		let logs_request_timeout = eth_config.logs_request_timeout;
 		let execute_gas_limit_multiplier = eth_config.execute_gas_limit_multiplier;
 		let filter_pool = filter_pool.clone();
 		let frontier_backend = frontier_backend.clone();
@@ -455,6 +456,7 @@ where
 
 		Box::new(move |subscription_task_executor| {
 			let eth_deps = crate::rpc::EthDeps {
+				client_version: env!("CARGO_PKG_VERSION").to_string(),
 				client: client.clone(),
 				pool: pool.clone(),
 				converter: Some(TransactionConverter::<B>::default()),
@@ -471,6 +473,7 @@ where
 				filter_pool: filter_pool.clone(),
 				max_past_logs,
 				max_block_range,
+				logs_request_timeout,
 				fee_history_cache: fee_history_cache.clone(),
 				fee_history_cache_limit,
 				execute_gas_limit_multiplier,

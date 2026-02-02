@@ -26,6 +26,8 @@ use fp_rpc::{ConvertTransaction, ConvertTransactionRuntimeApi, EthereumRuntimeRP
 
 /// Extra dependencies for Ethereum compatibility.
 pub struct EthDeps<B: BlockT, C, P, CT, CIDP> {
+	/// Client version.
+	pub client_version: String,
 	/// The client instance to use.
 	pub client: Arc<C>,
 	/// Transaction pool instance.
@@ -52,6 +54,8 @@ pub struct EthDeps<B: BlockT, C, P, CT, CIDP> {
 	pub max_past_logs: u32,
 	/// Maximum block range for eth_getLogs.
 	pub max_block_range: u32,
+	/// Timeout for eth logs query in seconds.
+	pub logs_request_timeout: u64,
 	/// Fee history cache.
 	pub fee_history_cache: FeeHistoryCache,
 	/// Maximum fee history cache size.
@@ -100,6 +104,7 @@ where
 	use fc_rpc::{TxPool, TxPoolApiServer};
 
 	let EthDeps {
+		client_version,
 		client,
 		pool,
 		converter,
@@ -113,6 +118,7 @@ where
 		filter_pool,
 		max_past_logs,
 		max_block_range,
+		logs_request_timeout,
 		fee_history_cache,
 		fee_history_cache_limit,
 		execute_gas_limit_multiplier,
@@ -156,6 +162,7 @@ where
 				filter_pool,
 				500_usize, // max stored filters
 				max_past_logs,
+				logs_request_timeout,
 				max_block_range,
 				block_data_cache.clone(),
 			)
@@ -185,7 +192,7 @@ where
 		.into_rpc(),
 	)?;
 
-	io.merge(Web3::new(client.clone()).into_rpc())?;
+	io.merge(Web3::new(&client_version).into_rpc())?;
 
 	io.merge(
 		Debug::new(
