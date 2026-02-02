@@ -39,6 +39,12 @@ pub use evm::{
 	Config, ExitReason, Opcode,
 };
 
+/// Default EVM configuration.
+pub static EVM_CONFIG: Config = Config::osaka();
+
+/// EIP-7825: Maximum transaction gas limit (2^24).
+pub const MAX_TRANSACTION_GAS_LIMIT: U256 = U256([16_777_216, 0, 0, 0]);
+
 pub use self::{
 	account_provider::AccountProvider,
 	precompile::{

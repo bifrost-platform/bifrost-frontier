@@ -21,6 +21,7 @@ use std::{marker::PhantomData, sync::Arc};
 use ethereum::TransactionV3 as EthereumTransaction;
 use futures::{future, FutureExt as _, StreamExt as _};
 use jsonrpsee::{core::traits::IdProvider, server::PendingSubscriptionSink};
+use log::debug;
 // Substrate
 use sc_client_api::{
 	backend::{Backend, StorageProvider},
@@ -118,16 +119,21 @@ where
 		}
 	}
 
-	fn notify_header(
-		&self,
-		notification: EthereumBlockNotification<B>,
-	) -> future::Ready<Option<PubSubResult>> {
-		let res = if notification.is_new_best {
-			self.storage_override.current_block(notification.hash)
-		} else {
-			None
-		};
-		future::ready(res.map(PubSubResult::header))
+	/// Get headers for enacted blocks during a reorg, including the new best block.
+	///
+	/// Per Ethereum spec (https://github.com/ethereum/go-ethereum/wiki/RPC-PUB-SUB#newheads):
+	/// "When a chain reorganization occurs, this subscription will emit an event
+	/// containing all new headers (blocks) for the new chain. This means that you
+	/// may see multiple headers emitted with the same height (block number)."
+	///
+	/// Returns headers in ascending order (oldest first), with `new_best` last.
+	fn get_reorg_headers(&self, enacted: &[B::Hash], new_best: B::Hash) -> Vec<PubSubResult> {
+		enacted
+			.iter()
+			.chain(std::iter::once(&new_best))
+			.filter_map(|hash| self.storage_override.current_block(*hash))
+			.map(PubSubResult::header)
+			.collect()
 	}
 
 	fn notify_logs(
@@ -139,16 +145,25 @@ where
 			let substrate_hash = notification.hash;
 
 			let block = self.storage_override.current_block(substrate_hash);
-			let receipts = self.storage_override.current_receipts(substrate_hash);
+			let statuses = self
+				.storage_override
+				.current_transaction_statuses(substrate_hash);
 
-			match (block, receipts) {
-				(Some(block), Some(receipts)) => Some((block, receipts)),
+			match (block, statuses) {
+				(Some(block), Some(statuses)) => Some((block, statuses)),
 				_ => None,
 			}
 		} else {
 			None
 		};
-		future::ready(res.map(|(block, receipts)| PubSubResult::logs(block, receipts, params)))
+
+		future::ready(res.map(|(block, statuses)| {
+			let logs = crate::eth::filter::filter_block_logs(&params.filter, block, statuses);
+
+			logs.clone()
+				.into_iter()
+				.map(|log| PubSubResult::Log(Box::new(log.clone())))
+		}))
 	}
 
 	fn pending_transactions(&self, hash: &TxHash<P>) -> future::Ready<Option<PubSubResult>> {
@@ -230,7 +245,7 @@ where
 {
 	fn subscribe(&self, pending: PendingSubscriptionSink, kind: Kind, params: Option<Params>) {
 		let filtered_params = match params {
-			Some(Params::Logs(filter)) => FilteredParams::new(Some(filter)),
+			Some(Params::Logs(filter)) => FilteredParams::new(filter),
 			_ => FilteredParams::default(),
 		};
 
@@ -243,10 +258,48 @@ where
 		let fut = async move {
 			match kind {
 				Kind::NewHeads => {
-					let stream = block_notification_stream
-						.filter_map(move |notification| pubsub.notify_header(notification));
+					// Per Ethereum spec, when a reorg occurs, we must emit all headers
+					// for the new canonical chain. The reorg_info field in the notification
+					// contains the enacted blocks when a reorg occurred.
+					let stream = block_notification_stream.filter_map(move |notification| {
+						if !notification.is_new_best {
+							return future::ready(None);
+						}
+
+						// Check if this block came from a reorg
+						let headers = if let Some(ref reorg_info) = notification.reorg_info {
+							debug!(
+								target: "eth-pubsub",
+								"Reorg detected: new_best={:?}, {} blocks retracted, {} blocks enacted",
+								reorg_info.new_best,
+								reorg_info.retracted.len(),
+								reorg_info.enacted.len()
+							);
+							// Emit all enacted blocks followed by the new best block
+							pubsub.get_reorg_headers(&reorg_info.enacted, reorg_info.new_best)
+						} else {
+							// Normal case: just emit the new block
+							if let Some(block) =
+								pubsub.storage_override.current_block(notification.hash)
+							{
+								vec![PubSubResult::header(block)]
+							} else {
+								return future::ready(None);
+							}
+						};
+
+						if headers.is_empty() {
+							return future::ready(None);
+						}
+
+						future::ready(Some(headers))
+					});
+
+					// Flatten the Vec<PubSubResult> into individual PubSubResult items
+					let flat_stream = stream.flat_map(futures::stream::iter);
+
 					PendingSubscription::from(pending)
-						.pipe_from_stream(stream, BoundedVecDeque::new(16))
+						.pipe_from_stream(flat_stream, BoundedVecDeque::new(16))
 						.await
 				}
 				Kind::Logs => {

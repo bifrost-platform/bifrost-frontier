@@ -26,14 +26,10 @@ use fp_rpc::{ConvertTransaction, ConvertTransactionRuntimeApi, EthereumRuntimeRP
 
 /// Extra dependencies for Ethereum compatibility.
 pub struct EthDeps<B: BlockT, C, P, CT, CIDP> {
-	/// Client version.
-	pub client_version: String,
 	/// The client instance to use.
 	pub client: Arc<C>,
 	/// Transaction pool instance.
 	pub pool: Arc<P>,
-	/// Graph pool instance.
-	pub graph: Arc<P>,
 	/// Ethereum transaction converter.
 	pub converter: Option<CT>,
 	/// The Node authority flag
@@ -54,8 +50,8 @@ pub struct EthDeps<B: BlockT, C, P, CT, CIDP> {
 	pub filter_pool: Option<FilterPool>,
 	/// Maximum number of logs in a query.
 	pub max_past_logs: u32,
-	/// Timeout for eth logs query RPCs in seconds. (default 10).
-	pub logs_request_timeout: u64,
+	/// Maximum block range for eth_getLogs.
+	pub max_block_range: u32,
 	/// Fee history cache.
 	pub fee_history_cache: FeeHistoryCache,
 	/// Maximum fee history cache size.
@@ -104,10 +100,8 @@ where
 	use fc_rpc::{TxPool, TxPoolApiServer};
 
 	let EthDeps {
-		client_version,
 		client,
 		pool,
-		graph,
 		converter,
 		is_authority,
 		enable_dev_signer,
@@ -118,7 +112,7 @@ where
 		block_data_cache,
 		filter_pool,
 		max_past_logs,
-		logs_request_timeout,
+		max_block_range,
 		fee_history_cache,
 		fee_history_cache_limit,
 		execute_gas_limit_multiplier,
@@ -135,7 +129,6 @@ where
 		Eth::<B, C, P, CT, BE, CIDP, EC>::new(
 			client.clone(),
 			pool.clone(),
-			graph.clone(),
 			converter,
 			sync.clone(),
 			signers,
@@ -159,11 +152,11 @@ where
 			EthFilter::new(
 				client.clone(),
 				frontier_backend.clone(),
-				graph.clone(),
+				pool.clone(),
 				filter_pool,
 				500_usize, // max stored filters
 				max_past_logs,
-				logs_request_timeout,
+				max_block_range,
 				block_data_cache.clone(),
 			)
 			.into_rpc(),
@@ -172,7 +165,7 @@ where
 
 	io.merge(
 		EthPubSub::new(
-			pool,
+			pool.clone(),
 			client.clone(),
 			sync,
 			subscription_task_executor,
@@ -192,7 +185,7 @@ where
 		.into_rpc(),
 	)?;
 
-	io.merge(Web3::new(&client_version).into_rpc())?;
+	io.merge(Web3::new(client.clone()).into_rpc())?;
 
 	io.merge(
 		Debug::new(
@@ -205,7 +198,7 @@ where
 	)?;
 
 	#[cfg(feature = "txpool")]
-	io.merge(TxPool::new(client, graph).into_rpc())?;
+	io.merge(TxPool::new(client, pool).into_rpc())?;
 
 	Ok(io)
 }

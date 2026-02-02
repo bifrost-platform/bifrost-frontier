@@ -416,7 +416,6 @@ where
 	config.rpc.id_provider = Some(Box::new(fc_rpc::EthereumSubIdProvider));
 
 	let rpc_builder = {
-		let client_version = config.impl_version.clone();
 		let client = client.clone();
 		let pool = transaction_pool.clone();
 		let network = network.clone();
@@ -425,7 +424,7 @@ where
 		let is_authority = role.is_authority();
 		let enable_dev_signer = eth_config.enable_dev_signer;
 		let max_past_logs = eth_config.max_past_logs;
-		let logs_request_timeout = eth_config.logs_request_timeout;
+		let max_block_range = eth_config.max_block_range;
 		let execute_gas_limit_multiplier = eth_config.execute_gas_limit_multiplier;
 		let filter_pool = filter_pool.clone();
 		let frontier_backend = frontier_backend.clone();
@@ -456,10 +455,8 @@ where
 
 		Box::new(move |subscription_task_executor| {
 			let eth_deps = crate::rpc::EthDeps {
-				client_version: client_version.clone(),
 				client: client.clone(),
 				pool: pool.clone(),
-				graph: pool.clone(),
 				converter: Some(TransactionConverter::<B>::default()),
 				is_authority,
 				enable_dev_signer,
@@ -473,7 +470,7 @@ where
 				block_data_cache: block_data_cache.clone(),
 				filter_pool: filter_pool.clone(),
 				max_past_logs,
-				logs_request_timeout,
+				max_block_range,
 				fee_history_cache: fee_history_cache.clone(),
 				fee_history_cache_limit,
 				execute_gas_limit_multiplier,
@@ -512,6 +509,7 @@ where
 		tx_handler_controller,
 		sync_service: sync_service.clone(),
 		telemetry: telemetry.as_mut(),
+		tracing_execute_block: None,
 	})?;
 
 	spawn_frontier_tasks(

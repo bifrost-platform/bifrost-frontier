@@ -46,9 +46,9 @@ pub struct EthConfiguration {
 	#[arg(long, default_value = "10000")]
 	pub max_past_logs: u32,
 
-	/// Timeout for eth logs query RPCs in seconds. (default 10).
-	#[arg(long, default_value = "10")]
-	pub logs_request_timeout: u64,
+	/// Maximum block range to query logs from.
+	#[arg(long, default_value = "1024")]
+	pub max_block_range: u32,
 
 	/// Maximum fee history cache size.
 	#[arg(long, default_value = "2048")]

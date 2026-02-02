@@ -107,7 +107,7 @@ pub use fp_evm::{
 	Account, AccountProvider, CallInfo, CreateInfo, ExecutionInfoV2 as ExecutionInfo,
 	FeeCalculator, IsPrecompileResult, LinearCostPrecompile, Log, Precompile, PrecompileFailure,
 	PrecompileHandle, PrecompileOutput, PrecompileResult, PrecompileSet,
-	TransactionValidationError, Vicinity,
+	TransactionValidationError, Vicinity, EVM_CONFIG,
 };
 
 pub use self::{
@@ -216,7 +216,7 @@ pub mod pallet {
 
 		/// EVM config used in the module.
 		fn config() -> &'static EvmConfig {
-			&PECTRA_CONFIG
+			&EVM_CONFIG
 		}
 	}
 
@@ -606,8 +606,8 @@ pub mod pallet {
 		InvalidNonce,
 		/// Gas limit is too low.
 		GasLimitTooLow,
-		/// Gas limit is too high.
-		GasLimitTooHigh,
+		/// Gas limit exceeds block gas limit.
+		GasLimitExceedsBlockLimit,
 		/// The chain id is invalid.
 		InvalidChainId,
 		/// the signature is invalid.
@@ -620,13 +620,17 @@ pub mod pallet {
 		Undefined,
 		/// Address not allowed to deploy contracts either via CREATE or CALL(CREATE).
 		CreateOriginNotAllowed,
+		/// EIP-7825: Transaction gas limit exceeds protocol cap (2^24).
+		TransactionGasLimitExceedsCap,
 	}
 
 	impl<T> From<TransactionValidationError> for Error<T> {
 		fn from(validation_error: TransactionValidationError) -> Self {
 			match validation_error {
 				TransactionValidationError::GasLimitTooLow => Error::<T>::GasLimitTooLow,
-				TransactionValidationError::GasLimitTooHigh => Error::<T>::GasLimitTooHigh,
+				TransactionValidationError::GasLimitExceedsBlockLimit => {
+					Error::<T>::GasLimitExceedsBlockLimit
+				}
 				TransactionValidationError::BalanceTooLow => Error::<T>::BalanceLow,
 				TransactionValidationError::TxNonceTooLow => Error::<T>::InvalidNonce,
 				TransactionValidationError::TxNonceTooHigh => Error::<T>::InvalidNonce,
@@ -637,6 +641,9 @@ pub mod pallet {
 				TransactionValidationError::InvalidSignature => Error::<T>::InvalidSignature,
 				TransactionValidationError::EmptyAuthorizationList => Error::<T>::Undefined,
 				TransactionValidationError::AuthorizationListTooLarge => Error::<T>::Undefined,
+				TransactionValidationError::TransactionGasLimitExceedsCap => {
+					Error::<T>::TransactionGasLimitExceedsCap
+				}
 				TransactionValidationError::UnknownError => Error::<T>::Undefined,
 			}
 		}
@@ -1012,8 +1019,6 @@ where
 		weight.div(T::WeightPerGas::get().ref_time()).ref_time()
 	}
 }
-
-static PECTRA_CONFIG: EvmConfig = EvmConfig::pectra();
 
 impl<T: Config> Pallet<T> {
 	/// Check whether an account is empty.

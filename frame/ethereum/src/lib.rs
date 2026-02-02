@@ -276,7 +276,7 @@ pub mod pallet {
 					Self::validate_transaction_in_block(source, &transaction).expect(
 						"pre-block transaction verification failed; the block cannot be built",
 					);
-					let (r, _) = Self::apply_validated_transaction(source, transaction)
+					let (r, _) = Self::apply_validated_transaction(source, transaction, None)
 						.expect("pre-block apply transaction failed; the block cannot be built");
 
 					weight = weight.saturating_add(r.actual_weight.unwrap_or_default());
@@ -325,7 +325,8 @@ pub mod pallet {
 				"pre log already exists; block is invalid",
 			);
 
-			Self::apply_validated_transaction(source, transaction).map(|(post_info, _)| post_info)
+			Self::apply_validated_transaction(source, transaction, None)
+				.map(|(post_info, _)| post_info)
 		}
 	}
 
@@ -638,8 +639,9 @@ impl<T: Config> Pallet<T> {
 	fn apply_validated_transaction(
 		source: H160,
 		transaction: Transaction,
+		maybe_force_create_address: Option<H160>,
 	) -> Result<(PostDispatchInfo, CallOrCreateInfo), DispatchErrorWithPostInfo> {
-		let (to, _, info) = Self::execute(source, &transaction, None)?;
+		let (to, _, info) = Self::execute(source, &transaction, None, maybe_force_create_address)?;
 
 		let transaction_hash = transaction.hash();
 		let transaction_index = Pending::<T>::count();
@@ -802,6 +804,7 @@ impl<T: Config> Pallet<T> {
 		from: H160,
 		transaction: &Transaction,
 		config: Option<evm::Config>,
+		maybe_force_create_address: Option<H160>,
 	) -> Result<(Option<H160>, Option<H160>, CallOrCreateInfo), DispatchErrorWithPostInfo> {
 		let transaction_data: TransactionData = transaction.into();
 		let (weight_limit, proof_size_base_cost) = Self::transaction_weight(&transaction_data);
@@ -924,31 +927,62 @@ impl<T: Config> Pallet<T> {
 				Ok((Some(target), None, CallOrCreateInfo::Call(res)))
 			}
 			ethereum::TransactionAction::Create => {
-				let res = match T::Runner::create(
-					from,
-					input,
-					value,
-					gas_limit.unique_saturated_into(),
-					max_fee_per_gas,
-					max_priority_fee_per_gas,
-					nonce,
-					access_list,
-					authorization_list,
-					is_transactional,
-					validate,
-					weight_limit,
-					proof_size_base_cost,
-					config.as_ref().unwrap_or_else(|| T::config()),
-				) {
-					Ok(res) => res,
-					Err(e) => {
-						return Err(DispatchErrorWithPostInfo {
-							post_info: PostDispatchInfo {
-								actual_weight: Some(e.weight),
-								pays_fee: Pays::Yes,
-							},
-							error: e.error.into(),
-						})
+				let res = if let Some(force_address) = maybe_force_create_address {
+					match T::Runner::create_force_address(
+						from,
+						input,
+						value,
+						gas_limit.unique_saturated_into(),
+						max_fee_per_gas,
+						max_priority_fee_per_gas,
+						nonce,
+						access_list,
+						authorization_list,
+						is_transactional,
+						validate,
+						weight_limit,
+						proof_size_base_cost,
+						config.as_ref().unwrap_or_else(|| T::config()),
+						force_address,
+					) {
+						Ok(res) => res,
+						Err(e) => {
+							return Err(DispatchErrorWithPostInfo {
+								post_info: PostDispatchInfo {
+									actual_weight: Some(e.weight),
+									pays_fee: Pays::Yes,
+								},
+								error: e.error.into(),
+							})
+						}
+					}
+				} else {
+					match T::Runner::create(
+						from,
+						input,
+						value,
+						gas_limit.unique_saturated_into(),
+						max_fee_per_gas,
+						max_priority_fee_per_gas,
+						nonce,
+						access_list,
+						authorization_list,
+						is_transactional,
+						validate,
+						weight_limit,
+						proof_size_base_cost,
+						config.as_ref().unwrap_or_else(|| T::config()),
+					) {
+						Ok(res) => res,
+						Err(e) => {
+							return Err(DispatchErrorWithPostInfo {
+								post_info: PostDispatchInfo {
+									actual_weight: Some(e.weight),
+									pays_fee: Pays::Yes,
+								},
+								error: e.error.into(),
+							})
+						}
 					}
 				};
 
@@ -1080,8 +1114,9 @@ impl<T: Config> ValidatedTransactionT for ValidatedTransaction<T> {
 	fn apply(
 		source: H160,
 		transaction: Transaction,
+		maybe_force_create_address: Option<H160>,
 	) -> Result<(PostDispatchInfo, CallOrCreateInfo), DispatchErrorWithPostInfo> {
-		Pallet::<T>::apply_validated_transaction(source, transaction)
+		Pallet::<T>::apply_validated_transaction(source, transaction, maybe_force_create_address)
 	}
 }
 
@@ -1116,9 +1151,11 @@ impl From<TransactionValidationError> for InvalidTransactionWrapper {
 			TransactionValidationError::GasLimitTooLow => InvalidTransactionWrapper(
 				InvalidTransaction::Custom(TransactionValidationError::GasLimitTooLow as u8),
 			),
-			TransactionValidationError::GasLimitTooHigh => InvalidTransactionWrapper(
-				InvalidTransaction::Custom(TransactionValidationError::GasLimitTooHigh as u8),
-			),
+			TransactionValidationError::GasLimitExceedsBlockLimit => {
+				InvalidTransactionWrapper(InvalidTransaction::Custom(
+					TransactionValidationError::GasLimitExceedsBlockLimit as u8,
+				))
+			}
 			TransactionValidationError::PriorityFeeTooHigh => InvalidTransactionWrapper(
 				InvalidTransaction::Custom(TransactionValidationError::PriorityFeeTooHigh as u8),
 			),
@@ -1151,6 +1188,11 @@ impl From<TransactionValidationError> for InvalidTransactionWrapper {
 			TransactionValidationError::AuthorizationListTooLarge => {
 				InvalidTransactionWrapper(InvalidTransaction::Custom(
 					TransactionValidationError::AuthorizationListTooLarge as u8,
+				))
+			}
+			TransactionValidationError::TransactionGasLimitExceedsCap => {
+				InvalidTransactionWrapper(InvalidTransaction::Custom(
+					TransactionValidationError::TransactionGasLimitExceedsCap as u8,
 				))
 			}
 			TransactionValidationError::UnknownError => InvalidTransactionWrapper(
