@@ -556,6 +556,7 @@ impl<T: Config> Pallet<T> {
 			transaction_data.gas_limit,
 			base_fee,
 		);
+		let is_feeless = T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
@@ -565,6 +566,7 @@ impl<T: Config> Pallet<T> {
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
 				is_zero_balance_callable,
+				is_feeless,
 			},
 			transaction_data.clone().into(),
 			weight_limit,
@@ -1020,6 +1022,7 @@ impl<T: Config> Pallet<T> {
 			transaction_data.gas_limit,
 			base_fee,
 		);
+		let is_feeless = T::FeelessCallFilter::is_feeless(origin, target, &transaction_data.input);
 
 		let _ = CheckEvmTransaction::<InvalidTransactionWrapper>::new(
 			CheckEvmTransactionConfig {
@@ -1029,6 +1032,7 @@ impl<T: Config> Pallet<T> {
 				chain_id: T::ChainId::get(),
 				is_transactional: true,
 				is_zero_balance_callable,
+				is_feeless,
 			},
 			transaction_data.into(),
 			weight_limit,

@@ -483,6 +483,7 @@ where
 			U256::from(gas_limit),
 			base_fee,
 		);
+		let is_feeless = T::FeelessCallFilter::is_feeless(source, target, &input);
 
 		let _ = fp_evm::CheckEvmTransaction::<Self::Error>::new(
 			fp_evm::CheckEvmTransactionConfig {
@@ -492,6 +493,7 @@ where
 				chain_id: T::ChainId::get(),
 				is_transactional,
 				is_zero_balance_callable,
+				is_feeless,
 			},
 			fp_evm::CheckEvmTransactionInput {
 				chain_id: Some(T::ChainId::get()),
