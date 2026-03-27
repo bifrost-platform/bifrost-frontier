@@ -40,7 +40,12 @@ pub use evm::{
 };
 
 /// Default EVM configuration.
-pub static EVM_CONFIG: Config = Config::osaka();
+pub static EVM_CONFIG: Config = {
+	let mut config = Config::osaka();
+	// 6MB EVM memory limit per transaction.
+	config.memory_limit = 6 * 1024 * 1024;
+	config
+};
 
 /// EIP-7825: Maximum transaction gas limit (2^24).
 /// Bifrost customization: increase the max transaction gas limit to 60M.
