@@ -427,6 +427,7 @@ where
 		let max_block_range = eth_config.max_block_range;
 		let logs_request_timeout = eth_config.logs_request_timeout;
 		let execute_gas_limit_multiplier = eth_config.execute_gas_limit_multiplier;
+		let state_override_max_storage_keys = eth_config.state_override_max_storage_keys;
 		let filter_pool = filter_pool.clone();
 		let frontier_backend = frontier_backend.clone();
 		let pubsub_notification_sinks = pubsub_notification_sinks.clone();
@@ -477,6 +478,7 @@ where
 				fee_history_cache: fee_history_cache.clone(),
 				fee_history_cache_limit,
 				execute_gas_limit_multiplier,
+				state_override_max_storage_keys,
 				forced_parent_hashes: None,
 				pending_create_inherent_data_providers,
 			};

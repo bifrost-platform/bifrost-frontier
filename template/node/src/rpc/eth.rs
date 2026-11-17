@@ -63,6 +63,8 @@ pub struct EthDeps<B: BlockT, C, P, CT, CIDP> {
 	/// Maximum allowed gas limit will be ` block.gas_limit * execute_gas_limit_multiplier` when
 	/// using eth_call/eth_estimateGas.
 	pub execute_gas_limit_multiplier: u64,
+	/// Max existing storage slots an eth_call `state` override may clear per request (all accounts).
+	pub state_override_max_storage_keys: u32,
 	/// Mandated parent hashes for a given block hash.
 	pub forced_parent_hashes: Option<BTreeMap<H256, H256>>,
 	/// Something that can create the inherent data providers for pending state
@@ -122,6 +124,7 @@ where
 		fee_history_cache,
 		fee_history_cache_limit,
 		execute_gas_limit_multiplier,
+		state_override_max_storage_keys,
 		forced_parent_hashes,
 		pending_create_inherent_data_providers,
 	} = deps;
@@ -145,6 +148,7 @@ where
 			fee_history_cache,
 			fee_history_cache_limit,
 			execute_gas_limit_multiplier,
+			state_override_max_storage_keys,
 			forced_parent_hashes,
 			pending_create_inherent_data_providers,
 			Some(Box::new(AuraConsensusDataProvider::new(client.clone()))),
