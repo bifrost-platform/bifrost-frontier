@@ -70,6 +70,10 @@ pub struct EthConfiguration {
 	#[arg(long, default_value = "10")]
 	pub execute_gas_limit_multiplier: u64,
 
+	/// Max existing storage slots an eth_call `state` override may clear per request (all accounts).
+	#[arg(long, default_value = "10000")]
+	pub state_override_max_storage_keys: u32,
+
 	/// Size in bytes of the LRU cache for block data.
 	#[arg(long, default_value = "50")]
 	pub eth_log_block_cache: usize,

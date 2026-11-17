@@ -1180,6 +1180,8 @@ where
 		state_overrides: Option<BTreeMap<H160, CallStateOverride>>,
 	) -> RpcResult<OverlayedChanges<HashingFor<B>>> {
 		let mut overlayed_changes = OverlayedChanges::default();
+		// Shared across all overridden accounts so one request can't multiply the bound.
+		let mut clear_budget = self.state_override_max_storage_keys;
 		if let Some(state_overrides) = state_overrides {
 			for (address, state_override) in state_overrides {
 				if EC::RuntimeStorageOverride::is_enabled() {
@@ -1223,7 +1225,16 @@ where
 						Some(&sp_storage::StorageKey(account_storage_key.clone())),
 						None,
 					) {
+						// Bounded: this runs before EVM execution (outside the gas cap) and
+						// synchronously on an RPC worker, so large contracts would stall the node.
 						for key in all_keys {
+							if clear_budget == 0 {
+								return Err(internal_err(format!(
+									"state override: clearing {address:?} exceeds the limit of {} existing storage slots per request, use stateDiff instead",
+									self.state_override_max_storage_keys
+								)));
+							}
+							clear_budget -= 1;
 							overlayed_changes.set_storage(key.0, None);
 						}
 					}
